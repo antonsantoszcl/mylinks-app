@@ -15,7 +15,7 @@ export default function PrivateLayout({
       <ProfileProvider>
         <PublicDataProvider>
           <DashboardsProvider>
-            <div className="flex h-screen bg-slate-50 overflow-hidden">
+            <div className="flex h-screen bg-white overflow-hidden">
               <Sidebar />
               <div className="flex-1 flex flex-col min-w-0">
                 <TopNav />

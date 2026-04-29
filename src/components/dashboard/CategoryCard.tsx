@@ -21,14 +21,24 @@ import {
 } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis, restrictToParentElement } from '@dnd-kit/modifiers';
 
-// Full border colors with white background
-const COLOR_ACCENTS = [
+// Colored border around the whole card
+const BORDER_COLORS = [
   'border-amber-200',
   'border-emerald-200',
   'border-orange-200',
   'border-sky-200',
   'border-rose-200',
   'border-violet-200',
+];
+
+// Subtle colored background for the card header area
+const HEADER_COLORS = [
+  'bg-amber-50',
+  'bg-emerald-50',
+  'bg-orange-50',
+  'bg-sky-50',
+  'bg-rose-50',
+  'bg-violet-50',
 ];
 
 const ICON_COLORS = [
@@ -40,7 +50,8 @@ const ICON_COLORS = [
   'bg-violet-100 text-violet-600',
 ];
 
-const TITLE_COLORS = [
+// Accent text color used in footer / add-link area
+const ACCENT_TEXT_COLORS = [
   'text-amber-600',
   'text-emerald-600',
   'text-orange-600',
@@ -85,10 +96,11 @@ export function CategoryCard({
   const [linkUrl, setLinkUrl] = useState('');
   const titleInputRef = useRef<HTMLInputElement>(null);
 
-  const accentIdx = colorIndex % COLOR_ACCENTS.length;
-  const accentClasses = COLOR_ACCENTS[accentIdx];
+  const accentIdx = colorIndex % BORDER_COLORS.length;
+  const borderClass = BORDER_COLORS[accentIdx];
+  const headerBgClass = HEADER_COLORS[accentIdx];
   const iconColorClass = ICON_COLORS[accentIdx];
-  const titleColorClass = TITLE_COLORS[accentIdx];
+  const accentTextClass = ACCENT_TEXT_COLORS[accentIdx];
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -143,8 +155,9 @@ export function CategoryCard({
   };
 
   return (
-    <article className={`rounded-xl shadow-sm border bg-white p-3 flex flex-col hover:shadow-md transition-shadow group/card ${accentClasses}`}>
-      <header className="flex items-center justify-between mb-2 pb-2 border-b border-slate-100/80">
+    <article className={`rounded-xl shadow-sm border bg-white flex flex-col hover:shadow-md transition-shadow group/card ${borderClass}`}>
+      {/* Colored header area */}
+      <header className={`flex items-center justify-between px-3 py-2 rounded-t-lg ${headerBgClass}`}>
         <div className="flex items-center gap-2 min-w-0">
           <div className={`p-1.5 rounded-lg transition-all flex-shrink-0 ${iconColorClass}`}>
             <IconComponent className="w-3.5 h-3.5" />
@@ -163,7 +176,7 @@ export function CategoryCard({
             />
           ) : (
             <h3
-              className={`text-xs font-semibold cursor-text truncate ${titleColorClass}`}
+              className="text-xs font-semibold cursor-text truncate text-slate-800"
               onClick={() => setIsEditingTitle(true)}
             >
               {category.title}
@@ -201,7 +214,8 @@ export function CategoryCard({
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto custom-scrollbar">
+      {/* White body area */}
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-3">
         {showAddLink && (
           <form onSubmit={submitNewLink} className="mb-2 p-2 rounded-lg border border-slate-200 bg-white/80 space-y-1.5">
             <input
@@ -253,6 +267,19 @@ export function CategoryCard({
           </div>
         )}
       </div>
+
+      {/* Optional footer with accent text */}
+      {!showAddLink && (
+        <div className="px-3 py-1.5 border-t border-slate-100">
+          <button
+            className={`text-xs font-medium ${accentTextClass} hover:opacity-75 transition-opacity flex items-center gap-1`}
+            onClick={() => setShowAddLink(true)}
+          >
+            <Icons.Plus className="w-3 h-3" />
+            Adicionar link
+          </button>
+        </div>
+      )}
     </article>
   );
 }
