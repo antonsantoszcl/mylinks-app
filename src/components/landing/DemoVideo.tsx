@@ -172,82 +172,47 @@ function SpeechBubble({ text, visible }: { text: string; visible: boolean }) {
 }
 
 /* ──────────────────────────────────────────────────────────────
-   Step 2 – Dashboard mini-animation
-   Shows: creating "Noticias" + adding "Globo.com", then
-   "Financas", "Ferramentas", "Entretenimento" appearing — same
-   data as DemoPreview.
+   Step 2 – Pre-populated dashboard
+   Cards slide in staggered to show the dashboard already full.
+   Same categories/links as DemoPreview.
 ────────────────────────────────────────────────────────────── */
-
-// Phase 0: empty → typing category name
-// Phase 1: "Noticias" card created, link "Globo.com" being typed/added
-// Phase 2: link added, card shows Globo.com + UOL
-// Phase 3+: other cards appear one by one
-const EXTRA_CARDS = [
+const PREPOP_CARDS = [
+  {
+    label: 'Noticias',
+    color: 'bg-purple-50 border-purple-100',
+    header: 'text-purple-700',
+    links: ['Globo.com', 'UOL', 'G1'],
+  },
   {
     label: 'Financas',
-    color: 'from-emerald-400 to-emerald-600',
-    links: ['Banco do Brasil', 'Itau', 'InfoMoney'],
+    color: 'bg-emerald-50 border-emerald-100',
+    header: 'text-emerald-700',
+    links: ['Banco do Brasil', 'InfoMoney'],
   },
   {
     label: 'Ferramentas',
-    color: 'from-sky-400 to-sky-600',
+    color: 'bg-sky-50 border-sky-100',
+    header: 'text-sky-700',
     links: ['Google Drive', 'Gmail', 'Canva'],
   },
   {
     label: 'Entretenimento',
-    color: 'from-rose-400 to-rose-600',
+    color: 'bg-rose-50 border-rose-100',
+    header: 'text-rose-700',
     links: ['YouTube', 'Netflix', 'Spotify'],
   },
 ];
 
 function DashboardAnim({ visible }: { visible: boolean }) {
-  // phase 0 = blank input; 1 = typing name; 2 = card created; 3 = typing link;
-  // 4 = link added; 5,6,7 = extra cards appearing
-  const [phase, setPhase] = useState(0);
-  const [typedName, setTypedName] = useState('');
-  const [typedLink, setTypedLink] = useState('');
-  const [extraShown, setExtraShown] = useState(0);
-
-  const CATEGORY_NAME = 'Noticias';
-  const LINK_NAME = 'Globo.com';
+  const [shown, setShown] = useState(0);
 
   useEffect(() => {
-    if (!visible) {
-      setPhase(0); setTypedName(''); setTypedLink(''); setExtraShown(0);
-      return;
-    }
+    if (!visible) { setShown(0); return; }
     const timers: ReturnType<typeof setTimeout>[] = [];
-
-    // Start typing category name at 300ms
-    timers.push(setTimeout(() => setPhase(1), 300));
-
-    // Type each letter of "Noticias"
-    CATEGORY_NAME.split('').forEach((_, i) => {
-      timers.push(setTimeout(() => {
-        setTypedName(CATEGORY_NAME.slice(0, i + 1));
-      }, 400 + i * 120));
+    // Stagger each card appearing, starting quickly
+    PREPOP_CARDS.forEach((_, i) => {
+      timers.push(setTimeout(() => setShown(i + 1), 300 + i * 900));
     });
-
-    // Card created
-    timers.push(setTimeout(() => setPhase(2), 400 + CATEGORY_NAME.length * 120 + 200));
-
-    // Start typing link name
-    timers.push(setTimeout(() => setPhase(3), 400 + CATEGORY_NAME.length * 120 + 600));
-    LINK_NAME.split('').forEach((_, i) => {
-      timers.push(setTimeout(() => {
-        setTypedLink(LINK_NAME.slice(0, i + 1));
-      }, 400 + CATEGORY_NAME.length * 120 + 700 + i * 100));
-    });
-
-    // Link added
-    const linkDoneAt = 400 + CATEGORY_NAME.length * 120 + 700 + LINK_NAME.length * 100 + 200;
-    timers.push(setTimeout(() => setPhase(4), linkDoneAt));
-
-    // Extra cards appear one by one
-    EXTRA_CARDS.forEach((_, i) => {
-      timers.push(setTimeout(() => setExtraShown(i + 1), linkDoneAt + 500 + i * 1200));
-    });
-
     return () => timers.forEach(clearTimeout);
   }, [visible]);
 
@@ -265,88 +230,37 @@ function DashboardAnim({ visible }: { visible: boolean }) {
           <span className="text-xs text-slate-400 ml-1 font-mono">mylinks.app/dashboard</span>
         </div>
 
-        <div className="flex flex-col gap-2">
-          {/* Phase 1: typing the category name */}
-          {phase === 1 && (
-            <div className="flex items-center gap-2 bg-white border-2 border-purple-400 rounded-lg px-2 py-1.5 shadow-sm">
-              <span className="text-[10px] text-slate-400 font-medium">Nova categoria:</span>
-              <span className="text-xs text-purple-700 font-semibold">
-                {typedName}
-                <span className="animate-pulse">|</span>
-              </span>
-            </div>
-          )}
-
-          {/* Phase 2+: Noticias card */}
-          {phase >= 2 && (
-            <div className="transition-all duration-500 bg-white border border-slate-200 rounded-lg p-2 shadow-sm">
-              {/* Card header */}
-              <div className="flex items-center gap-1.5 mb-1.5 pb-1.5 border-b border-slate-100">
-                <div className="w-5 h-5 rounded bg-purple-100 flex items-center justify-center text-purple-600">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l6 6v8a2 2 0 01-2 2z"/>
-                    <polyline points="17 2 17 8 23 8"/>
-                    <line x1="9" y1="15" x2="15" y2="15"/>
-                  </svg>
-                </div>
-                <span className="text-xs font-semibold text-slate-700">Noticias</span>
-                <span className="ml-auto text-[10px] bg-purple-50 text-purple-500 rounded-full px-1.5 font-medium">
-                  {phase >= 4 ? '2' : '0'}
-                </span>
-              </div>
-
-              {/* Phase 3: typing link name */}
-              {phase === 3 && (
-                <div className="flex items-center gap-1.5 bg-purple-50 border border-purple-200 rounded px-1.5 py-1">
-                  <span className="text-[9px] text-slate-400">+ Link:</span>
-                  <span className="text-[10px] text-purple-700 font-medium">
-                    {typedLink}
-                    <span className="animate-pulse">|</span>
-                  </span>
-                </div>
-              )}
-
-              {/* Phase 4+: links added */}
-              {phase >= 4 && (
-                <div className="flex flex-col gap-1">
-                  {['Globo.com', 'UOL'].map((link, i) => (
-                    <div
-                      key={link}
-                      className="flex items-center gap-1.5 px-1 py-0.5 rounded hover:bg-purple-50 transition-all duration-300"
-                      style={{ opacity: phase >= 4 ? 1 : 0, transitionDelay: `${i * 120}ms` }}
-                    >
-                      <div className="w-3.5 h-3.5 rounded-sm bg-slate-200 flex-shrink-0 overflow-hidden">
-                        {/* favicon placeholder */}
-                        <div className="w-full h-full bg-gradient-to-br from-blue-300 to-blue-500" />
-                      </div>
-                      <span className="text-[10px] text-slate-600">{link}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Extra cards appearing */}
-          {EXTRA_CARDS.map((card, i) => (
+        <div className="grid grid-cols-2 gap-2">
+          {PREPOP_CARDS.map((card, i) => (
             <div
               key={card.label}
-              className="transition-all duration-500"
+              className={`transition-all duration-500 border rounded-lg p-2 ${card.color}`}
               style={{
-                opacity: extraShown > i ? 1 : 0,
-                transform: extraShown > i ? 'translateX(0)' : 'translateX(-12px)',
+                opacity: shown > i ? 1 : 0,
+                transform: shown > i ? 'scale(1) translateY(0)' : 'scale(0.88) translateY(8px)',
               }}
             >
-              <div className={`bg-gradient-to-r ${card.color} rounded-lg p-2`}>
-                <span className="text-white text-xs font-semibold">{card.label}</span>
-                <div className="flex gap-1 mt-1 flex-wrap">
-                  {card.links.map((l) => (
-                    <span key={l} className="text-white/80 text-[9px] bg-white/20 rounded px-1.5 py-0.5">{l}</span>
-                  ))}
-                </div>
+              <p className={`text-[10px] font-bold mb-1.5 ${card.header}`}>{card.label}</p>
+              <div className="flex flex-col gap-0.5">
+                {card.links.map((l) => (
+                  <div key={l} className="flex items-center gap-1">
+                    <div className="w-2.5 h-2.5 rounded-sm bg-white/80 border border-white flex-shrink-0" />
+                    <span className="text-[9px] text-slate-500 truncate">{l}</span>
+                  </div>
+                ))}
               </div>
             </div>
           ))}
+        </div>
+
+        {/* "Pre-populated" badge that fades in after all cards */}
+        <div
+          className="mt-2 transition-all duration-500"
+          style={{ opacity: shown >= PREPOP_CARDS.length ? 1 : 0 }}
+        >
+          <p className="text-center text-[9px] text-purple-500 font-medium bg-purple-50 rounded-full py-0.5">
+            Pronto para usar!
+          </p>
         </div>
       </div>
     </div>
@@ -354,18 +268,43 @@ function DashboardAnim({ visible }: { visible: boolean }) {
 }
 
 /* ──────────────────────────────────────────────────────────────
-   Step 3 – Public page mini-animation
+   Step 3 – Edit animation: remove a link, add a new one
+   Shows the Noticias card, strikes through "G1" (delete),
+   then adds "CNN Brasil" (typed in).
 ────────────────────────────────────────────────────────────── */
-function PublicPageAnim({ visible }: { visible: boolean }) {
-  const [cardIn, setCardIn] = useState(false);
-  const [linksIn, setLinksIn] = useState(false);
+function EditAnim({ visible }: { visible: boolean }) {
+  // phase 0 = show card; 1 = hover delete on G1; 2 = G1 deleted;
+  // 3 = show add-input; 4 = typing new link; 5 = new link added
+  const [phase, setPhase] = useState(0);
+  const [typedNew, setTypedNew] = useState('');
+  const NEW_LINK = 'CNN Brasil';
 
   useEffect(() => {
-    if (!visible) { setCardIn(false); setLinksIn(false); return; }
-    const t1 = setTimeout(() => setCardIn(true), 300);
-    const t2 = setTimeout(() => setLinksIn(true), 1200);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
+    if (!visible) { setPhase(0); setTypedNew(''); return; }
+    const timers: ReturnType<typeof setTimeout>[] = [];
+
+    timers.push(setTimeout(() => setPhase(1), 700));   // hover on G1 → show delete btn
+    timers.push(setTimeout(() => setPhase(2), 1600));  // G1 deleted
+    timers.push(setTimeout(() => setPhase(3), 2400));  // show + add input
+    timers.push(setTimeout(() => setPhase(4), 2900));  // start typing
+
+    NEW_LINK.split('').forEach((_, i) => {
+      timers.push(setTimeout(() => {
+        setTypedNew(NEW_LINK.slice(0, i + 1));
+      }, 3000 + i * 90));
+    });
+
+    const addedAt = 3000 + NEW_LINK.length * 90 + 200;
+    timers.push(setTimeout(() => setPhase(5), addedAt));
+
+    return () => timers.forEach(clearTimeout);
   }, [visible]);
+
+  // Links array evolves with phase
+  const baseLinks = ['Globo.com', 'UOL', 'G1'];
+  const finalLinks = phase >= 2
+    ? ['Globo.com', 'UOL']
+    : baseLinks;
 
   return (
     <div
@@ -373,32 +312,94 @@ function PublicPageAnim({ visible }: { visible: boolean }) {
       style={{ opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(20px)' }}
     >
       <div className="bg-slate-100 rounded-xl p-3 w-[240px]">
+        {/* Browser chrome */}
         <div className="flex items-center gap-2 mb-3">
           <div className="w-2 h-2 rounded-full bg-red-400" />
           <div className="w-2 h-2 rounded-full bg-yellow-400" />
           <div className="w-2 h-2 rounded-full bg-green-400" />
-          <span className="text-xs text-slate-400 ml-1 font-mono">mylinks.app/@voce</span>
+          <span className="text-xs text-slate-400 ml-1 font-mono">mylinks.app/dashboard</span>
         </div>
-        {/* Profile card */}
-        <div
-          className="bg-white rounded-xl p-3 shadow-sm transition-all duration-500 text-center"
-          style={{ opacity: cardIn ? 1 : 0, transform: cardIn ? 'scale(1)' : 'scale(0.85)' }}
-        >
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-purple-700 mx-auto flex items-center justify-center text-white font-bold text-lg mb-1.5">
-            V
+
+        <div className="bg-white border border-slate-200 rounded-lg p-2 shadow-sm">
+          {/* Card header */}
+          <div className="flex items-center gap-1.5 mb-2 pb-1.5 border-b border-slate-100">
+            <div className="w-5 h-5 rounded bg-purple-100 flex items-center justify-center">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#9333ea" strokeWidth="2.5">
+                <path d="M4 11a9 9 0 0 1 9 9" /><path d="M4 4a16 16 0 0 1 16 16" />
+                <circle cx="5" cy="19" r="1" fill="#9333ea" stroke="none" />
+              </svg>
+            </div>
+            <span className="text-xs font-semibold text-slate-700">Noticias</span>
+            <span className="ml-auto text-[10px] bg-purple-50 text-purple-500 rounded-full px-1.5 font-medium">
+              {phase >= 5 ? 3 : phase >= 2 ? 2 : 3}
+            </span>
           </div>
-          <p className="font-semibold text-slate-800 text-xs">@voce</p>
-          <p className="text-[10px] text-slate-400 mb-2">Desenvolvedor · Designer</p>
-          <div className="flex flex-col gap-1.5">
-            {['Portfolio', 'GitHub', 'LinkedIn'].map((item, i) => (
-              <div
-                key={item}
-                className="bg-purple-50 border border-purple-100 rounded-lg py-1.5 text-xs text-purple-700 font-medium transition-all duration-300"
-                style={{ opacity: linksIn ? 1 : 0, transform: linksIn ? 'translateY(0)' : 'translateY(6px)', transitionDelay: `${i * 150}ms` }}
-              >
-                {item}
+
+          <div className="flex flex-col gap-1">
+            {/* Stable links */}
+            {finalLinks.map((link) => (
+              <div key={link} className="flex items-center gap-1.5 px-1 py-0.5 rounded group">
+                <div className="w-3 h-3 rounded-sm bg-gradient-to-br from-blue-300 to-blue-500 flex-shrink-0" />
+                <span className="text-[10px] text-slate-600 flex-1">{link}</span>
               </div>
             ))}
+
+            {/* G1 — phase 0-1: normal; phase 1: highlight with delete icon; phase 2+: gone */}
+            {phase < 2 && (
+              <div
+                className={`flex items-center gap-1.5 px-1 py-0.5 rounded transition-all duration-300 ${
+                  phase === 1 ? 'bg-red-50 border border-red-200' : ''
+                }`}
+              >
+                <div className="w-3 h-3 rounded-sm bg-gradient-to-br from-blue-300 to-blue-500 flex-shrink-0" />
+                <span
+                  className={`text-[10px] flex-1 transition-all duration-300 ${
+                    phase === 1 ? 'text-red-400 line-through' : 'text-slate-600'
+                  }`}
+                >
+                  G1
+                </span>
+                {phase === 1 && (
+                  <span className="text-[9px] text-red-400 font-bold bg-red-100 rounded px-1 ml-auto">
+                    ✕
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Phase 2 — deleted feedback */}
+            {phase === 2 && (
+              <p className="text-[9px] text-red-400 text-center py-0.5 animate-pulse">Link removido!</p>
+            )}
+
+            {/* Phase 3 — add input empty */}
+            {phase === 3 && (
+              <div className="flex items-center gap-1.5 bg-purple-50 border border-purple-300 rounded px-1.5 py-1 mt-0.5">
+                <span className="text-[9px] text-purple-400">+ Novo link:</span>
+                <span className="text-[10px] text-purple-700 font-medium animate-pulse">|</span>
+              </div>
+            )}
+
+            {/* Phase 4 — typing */}
+            {phase === 4 && (
+              <div className="flex items-center gap-1.5 bg-purple-50 border border-purple-400 rounded px-1.5 py-1 mt-0.5">
+                <span className="text-[9px] text-purple-400">+ Novo link:</span>
+                <span className="text-[10px] text-purple-700 font-semibold">
+                  {typedNew}<span className="animate-pulse">|</span>
+                </span>
+              </div>
+            )}
+
+            {/* Phase 5 — CNN Brasil added */}
+            {phase >= 5 && (
+              <div
+                className="flex items-center gap-1.5 px-1 py-0.5 rounded bg-green-50 border border-green-200 transition-all duration-500"
+              >
+                <div className="w-3 h-3 rounded-sm bg-gradient-to-br from-red-400 to-red-600 flex-shrink-0" />
+                <span className="text-[10px] text-green-700 font-medium flex-1">CNN Brasil</span>
+                <span className="text-[9px] text-green-500">✓ novo</span>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -570,8 +571,8 @@ function DemoContent({ onClose }: { onClose: () => void }) {
 
   const stepTexts = [
     'Oi! Eu sou o Link,\nseu assistente do MyLinks!',
-    'Aqui você organiza todos os seus\nlinks favoritos em categorias.',
-    'E cria sua página pública para\ncompartilhar com todo mundo!',
+    'Seu dashboard já vem com categorias\ne links populares pra você começar!',
+    'Mas é tudo seu! Pode tirar, trocar,\nadicionar o que quiser. Super fácil!',
     'Arraste, organize, personalize.\nTudo do seu jeito!',
     'Comece agora, é grátis!',
   ];
@@ -610,7 +611,7 @@ function DemoContent({ onClose }: { onClose: () => void }) {
         <div className="my-1">
           <Character
             waving={currentStep === 0 || currentStep === 4}
-            pointing={currentStep === 1}
+            pointing={currentStep === 1 || currentStep === 2}
             thumbsUp={currentStep === 3}
           />
         </div>
@@ -618,7 +619,7 @@ function DemoContent({ onClose }: { onClose: () => void }) {
         {/* Step content */}
         <div className="w-full flex justify-center">
           {currentStep === 1 && <DashboardAnim visible={currentStep === 1} />}
-          {currentStep === 2 && <PublicPageAnim visible={currentStep === 2} />}
+          {currentStep === 2 && <EditAnim visible={currentStep === 2} />}
           {currentStep === 3 && <DragAnim visible={currentStep === 3} />}
           {currentStep === 4 && <CtaAnim visible={currentStep === 4} />}
         </div>
