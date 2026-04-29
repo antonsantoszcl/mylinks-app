@@ -21,14 +21,14 @@ import {
 } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis, restrictToParentElement } from '@dnd-kit/modifiers';
 
-// Pastel color accents cycling through 6 options
+// Full border colors with white background
 const COLOR_ACCENTS = [
-  'border-amber-300 bg-amber-50',
-  'border-emerald-300 bg-emerald-50',
-  'border-orange-300 bg-orange-50',
-  'border-sky-300 bg-sky-50',
-  'border-rose-300 bg-rose-50',
-  'border-violet-300 bg-violet-50',
+  'border-amber-200',
+  'border-emerald-200',
+  'border-orange-200',
+  'border-sky-200',
+  'border-rose-200',
+  'border-violet-200',
 ];
 
 const ICON_COLORS = [
@@ -38,6 +38,15 @@ const ICON_COLORS = [
   'bg-sky-100 text-sky-600',
   'bg-rose-100 text-rose-600',
   'bg-violet-100 text-violet-600',
+];
+
+const TITLE_COLORS = [
+  'text-amber-600',
+  'text-emerald-600',
+  'text-orange-600',
+  'text-sky-600',
+  'text-rose-600',
+  'text-violet-600',
 ];
 
 interface CategoryCardProps {
@@ -79,6 +88,7 @@ export function CategoryCard({
   const accentIdx = colorIndex % COLOR_ACCENTS.length;
   const accentClasses = COLOR_ACCENTS[accentIdx];
   const iconColorClass = ICON_COLORS[accentIdx];
+  const titleColorClass = TITLE_COLORS[accentIdx];
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -133,7 +143,7 @@ export function CategoryCard({
   };
 
   return (
-    <article className={`rounded-xl shadow-sm border-l-4 border border-slate-100 p-3 flex flex-col hover:shadow-md transition-shadow group/card ${accentClasses}`}>
+    <article className={`rounded-xl shadow-sm border bg-white p-3 flex flex-col hover:shadow-md transition-shadow group/card ${accentClasses}`}>
       <header className="flex items-center justify-between mb-2 pb-2 border-b border-slate-100/80">
         <div className="flex items-center gap-2 min-w-0">
           <div className={`p-1.5 rounded-lg transition-all flex-shrink-0 ${iconColorClass}`}>
@@ -153,7 +163,7 @@ export function CategoryCard({
             />
           ) : (
             <h3
-              className="text-xs font-semibold text-slate-700 cursor-text truncate"
+              className={`text-xs font-semibold cursor-text truncate ${titleColorClass}`}
               onClick={() => setIsEditingTitle(true)}
             >
               {category.title}
