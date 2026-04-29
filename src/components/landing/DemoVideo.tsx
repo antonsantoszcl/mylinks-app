@@ -173,22 +173,81 @@ function SpeechBubble({ text, visible }: { text: string; visible: boolean }) {
 
 /* ──────────────────────────────────────────────────────────────
    Step 2 – Dashboard mini-animation
+   Shows: creating "Noticias" + adding "Globo.com", then
+   "Financas", "Ferramentas", "Entretenimento" appearing — same
+   data as DemoPreview.
 ────────────────────────────────────────────────────────────── */
-const CARDS = [
-  { label: 'Trabalho',  color: 'from-violet-400 to-violet-600', links: ['Notion', 'Figma', 'Jira'] },
-  { label: 'Aprender',  color: 'from-sky-400 to-sky-600',       links: ['YouTube', 'Udemy', 'Github'] },
-  { label: 'Redes',     color: 'from-rose-400 to-rose-600',     links: ['Twitter', 'LinkedIn'] },
+
+// Phase 0: empty → typing category name
+// Phase 1: "Noticias" card created, link "Globo.com" being typed/added
+// Phase 2: link added, card shows Globo.com + UOL
+// Phase 3+: other cards appear one by one
+const EXTRA_CARDS = [
+  {
+    label: 'Financas',
+    color: 'from-emerald-400 to-emerald-600',
+    links: ['Banco do Brasil', 'Itau', 'InfoMoney'],
+  },
+  {
+    label: 'Ferramentas',
+    color: 'from-sky-400 to-sky-600',
+    links: ['Google Drive', 'Gmail', 'Canva'],
+  },
+  {
+    label: 'Entretenimento',
+    color: 'from-rose-400 to-rose-600',
+    links: ['YouTube', 'Netflix', 'Spotify'],
+  },
 ];
 
 function DashboardAnim({ visible }: { visible: boolean }) {
-  const [shown, setShown] = useState(0);
+  // phase 0 = blank input; 1 = typing name; 2 = card created; 3 = typing link;
+  // 4 = link added; 5,6,7 = extra cards appearing
+  const [phase, setPhase] = useState(0);
+  const [typedName, setTypedName] = useState('');
+  const [typedLink, setTypedLink] = useState('');
+  const [extraShown, setExtraShown] = useState(0);
+
+  const CATEGORY_NAME = 'Noticias';
+  const LINK_NAME = 'Globo.com';
 
   useEffect(() => {
-    if (!visible) { setShown(0); return; }
+    if (!visible) {
+      setPhase(0); setTypedName(''); setTypedLink(''); setExtraShown(0);
+      return;
+    }
     const timers: ReturnType<typeof setTimeout>[] = [];
-    CARDS.forEach((_, i) => {
-      timers.push(setTimeout(() => setShown(i + 1), i * 1400));
+
+    // Start typing category name at 300ms
+    timers.push(setTimeout(() => setPhase(1), 300));
+
+    // Type each letter of "Noticias"
+    CATEGORY_NAME.split('').forEach((_, i) => {
+      timers.push(setTimeout(() => {
+        setTypedName(CATEGORY_NAME.slice(0, i + 1));
+      }, 400 + i * 120));
     });
+
+    // Card created
+    timers.push(setTimeout(() => setPhase(2), 400 + CATEGORY_NAME.length * 120 + 200));
+
+    // Start typing link name
+    timers.push(setTimeout(() => setPhase(3), 400 + CATEGORY_NAME.length * 120 + 600));
+    LINK_NAME.split('').forEach((_, i) => {
+      timers.push(setTimeout(() => {
+        setTypedLink(LINK_NAME.slice(0, i + 1));
+      }, 400 + CATEGORY_NAME.length * 120 + 700 + i * 100));
+    });
+
+    // Link added
+    const linkDoneAt = 400 + CATEGORY_NAME.length * 120 + 700 + LINK_NAME.length * 100 + 200;
+    timers.push(setTimeout(() => setPhase(4), linkDoneAt));
+
+    // Extra cards appear one by one
+    EXTRA_CARDS.forEach((_, i) => {
+      timers.push(setTimeout(() => setExtraShown(i + 1), linkDoneAt + 500 + i * 1200));
+    });
+
     return () => timers.forEach(clearTimeout);
   }, [visible]);
 
@@ -197,28 +256,92 @@ function DashboardAnim({ visible }: { visible: boolean }) {
       className="transition-all duration-700"
       style={{ opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(20px)' }}
     >
-      <div className="bg-slate-100 rounded-xl p-3 w-[260px]">
+      <div className="bg-slate-100 rounded-xl p-3 w-[270px]">
+        {/* Browser chrome */}
         <div className="flex items-center gap-2 mb-3">
           <div className="w-2 h-2 rounded-full bg-red-400" />
           <div className="w-2 h-2 rounded-full bg-yellow-400" />
           <div className="w-2 h-2 rounded-full bg-green-400" />
-          <span className="text-xs text-slate-400 ml-1 font-mono">dashboard</span>
+          <span className="text-xs text-slate-400 ml-1 font-mono">mylinks.app/dashboard</span>
         </div>
+
         <div className="flex flex-col gap-2">
-          {CARDS.map((card, i) => (
+          {/* Phase 1: typing the category name */}
+          {phase === 1 && (
+            <div className="flex items-center gap-2 bg-white border-2 border-purple-400 rounded-lg px-2 py-1.5 shadow-sm">
+              <span className="text-[10px] text-slate-400 font-medium">Nova categoria:</span>
+              <span className="text-xs text-purple-700 font-semibold">
+                {typedName}
+                <span className="animate-pulse">|</span>
+              </span>
+            </div>
+          )}
+
+          {/* Phase 2+: Noticias card */}
+          {phase >= 2 && (
+            <div className="transition-all duration-500 bg-white border border-slate-200 rounded-lg p-2 shadow-sm">
+              {/* Card header */}
+              <div className="flex items-center gap-1.5 mb-1.5 pb-1.5 border-b border-slate-100">
+                <div className="w-5 h-5 rounded bg-purple-100 flex items-center justify-center text-purple-600">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l6 6v8a2 2 0 01-2 2z"/>
+                    <polyline points="17 2 17 8 23 8"/>
+                    <line x1="9" y1="15" x2="15" y2="15"/>
+                  </svg>
+                </div>
+                <span className="text-xs font-semibold text-slate-700">Noticias</span>
+                <span className="ml-auto text-[10px] bg-purple-50 text-purple-500 rounded-full px-1.5 font-medium">
+                  {phase >= 4 ? '2' : '0'}
+                </span>
+              </div>
+
+              {/* Phase 3: typing link name */}
+              {phase === 3 && (
+                <div className="flex items-center gap-1.5 bg-purple-50 border border-purple-200 rounded px-1.5 py-1">
+                  <span className="text-[9px] text-slate-400">+ Link:</span>
+                  <span className="text-[10px] text-purple-700 font-medium">
+                    {typedLink}
+                    <span className="animate-pulse">|</span>
+                  </span>
+                </div>
+              )}
+
+              {/* Phase 4+: links added */}
+              {phase >= 4 && (
+                <div className="flex flex-col gap-1">
+                  {['Globo.com', 'UOL'].map((link, i) => (
+                    <div
+                      key={link}
+                      className="flex items-center gap-1.5 px-1 py-0.5 rounded hover:bg-purple-50 transition-all duration-300"
+                      style={{ opacity: phase >= 4 ? 1 : 0, transitionDelay: `${i * 120}ms` }}
+                    >
+                      <div className="w-3.5 h-3.5 rounded-sm bg-slate-200 flex-shrink-0 overflow-hidden">
+                        {/* favicon placeholder */}
+                        <div className="w-full h-full bg-gradient-to-br from-blue-300 to-blue-500" />
+                      </div>
+                      <span className="text-[10px] text-slate-600">{link}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Extra cards appearing */}
+          {EXTRA_CARDS.map((card, i) => (
             <div
               key={card.label}
               className="transition-all duration-500"
               style={{
-                opacity: shown > i ? 1 : 0,
-                transform: shown > i ? 'translateX(0)' : 'translateX(-16px)',
+                opacity: extraShown > i ? 1 : 0,
+                transform: extraShown > i ? 'translateX(0)' : 'translateX(-12px)',
               }}
             >
               <div className={`bg-gradient-to-r ${card.color} rounded-lg p-2`}>
                 <span className="text-white text-xs font-semibold">{card.label}</span>
                 <div className="flex gap-1 mt-1 flex-wrap">
                   {card.links.map((l) => (
-                    <span key={l} className="text-white/80 text-[10px] bg-white/20 rounded px-1.5 py-0.5">{l}</span>
+                    <span key={l} className="text-white/80 text-[9px] bg-white/20 rounded px-1.5 py-0.5">{l}</span>
                   ))}
                 </div>
               </div>
@@ -300,8 +423,8 @@ function DragAnim({ visible }: { visible: boolean }) {
     return () => [t1, t2, t3, t4, t5].forEach(clearTimeout);
   }, [visible]);
 
-  const items = ['Notion', 'Figma', 'Jira', 'Slack'];
-  const orderedItems = dropped ? ['Figma', 'Notion', 'Jira', 'Slack'] : items;
+  const items = ['Globo.com', 'UOL', 'G1', 'CNN Brasil'];
+  const orderedItems = dropped ? ['UOL', 'Globo.com', 'G1', 'CNN Brasil'] : items;
 
   return (
     <div
@@ -309,7 +432,7 @@ function DragAnim({ visible }: { visible: boolean }) {
       style={{ opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(20px)' }}
     >
       <div className="bg-white rounded-xl p-3 shadow-sm border border-slate-200 w-[220px]">
-        <p className="text-[10px] text-slate-400 mb-2 font-medium uppercase tracking-wide">Trabalho</p>
+        <p className="text-[10px] text-slate-400 mb-2 font-medium uppercase tracking-wide">Noticias</p>
         <div className="flex flex-col gap-1.5">
           {orderedItems.map((item, i) => (
             <div
