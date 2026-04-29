@@ -16,11 +16,11 @@ interface StepConfig {
 }
 
 const STEPS: StepConfig[] = [
-  { start: 0,  end: 8,  label: 'Apresentação' },
-  { start: 8,  end: 18, label: 'Dashboard'    },
-  { start: 18, end: 28, label: 'Página Pública' },
-  { start: 28, end: 35, label: 'Organização'  },
-  { start: 35, end: 40, label: 'Comece agora' },
+  { start: 0,  end: 8,  label: 'Apresentação'   },
+  { start: 8,  end: 18, label: 'Já organizado'  },
+  { start: 18, end: 28, label: 'Personalize'    },
+  { start: 28, end: 35, label: 'Organização'    },
+  { start: 35, end: 40, label: 'Comece agora'   },
 ];
 const TOTAL = 40;
 

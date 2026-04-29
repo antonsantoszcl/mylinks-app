@@ -183,7 +183,17 @@ export default function Home() {
       </section>
 
       {/* Demo Preview */}
+      <div className="text-center pt-2 px-4">
+        <p className="text-xs text-gray-400 max-w-md mx-auto">
+          ⚡ Os links abaixo são apenas exemplos — você adiciona e organiza os seus do jeito que quiser!
+        </p>
+      </div>
       <DemoPreview />
+      <div className="text-center pb-10 -mt-2 px-4">
+        <p className="text-sm text-gray-400 max-w-md mx-auto">
+          ✨ Estes links são apenas exemplos. Você escolhe e organiza os seus do jeito que preferir!
+        </p>
+      </div>
 
       {/* Features */}
       <section className="py-20 bg-slate-50">
