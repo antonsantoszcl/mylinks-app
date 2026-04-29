@@ -7,7 +7,6 @@ import { useAuth } from '@/context/AuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
 import { Link2, Grid3x3, Globe, Zap, ChevronRight, GripVertical } from 'lucide-react';
 import { DemoPreview } from '@/components/landing/DemoPreview';
-import DemoVideoButton from '@/components/landing/DemoVideo';
 
 function GoogleIcon() {
   return (
@@ -16,15 +15,6 @@ function GoogleIcon() {
       <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/>
       <path d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z" fill="#FBBC05"/>
       <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
-    </svg>
-  );
-}
-
-function FacebookIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M18 9a9 9 0 1 0-10.406 8.89v-6.29H5.31V9h2.284V7.018c0-2.255 1.343-3.502 3.4-3.502.984 0 2.014.176 2.014.176v2.215h-1.135c-1.118 0-1.467.694-1.467 1.406V9h2.496l-.399 2.6H10.406v6.29A9.002 9.002 0 0 0 18 9z" fill="#1877F2"/>
-      <path d="M12.503 11.6 12.902 9h-2.496V7.313c0-.712.349-1.406 1.467-1.406h1.135V3.692s-1.03-.176-2.014-.176c-2.057 0-3.4 1.247-3.4 3.502V9H5.31v2.6h2.284v6.29a9.064 9.064 0 0 0 2.812 0V11.6h2.097z" fill="white"/>
     </svg>
   );
 }
@@ -73,7 +63,7 @@ const steps = [
 export default function Home() {
   const { isAuthenticated, hydrated } = useAuth();
   const router = useRouter();
-  const [oauthLoading, setOauthLoading] = useState<'google' | 'facebook' | null>(null);
+  const [oauthLoading, setOauthLoading] = useState<'google' | null>(null);
 
   useEffect(() => {
     if (hydrated && isAuthenticated) {
@@ -81,7 +71,7 @@ export default function Home() {
     }
   }, [hydrated, isAuthenticated, router]);
 
-  const handleOAuth = async (provider: 'google' | 'facebook') => {
+  const handleOAuth = async (provider: 'google') => {
     setOauthLoading(provider);
     const supabase = getSupabaseClient();
     await supabase.auth.signInWithOAuth({
@@ -151,7 +141,6 @@ export default function Home() {
               Criar minha página grátis
               <ChevronRight className="w-4 h-4" />
             </Link>
-            <DemoVideoButton />
             <Link
               href="/login"
               className="inline-flex items-center gap-2 text-slate-600 font-medium px-5 py-3 rounded-xl hover:bg-slate-100 transition-colors"
@@ -168,15 +157,6 @@ export default function Home() {
             >
               <GoogleIcon />
               {oauthLoading === 'google' ? 'Redirecionando...' : 'Entrar com Google'}
-            </button>
-            <button
-              type="button"
-              onClick={() => handleOAuth('facebook')}
-              disabled={!!oauthLoading}
-              className="inline-flex items-center gap-2 border border-slate-200 bg-white text-slate-600 font-medium px-4 py-2 rounded-lg text-sm hover:bg-slate-50 transition-colors disabled:opacity-60 shadow-sm"
-            >
-              <FacebookIcon />
-              {oauthLoading === 'facebook' ? 'Redirecionando...' : 'Entrar com Facebook'}
             </button>
           </div>
         </div>

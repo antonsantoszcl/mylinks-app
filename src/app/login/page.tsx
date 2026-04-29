@@ -18,15 +18,6 @@ function GoogleIcon() {
   );
 }
 
-function FacebookIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M18 9a9 9 0 1 0-10.406 8.89v-6.29H5.31V9h2.284V7.018c0-2.255 1.343-3.502 3.4-3.502.984 0 2.014.176 2.014.176v2.215h-1.135c-1.118 0-1.467.694-1.467 1.406V9h2.496l-.399 2.6H10.406v6.29A9.002 9.002 0 0 0 18 9z" fill="#1877F2"/>
-      <path d="M12.503 11.6 12.902 9h-2.496V7.313c0-.712.349-1.406 1.467-1.406h1.135V3.692s-1.03-.176-2.014-.176c-2.057 0-3.4 1.247-3.4 3.502V9H5.31v2.6h2.284v6.29a9.064 9.064 0 0 0 2.812 0V11.6h2.097z" fill="white"/>
-    </svg>
-  );
-}
-
 export default function LoginPage() {
   const { login } = useAuth();
   const router = useRouter();
@@ -34,7 +25,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [oauthLoading, setOauthLoading] = useState<'google' | 'facebook' | null>(null);
+  const [oauthLoading, setOauthLoading] = useState<'google' | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,7 +44,7 @@ export default function LoginPage() {
     }
   };
 
-  const handleOAuth = async (provider: 'google' | 'facebook') => {
+  const handleOAuth = async (provider: 'google') => {
     setError('');
     setOauthLoading(provider);
     const supabase = getSupabaseClient();
@@ -64,11 +55,7 @@ export default function LoginPage() {
       },
     });
     if (oauthError) {
-      setError(
-        provider === 'facebook'
-          ? 'Erro ao entrar com o Facebook. Verifique se o aplicativo está configurado corretamente e tente novamente.'
-          : 'Erro ao entrar com o Google. Tente novamente.'
-      );
+      setError('Erro ao entrar com o Google. Tente novamente.');
       setOauthLoading(null);
     }
   };
@@ -99,15 +86,6 @@ export default function LoginPage() {
             >
               <GoogleIcon />
               {oauthLoading === 'google' ? 'Redirecionando...' : 'Entrar com Google'}
-            </button>
-            <button
-              type="button"
-              onClick={() => handleOAuth('facebook')}
-              disabled={!!oauthLoading || loading}
-              className="w-full flex items-center justify-center gap-2.5 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors disabled:opacity-60"
-            >
-              <FacebookIcon />
-              {oauthLoading === 'facebook' ? 'Redirecionando...' : 'Entrar com Facebook'}
             </button>
           </div>
 
