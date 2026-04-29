@@ -259,7 +259,7 @@ function DashboardAnim({ visible }: { visible: boolean }) {
           style={{ opacity: shown >= PREPOP_CARDS.length ? 1 : 0 }}
         >
           <p className="text-center text-[9px] text-purple-500 font-medium bg-purple-50 rounded-full py-0.5">
-            Pronto para usar!
+            Exemplos prontos para começar!
           </p>
         </div>
       </div>
@@ -571,7 +571,7 @@ function DemoContent({ onClose }: { onClose: () => void }) {
 
   const stepTexts = [
     'Oi! Eu sou o Link,\nseu assistente do MyLinks!',
-    'Seu dashboard já vem com categorias\ne links populares pra você começar!',
+    'Os links já vem como exemplo,\nmas você monta do jeito que quiser!',
     'Mas é tudo seu! Pode tirar, trocar,\nadicionar o que quiser. Super fácil!',
     'Arraste, organize, personalize.\nTudo do seu jeito!',
     'Comece agora, é grátis!',
