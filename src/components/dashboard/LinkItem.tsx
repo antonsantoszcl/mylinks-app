@@ -11,22 +11,12 @@ interface LinkItemProps {
   dragHandleAttributes?: DraggableAttributes;
 }
 
-function getHostname(url: string) {
-  try {
-    return new URL(url).hostname.replace(/^www\./, '');
-  } catch {
-    return url.replace(/^https?:\/\/(www\.)?/, '').split('/')[0] || '';
-  }
-}
-
 export function LinkItem({ link, onDelete, dragHandleListeners, dragHandleAttributes }: LinkItemProps) {
   const deleteLink = () => {
     if (window.confirm(`Remover o link "${link.title}"?`)) {
       onDelete(link.id);
     }
   };
-
-  const domain = getHostname(link.url);
 
   return (
     <div className="group/link flex items-center justify-between py-1 px-1.5 rounded-lg hover:bg-white/70 transition-all cursor-pointer">
@@ -36,16 +26,9 @@ export function LinkItem({ link, onDelete, dragHandleListeners, dragHandleAttrib
           alt={link.title}
           className="w-5 h-5 object-contain flex-shrink-0 rounded-sm"
         />
-        <div className="min-w-0 flex-1">
-          <span className="text-sm text-slate-700 truncate block group-hover/link:text-primary-600 transition-colors leading-tight">
-            {link.title}
-          </span>
-          {domain && (
-            <span className="text-xs text-gray-400 truncate block leading-tight">
-              {domain}
-            </span>
-          )}
-        </div>
+        <span className="text-sm text-slate-700 truncate flex-1 group-hover/link:text-primary-600 transition-colors">
+          {link.title}
+        </span>
       </Link>
 
       {dragHandleListeners && dragHandleAttributes && (
