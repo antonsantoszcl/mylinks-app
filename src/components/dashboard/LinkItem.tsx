@@ -11,6 +11,14 @@ interface LinkItemProps {
   dragHandleAttributes?: DraggableAttributes;
 }
 
+function getHostname(url: string) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    return url.replace(/^https?:\/\/(www\.)?/, '').split('/')[0] || '';
+  }
+}
+
 export function LinkItem({ link, onDelete, dragHandleListeners, dragHandleAttributes }: LinkItemProps) {
   const deleteLink = () => {
     if (window.confirm(`Remover o link "${link.title}"?`)) {
@@ -18,17 +26,26 @@ export function LinkItem({ link, onDelete, dragHandleListeners, dragHandleAttrib
     }
   };
 
+  const domain = getHostname(link.url);
+
   return (
-    <div className="group/link flex items-center justify-between py-0.5 px-1 rounded hover:bg-slate-50 transition-all cursor-pointer">
-      <Link href={link.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 flex-1 min-w-0">
+    <div className="group/link flex items-center justify-between py-1 px-1.5 rounded-lg hover:bg-white/70 transition-all cursor-pointer">
+      <Link href={link.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 flex-1 min-w-0">
         <img
           src={link.iconUrl}
           alt={link.title}
-          className="w-3.5 h-3.5 object-contain flex-shrink-0 opacity-80"
+          className="w-5 h-5 object-contain flex-shrink-0 rounded-sm"
         />
-        <span className="text-xs text-slate-600 truncate group-hover/link:text-primary-600 transition-colors leading-4">
-          {link.title}
-        </span>
+        <div className="min-w-0 flex-1">
+          <span className="text-sm text-slate-700 truncate block group-hover/link:text-primary-600 transition-colors leading-tight">
+            {link.title}
+          </span>
+          {domain && (
+            <span className="text-xs text-gray-400 truncate block leading-tight">
+              {domain}
+            </span>
+          )}
+        </div>
       </Link>
 
       {dragHandleListeners && dragHandleAttributes && (

@@ -7,6 +7,7 @@ import { CategoryCard } from './CategoryCard';
 
 interface SortableCategoryCardProps {
   category: Category;
+  colorIndex: number;
   links: LinkType[];
   onRenameCategory: (categoryId: string, title: string) => void;
   onAddLink: (categoryId: string, title: string, url: string) => void;
@@ -17,6 +18,7 @@ interface SortableCategoryCardProps {
 
 export function SortableCategoryCard({
   category,
+  colorIndex,
   links,
   onRenameCategory,
   onAddLink,
@@ -44,6 +46,7 @@ export function SortableCategoryCard({
     <div ref={setNodeRef} style={style} className="relative group/category">
       <CategoryCard
         category={category}
+        colorIndex={colorIndex}
         links={links}
         onRenameCategory={onRenameCategory}
         onAddLink={onAddLink}

@@ -83,11 +83,12 @@ export function CategoryGrid({
         onDragEnd={handleCategoryDragEnd}
       >
         <SortableContext items={categories.map((c) => c.id)} strategy={rectSortingStrategy}>
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
-            {categories.map((category) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+            {categories.map((category, index) => (
               <SortableCategoryCard
                 key={category.id}
                 category={category}
+                colorIndex={index}
                 links={links.filter((link) => link.categoryId === category.id).sort((a, b) => a.order - b.order)}
                 onRenameCategory={onRenameCategory}
                 onAddLink={onAddLink}

@@ -21,8 +21,28 @@ import {
 } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis, restrictToParentElement } from '@dnd-kit/modifiers';
 
+// Pastel color accents cycling through 6 options
+const COLOR_ACCENTS = [
+  'border-amber-300 bg-amber-50',
+  'border-emerald-300 bg-emerald-50',
+  'border-orange-300 bg-orange-50',
+  'border-sky-300 bg-sky-50',
+  'border-rose-300 bg-rose-50',
+  'border-violet-300 bg-violet-50',
+];
+
+const ICON_COLORS = [
+  'bg-amber-100 text-amber-600',
+  'bg-emerald-100 text-emerald-600',
+  'bg-orange-100 text-orange-600',
+  'bg-sky-100 text-sky-600',
+  'bg-rose-100 text-rose-600',
+  'bg-violet-100 text-violet-600',
+];
+
 interface CategoryCardProps {
   category: Category;
+  colorIndex: number;
   links: LinkType[];
   onRenameCategory: (categoryId: string, title: string) => void;
   onAddLink: (categoryId: string, title: string, url: string) => void;
@@ -35,6 +55,7 @@ interface CategoryCardProps {
 
 export function CategoryCard({
   category,
+  colorIndex,
   links,
   onRenameCategory,
   onAddLink,
@@ -54,6 +75,10 @@ export function CategoryCard({
   const [linkTitle, setLinkTitle] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
   const titleInputRef = useRef<HTMLInputElement>(null);
+
+  const accentIdx = colorIndex % COLOR_ACCENTS.length;
+  const accentClasses = COLOR_ACCENTS[accentIdx];
+  const iconColorClass = ICON_COLORS[accentIdx];
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -108,10 +133,10 @@ export function CategoryCard({
   };
 
   return (
-    <article className="bg-white rounded-xl shadow-sm border border-slate-200 p-2 flex flex-col hover:shadow-md transition-shadow group/card">
-      <header className="flex items-center justify-between mb-1.5 pb-1.5 border-b border-slate-100">
-        <div className="flex items-center gap-1.5 min-w-0">
-          <div className="p-1 rounded-lg bg-primary-100/50 text-primary-600 group-hover/card:bg-primary-100 transition-all flex-shrink-0">
+    <article className={`rounded-xl shadow-sm border-l-4 border border-slate-100 p-3 flex flex-col hover:shadow-md transition-shadow group/card ${accentClasses}`}>
+      <header className="flex items-center justify-between mb-2 pb-2 border-b border-slate-100/80">
+        <div className="flex items-center gap-2 min-w-0">
+          <div className={`p-1.5 rounded-lg transition-all flex-shrink-0 ${iconColorClass}`}>
             <IconComponent className="w-3.5 h-3.5" />
           </div>
           {isEditingTitle ? (
@@ -124,7 +149,7 @@ export function CategoryCard({
                 if (e.key === 'Enter') saveTitle();
                 if (e.key === 'Escape') cancelTitleEdit();
               }}
-              className="text-xs font-semibold text-slate-800 border border-primary-200 rounded px-1.5 py-0.5 outline-none focus:ring-1 focus:ring-primary-300 w-full"
+              className="text-xs font-semibold text-slate-800 border border-primary-200 rounded px-1.5 py-0.5 outline-none focus:ring-1 focus:ring-primary-300 w-full bg-white"
             />
           ) : (
             <h3
@@ -134,13 +159,13 @@ export function CategoryCard({
               {category.title}
             </h3>
           )}
-          <span className="bg-slate-100 text-slate-400 text-xs font-medium px-1.5 py-0 rounded-full flex-shrink-0 leading-4">
+          <span className="bg-white/70 text-slate-400 text-xs font-medium px-1.5 py-0 rounded-full flex-shrink-0 leading-4">
             {links.length}
           </span>
         </div>
         <div className="flex items-center gap-0.5 flex-shrink-0">
           <button
-            className="p-1 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded transition-colors"
+            className="p-1 text-slate-400 hover:text-primary-600 hover:bg-white/60 rounded transition-colors"
             aria-label="Add new link to category"
             onClick={() => setShowAddLink(true)}
           >
@@ -168,18 +193,18 @@ export function CategoryCard({
 
       <div className="flex-1 overflow-y-auto custom-scrollbar">
         {showAddLink && (
-          <form onSubmit={submitNewLink} className="mb-2 p-2 rounded-lg border border-slate-200 bg-slate-50 space-y-1.5">
+          <form onSubmit={submitNewLink} className="mb-2 p-2 rounded-lg border border-slate-200 bg-white/80 space-y-1.5">
             <input
               value={linkTitle}
               onChange={(e) => setLinkTitle(e.target.value)}
               placeholder="Titulo do link"
-              className="w-full rounded border border-slate-200 px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-primary-300"
+              className="w-full rounded border border-slate-200 px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-primary-300 bg-white"
             />
             <input
               value={linkUrl}
               onChange={(e) => setLinkUrl(e.target.value)}
               placeholder="https://exemplo.com"
-              className="w-full rounded border border-slate-200 px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-primary-300"
+              className="w-full rounded border border-slate-200 px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-primary-300 bg-white"
             />
             <div className="flex justify-end gap-1.5">
               <button
@@ -212,7 +237,7 @@ export function CategoryCard({
             </SortableContext>
           </DndContext>
         ) : (
-          <div className="flex flex-col items-center justify-center h-14 text-slate-400 gap-1">
+          <div className="flex flex-col items-center justify-center h-16 text-slate-400 gap-1">
             <Icons.Inbox className="w-5 h-5 opacity-20" />
             <p className="text-xs">Nenhum link</p>
           </div>
