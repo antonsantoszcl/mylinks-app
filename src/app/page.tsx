@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
 import { Link2, Grid3x3, Globe, Zap, ChevronRight, GripVertical } from 'lucide-react';
+import { DemoPreview } from '@/components/landing/DemoPreview';
+import DemoVideoButton from '@/components/landing/DemoVideo';
 
 function GoogleIcon() {
   return (
@@ -149,6 +151,7 @@ export default function Home() {
               Criar minha página grátis
               <ChevronRight className="w-4 h-4" />
             </Link>
+            <DemoVideoButton />
             <Link
               href="/login"
               className="inline-flex items-center gap-2 text-slate-600 font-medium px-5 py-3 rounded-xl hover:bg-slate-100 transition-colors"
@@ -178,6 +181,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Demo Preview */}
+      <DemoPreview />
 
       {/* Features */}
       <section className="py-20 bg-slate-50">
