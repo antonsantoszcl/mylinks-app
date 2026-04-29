@@ -27,8 +27,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Dashboard } from '@/lib/types';
 
 const secondaryItems = [
-  { icon: Settings, label: 'Configuracoes', href: '/dashboard/settings' },
-  { icon: CreditCard, label: 'Assinatura', href: '/assinatura' },
+  { icon: Settings, label: 'Configuracoes', href: '/dashboard/settings', inactive: false },
+  { icon: CreditCard, label: 'Assinatura', href: '/assinatura', inactive: true },
 ];
 
 const SIDEBAR_KEY = 'mylinks.sidebar.collapsed';
@@ -174,11 +174,11 @@ export function Sidebar() {
   const publicHref = profile.username ? `/${profile.username}` : '/me';
 
   const otherNavItems = [
-    { icon: Globe, label: 'Publico', href: publicHref },
-    { icon: Star, label: 'Favoritos', href: '/favoritos' },
-    { icon: Clock, label: 'Recentes', href: '/recentes' },
-    { icon: Tags, label: 'Tags', href: '/tags' },
-    { icon: FileText, label: 'Templates', href: '/templates' },
+    { icon: Globe, label: 'Publico', href: publicHref, inactive: false },
+    { icon: Star, label: 'Favoritos', href: '/favoritos', inactive: true },
+    { icon: Clock, label: 'Recentes', href: '/recentes', inactive: true },
+    { icon: Tags, label: 'Tags', href: '/tags', inactive: true },
+    { icon: FileText, label: 'Templates', href: '/templates', inactive: true },
   ];
 
   useEffect(() => {
@@ -355,7 +355,11 @@ export function Sidebar() {
             key={item.href}
             href={item.href}
             title={collapsed ? item.label : undefined}
-            className={`flex items-center ${collapsed ? 'justify-center px-0' : 'gap-2.5 px-2'} py-2 text-slate-600 rounded-lg hover:bg-slate-50 hover:text-primary-600 transition-colors`}
+            className={`flex items-center ${collapsed ? 'justify-center px-0' : 'gap-2.5 px-2'} py-2 rounded-lg transition-colors ${
+              item.inactive
+                ? 'text-gray-300 cursor-default pointer-events-none'
+                : 'text-slate-600 hover:bg-slate-50 hover:text-primary-600'
+            }`}
           >
             <item.icon className="w-4 h-4 flex-shrink-0" />
             {!collapsed && <span className="text-sm font-medium truncate">{item.label}</span>}
@@ -369,7 +373,11 @@ export function Sidebar() {
             key={item.href}
             href={item.href}
             title={collapsed ? item.label : undefined}
-            className={`flex items-center ${collapsed ? 'justify-center px-0' : 'gap-2.5 px-2'} py-2 text-slate-600 rounded-lg hover:bg-slate-50 hover:text-primary-600 transition-colors`}
+            className={`flex items-center ${collapsed ? 'justify-center px-0' : 'gap-2.5 px-2'} py-2 rounded-lg transition-colors ${
+              item.inactive
+                ? 'text-gray-300 cursor-default pointer-events-none'
+                : 'text-slate-600 hover:bg-slate-50 hover:text-primary-600'
+            }`}
           >
             <item.icon className="w-4 h-4 flex-shrink-0" />
             {!collapsed && <span className="text-sm font-medium truncate">{item.label}</span>}
