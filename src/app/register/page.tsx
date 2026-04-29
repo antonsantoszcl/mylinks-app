@@ -1,0 +1,215 @@
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
+import { getSupabaseClient } from '@/lib/supabase';
+import { Link2, CheckCircle } from 'lucide-react';
+
+function GoogleIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+      <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/>
+      <path d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z" fill="#FBBC05"/>
+      <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+    </svg>
+  );
+}
+
+function FacebookIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M18 9a9 9 0 1 0-10.406 8.89v-6.29H5.31V9h2.284V7.018c0-2.255 1.343-3.502 3.4-3.502.984 0 2.014.176 2.014.176v2.215h-1.135c-1.118 0-1.467.694-1.467 1.406V9h2.496l-.399 2.6H10.406v6.29A9.002 9.002 0 0 0 18 9z" fill="#1877F2"/>
+      <path d="M12.503 11.6 12.902 9h-2.496V7.313c0-.712.349-1.406 1.467-1.406h1.135V3.692s-1.03-.176-2.014-.176c-2.057 0-3.4 1.247-3.4 3.502V9H5.31v2.6h2.284v6.29a9.064 9.064 0 0 0 2.812 0V11.6h2.097z" fill="white"/>
+    </svg>
+  );
+}
+
+export default function RegisterPage() {
+  const { register } = useAuth();
+  const router = useRouter();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [oauthLoading, setOauthLoading] = useState<'google' | 'facebook' | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setMessage('');
+    if (!name || !email || !password || !confirmPassword) {
+      setError('Preencha todos os campos.');
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError('As senhas não coincidem.');
+      return;
+    }
+    if (password.length < 6) {
+      setError('A senha deve ter pelo menos 6 caracteres.');
+      return;
+    }
+    setLoading(true);
+    const result = await register(name, email, password);
+    if (result.error) {
+      setError(result.error);
+      setLoading(false);
+    } else if (result.needsConfirmation) {
+      setMessage('Verifique seu email para confirmar o cadastro antes de entrar.');
+      setLoading(false);
+    } else {
+      router.push('/dashboard');
+    }
+  };
+
+  const handleOAuth = async (provider: 'google' | 'facebook') => {
+    setOauthLoading(provider);
+    const supabase = getSupabaseClient();
+    await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`,
+      },
+    });
+    setOauthLoading(null);
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-sm">
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <Link href="/" className="inline-block">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center mx-auto mb-3">
+              <Link2 className="w-6 h-6 text-white" />
+            </div>
+            <h1 className="text-xl font-bold text-slate-900">MyLinks</h1>
+          </Link>
+          <p className="text-sm text-slate-500 mt-1">Crie sua conta grátis</p>
+        </div>
+
+        {/* Card */}
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+          {message ? (
+            <div className="flex flex-col items-center gap-3 py-4 text-center">
+              <CheckCircle className="w-10 h-10 text-emerald-500" />
+              <p className="text-sm font-semibold text-slate-800">Cadastro realizado!</p>
+              <p className="text-xs text-slate-500">{message}</p>
+              <Link
+                href="/login"
+                className="mt-2 text-sm text-primary-600 font-medium hover:text-primary-700 transition-colors"
+              >
+                Ir para o login
+              </Link>
+            </div>
+          ) : (
+            <>
+              {/* Social login buttons */}
+              <div className="space-y-2.5 mb-5">
+                <button
+                  type="button"
+                  onClick={() => handleOAuth('google')}
+                  disabled={!!oauthLoading || loading}
+                  className="w-full flex items-center justify-center gap-2.5 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors disabled:opacity-60"
+                >
+                  <GoogleIcon />
+                  {oauthLoading === 'google' ? 'Redirecionando...' : 'Cadastrar com Google'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleOAuth('facebook')}
+                  disabled={!!oauthLoading || loading}
+                  className="w-full flex items-center justify-center gap-2.5 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors disabled:opacity-60"
+                >
+                  <FacebookIcon />
+                  {oauthLoading === 'facebook' ? 'Redirecionando...' : 'Cadastrar com Facebook'}
+                </button>
+              </div>
+
+              {/* Divider */}
+              <div className="flex items-center gap-3 mb-5">
+                <div className="flex-1 h-px bg-slate-100" />
+                <span className="text-xs text-slate-400 font-medium">ou</span>
+                <div className="flex-1 h-px bg-slate-100" />
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {error && (
+                  <div className="bg-red-50 text-red-600 text-xs p-3 rounded-lg border border-red-100">
+                    {error}
+                  </div>
+                )}
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1.5">Nome</label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Seu nome"
+                    autoComplete="name"
+                    className="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1.5">Email</label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="seu@email.com"
+                    autoComplete="email"
+                    className="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1.5">Senha</label>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    autoComplete="new-password"
+                    className="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-700 mb-1.5">Confirmar senha</label>
+                  <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="••••••••"
+                    autoComplete="new-password"
+                    className="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={loading || !!oauthLoading}
+                  className="w-full bg-primary-600 text-white font-semibold py-2.5 rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-60 text-sm mt-1"
+                >
+                  {loading ? 'Criando conta...' : 'Criar conta'}
+                </button>
+              </form>
+            </>
+          )}
+        </div>
+
+        {!message && (
+          <p className="text-center text-xs text-slate-500 mt-4">
+            Já tem conta?{' '}
+            <Link href="/login" className="text-primary-600 font-medium hover:text-primary-700 transition-colors">
+              Entre aqui
+            </Link>
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
