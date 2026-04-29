@@ -27,7 +27,7 @@ const TOTAL = 40;
 /* ──────────────────────────────────────────────────────────────
    Character SVG
 ────────────────────────────────────────────────────────────── */
-function Character({ waving, pointing, thumbsUp }: { waving?: boolean; pointing?: boolean; thumbsUp?: boolean }) {
+function Character({ waving, pointing, thumbsUp, excited }: { waving?: boolean; pointing?: boolean; thumbsUp?: boolean; excited?: boolean }) {
   const armClass = waving
     ? 'animate-wave-arm'
     : pointing
@@ -52,9 +52,24 @@ function Character({ waving, pointing, thumbsUp }: { waving?: boolean; pointing?
           0%,100% { transform: rotate(-20deg) translateY(0px); }
           50% { transform: rotate(-20deg) translateY(-4px); }
         }
+        @keyframes excited-left {
+          0%,100% { transform: rotate(20deg) translateY(0px); }
+          30% { transform: rotate(50deg) translateY(-6px); }
+          60% { transform: rotate(10deg) translateY(-2px); }
+        }
+        @keyframes excited-right {
+          0%,100% { transform: rotate(-20deg) translateY(0px); }
+          30% { transform: rotate(-50deg) translateY(-6px); }
+          60% { transform: rotate(-10deg) translateY(-2px); }
+        }
         @keyframes bob {
           0%,100% { transform: translateY(0px); }
           50% { transform: translateY(-5px); }
+        }
+        @keyframes excited-bob {
+          0%,100% { transform: translateY(0px) scale(1); }
+          25% { transform: translateY(-8px) scale(1.05); }
+          75% { transform: translateY(-3px) scale(1.02); }
         }
         @keyframes blink {
           0%,90%,100% { transform: scaleY(1); }
@@ -67,13 +82,16 @@ function Character({ waving, pointing, thumbsUp }: { waving?: boolean; pointing?
         .animate-wave-arm { animation: wave-arm 0.7s ease-in-out infinite; transform-origin: top center; }
         .animate-point-arm { animation: point-arm 0.9s ease-in-out infinite; transform-origin: top center; }
         .animate-thumbs-up { animation: thumbs-up-arm 0.8s ease-in-out infinite; transform-origin: bottom center; }
+        .animate-excited-left { animation: excited-left 0.6s ease-in-out infinite; transform-origin: top center; }
+        .animate-excited-right { animation: excited-right 0.6s ease-in-out infinite; transform-origin: top center; }
         .char-bob { animation: bob 2s ease-in-out infinite; }
+        .char-excited-bob { animation: excited-bob 0.7s ease-in-out infinite; }
         .char-eye { animation: blink 3s ease-in-out infinite; transform-origin: center; }
         .pulse-ring { animation: pulse-ring 1.5s ease-out infinite; }
       `}</style>
 
       {/* Body wrapper with bob */}
-      <div className="char-bob">
+      <div className={excited ? 'char-excited-bob' : 'char-bob'}>
         {/* Head */}
         <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
           {/* Glow behind head */}
@@ -112,7 +130,7 @@ function Character({ waving, pointing, thumbsUp }: { waving?: boolean; pointing?
           {/* Left arm */}
           <div
             className={`w-4 h-12 rounded-full bg-gradient-to-b from-purple-300 to-purple-500 mt-2 -mr-1 ${
-              waving ? 'animate-wave-arm' : ''
+              excited ? 'animate-excited-left' : waving ? 'animate-wave-arm' : ''
             }`}
           />
           {/* Torso */}
@@ -122,7 +140,7 @@ function Character({ waving, pointing, thumbsUp }: { waving?: boolean; pointing?
           {/* Right arm */}
           <div
             className={`w-4 h-12 rounded-full bg-gradient-to-b from-purple-300 to-purple-500 mt-2 -ml-1 ${
-              pointing ? 'animate-point-arm' : thumbsUp ? 'animate-thumbs-up' : ''
+              excited ? 'animate-excited-right' : pointing ? 'animate-point-arm' : thumbsUp ? 'animate-thumbs-up' : ''
             }`}
           />
         </div>
@@ -140,7 +158,44 @@ function Character({ waving, pointing, thumbsUp }: { waving?: boolean; pointing?
 /* ──────────────────────────────────────────────────────────────
    Speech Bubble
 ────────────────────────────────────────────────────────────── */
-function SpeechBubble({ text, visible }: { text: string; visible: boolean }) {
+function SpeechBubble({ text, visible, emphasis }: { text: string; visible: boolean; emphasis?: boolean }) {
+  if (emphasis) {
+    // Split on "!" to highlight the exclamation-heavy first sentence
+    const lines = text.split('\n');
+    return (
+      <div
+        className="transition-all duration-500"
+        style={{
+          opacity: visible ? 1 : 0,
+          transform: visible ? 'translateY(0) scale(1)' : 'translateY(8px) scale(0.95)',
+        }}
+      >
+        <div className="relative bg-gradient-to-br from-purple-600 to-purple-800 border-2 border-purple-400 rounded-2xl px-5 py-4 shadow-xl max-w-[280px]">
+          {/* Emphasis glow ring */}
+          <div className="absolute -inset-1 rounded-2xl bg-purple-400/30 blur-sm -z-10" />
+          {/* First line — large and bold */}
+          <p className="text-base text-white font-bold leading-tight text-center mb-2">
+            {lines[0]}
+          </p>
+          {/* Remaining lines — smaller but still prominent */}
+          {lines.slice(1).map((line, i) => (
+            <p key={i} className="text-xs text-purple-100 font-medium leading-snug text-center">
+              {line}
+            </p>
+          ))}
+          {/* Tail */}
+          <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-0 h-0"
+            style={{
+              borderLeft: '8px solid transparent',
+              borderRight: '8px solid transparent',
+              borderTop: '12px solid #7e22ce',
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className="transition-all duration-500"
@@ -571,7 +626,7 @@ function DemoContent({ onClose }: { onClose: () => void }) {
 
   const stepTexts = [
     'Oi! Eu sou o Link,\nseu assistente do MyLinks!',
-    'Os links já vem como exemplo,\nmas você monta do jeito que quiser!',
+    'Esses links são apenas exemplos!\nVocê exclui o que não quiser e adiciona\nos seus. Cada um monta do seu jeito!',
     'Mas é tudo seu! Pode tirar, trocar,\nadicionar o que quiser. Super fácil!',
     'Arraste, organize, personalize.\nTudo do seu jeito!',
     'Comece agora, é grátis!',
@@ -605,13 +660,14 @@ function DemoContent({ onClose }: { onClose: () => void }) {
       {/* Stage */}
       <div className="px-6 py-5 min-h-[300px] flex flex-col items-center justify-center gap-4 relative bg-gradient-to-b from-purple-50/40 to-white">
         {/* Speech bubble */}
-        <SpeechBubble text={stepTexts[currentStep]} visible={true} />
+        <SpeechBubble text={stepTexts[currentStep]} visible={true} emphasis={currentStep === 1} />
 
         {/* Character */}
         <div className="my-1">
           <Character
             waving={currentStep === 0 || currentStep === 4}
-            pointing={currentStep === 1 || currentStep === 2}
+            excited={currentStep === 1}
+            pointing={currentStep === 2}
             thumbsUp={currentStep === 3}
           />
         </div>
