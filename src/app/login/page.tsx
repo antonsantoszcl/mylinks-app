@@ -54,15 +54,23 @@ export default function LoginPage() {
   };
 
   const handleOAuth = async (provider: 'google' | 'facebook') => {
+    setError('');
     setOauthLoading(provider);
     const supabase = getSupabaseClient();
-    await supabase.auth.signInWithOAuth({
+    const { error: oauthError } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
         redirectTo: `${window.location.origin}/dashboard`,
       },
     });
-    setOauthLoading(null);
+    if (oauthError) {
+      setError(
+        provider === 'facebook'
+          ? 'Erro ao entrar com o Facebook. Verifique se o aplicativo está configurado corretamente e tente novamente.'
+          : 'Erro ao entrar com o Google. Tente novamente.'
+      );
+      setOauthLoading(null);
+    }
   };
 
   return (

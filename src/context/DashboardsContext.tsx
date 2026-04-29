@@ -4,6 +4,80 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { getSupabaseClient } from '@/lib/supabase';
 import { Dashboard } from '@/lib/types';
 
+// ── Default seed data for new users ────────────────────────────────────────
+function faviconUrl(domain: string) {
+  return `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
+}
+
+const DEFAULT_CATEGORIES: Array<{
+  title: string;
+  iconName: string;
+  links: Array<{ title: string; url: string; domain: string }>;
+}> = [
+  {
+    title: 'Notícias',
+    iconName: 'newspaper',
+    links: [
+      { title: 'Globo.com', url: 'https://globo.com', domain: 'globo.com' },
+      { title: 'UOL', url: 'https://uol.com.br', domain: 'uol.com.br' },
+      { title: 'G1', url: 'https://g1.globo.com', domain: 'g1.globo.com' },
+      { title: 'CNN Brasil', url: 'https://cnnbrasil.com.br', domain: 'cnnbrasil.com.br' },
+    ],
+  },
+  {
+    title: 'Finanças',
+    iconName: 'banknote',
+    links: [
+      { title: 'Banco do Brasil', url: 'https://bb.com.br', domain: 'bb.com.br' },
+      { title: 'Itaú', url: 'https://itau.com.br', domain: 'itau.com.br' },
+      { title: 'InfoMoney', url: 'https://infomoney.com.br', domain: 'infomoney.com.br' },
+      { title: 'Yahoo Finance', url: 'https://finance.yahoo.com', domain: 'finance.yahoo.com' },
+    ],
+  },
+  {
+    title: 'Ferramentas',
+    iconName: 'wrench',
+    links: [
+      { title: 'Google Drive', url: 'https://drive.google.com', domain: 'drive.google.com' },
+      { title: 'Gmail', url: 'https://gmail.com', domain: 'gmail.com' },
+      { title: 'Canva', url: 'https://canva.com', domain: 'canva.com' },
+      { title: 'ChatGPT', url: 'https://chat.openai.com', domain: 'chat.openai.com' },
+    ],
+  },
+  {
+    title: 'Utilidades',
+    iconName: 'star',
+    links: [
+      { title: 'Google Tradutor', url: 'https://translate.google.com', domain: 'translate.google.com' },
+      { title: 'Calculadora', url: 'https://google.com/search?q=calculadora', domain: 'google.com' },
+      { title: 'Buscapé', url: 'https://buscape.com.br', domain: 'buscape.com.br' },
+      { title: 'Wikipedia', url: 'https://pt.wikipedia.org', domain: 'pt.wikipedia.org' },
+    ],
+  },
+  {
+    title: 'Entretenimento',
+    iconName: 'tv',
+    links: [
+      { title: 'YouTube', url: 'https://youtube.com', domain: 'youtube.com' },
+      { title: 'Netflix', url: 'https://netflix.com', domain: 'netflix.com' },
+      { title: 'Spotify', url: 'https://spotify.com', domain: 'spotify.com' },
+      { title: 'Prime Video', url: 'https://primevideo.com', domain: 'primevideo.com' },
+      { title: 'History Channel', url: 'https://historychannel.com.br', domain: 'historychannel.com.br' },
+      { title: 'History Channel YouTube', url: 'https://youtube.com/c/historychannel', domain: 'youtube.com' },
+    ],
+  },
+  {
+    title: 'Dia a Dia',
+    iconName: 'calendar',
+    links: [
+      { title: 'Clima Tempo', url: 'https://climatempo.com.br', domain: 'climatempo.com.br' },
+      { title: 'GE Esportes', url: 'https://ge.globo.com', domain: 'ge.globo.com' },
+      { title: 'iFood', url: 'https://ifood.com.br', domain: 'ifood.com.br' },
+      { title: 'Google Maps', url: 'https://maps.google.com', domain: 'maps.google.com' },
+    ],
+  },
+];
+
 type DashboardsContextType = {
   dashboards: Dashboard[];
   isLoading: boolean;
@@ -79,6 +153,19 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
       }
     }
 
+    // Seed example data if the default dashboard has no categories yet
+    const defaultDash = list.find((d) => d.isDefault) ?? list[0];
+    if (defaultDash) {
+      const { count } = await supabase
+        .from('categories')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', uid)
+        .eq('dashboard_id', defaultDash.id);
+      if ((count ?? 0) === 0) {
+        await seedDefaultDashboard(uid, defaultDash.id);
+      }
+    }
+
     setDashboards(list);
     setIsLoading(false);
   };
@@ -105,6 +192,34 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
       isDefault: data.is_default as boolean,
       sortOrder: data.sort_order as number,
     };
+  };
+
+  const seedDefaultDashboard = async (uid: string, dashboardId: string): Promise<void> => {
+    const supabase = getSupabaseClient();
+    for (let ci = 0; ci < DEFAULT_CATEGORIES.length; ci++) {
+      const cat = DEFAULT_CATEGORIES[ci];
+      const { data: catData } = await supabase
+        .from('categories')
+        .insert({
+          user_id: uid,
+          dashboard_id: dashboardId,
+          title: cat.title,
+          icon_name: cat.iconName,
+          sort_order: ci + 1,
+        })
+        .select()
+        .single();
+      if (!catData) continue;
+      const linkRows = cat.links.map((l, li) => ({
+        user_id: uid,
+        category_id: catData.id as string,
+        title: l.title,
+        url: l.url,
+        icon_url: faviconUrl(l.domain),
+        sort_order: li + 1,
+      }));
+      await supabase.from('links').insert(linkRows);
+    }
   };
 
   const createDashboard = async (title: string): Promise<Dashboard | null> => {
