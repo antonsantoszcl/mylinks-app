@@ -23,12 +23,12 @@ import { restrictToVerticalAxis, restrictToParentElement } from '@dnd-kit/modifi
 
 // Exact RGB colors per category index (0-based)
 const CATEGORY_COLORS = [
-  { border: '#FDE089', lightBg: '#FEF9E7', iconBg: '#FDE089', iconText: '#92400E', accentText: '#92400E' }, // Warm yellow
-  { border: '#86E0BD', lightBg: '#EAFAF3', iconBg: '#86E0BD', iconText: '#065F46', accentText: '#065F46' }, // Mint green
-  { border: '#FDBA74', lightBg: '#FEF4E8', iconBg: '#FDBA74', iconText: '#9A3412', accentText: '#9A3412' }, // Soft orange
-  { border: '#C4B5FD', lightBg: '#F3F0FE', iconBg: '#C4B5FD', iconText: '#4C1D95', accentText: '#4C1D95' }, // Lavender
-  { border: '#A3E692', lightBg: '#EEF9EC', iconBg: '#A3E692', iconText: '#14532D', accentText: '#14532D' }, // Lime green
-  { border: '#FBA4B8', lightBg: '#FEF0F3', iconBg: '#FBA4B8', iconText: '#881337', accentText: '#881337' }, // Pink
+  { border: '#FDE089', lightBg: '#FEFCF7', iconBg: '#FDE089', iconText: '#92400E', accentText: '#92400E' }, // Warm yellow
+  { border: '#86E0BD', lightBg: '#FAFDFA', iconBg: '#86E0BD', iconText: '#065F46', accentText: '#065F46' }, // Mint green
+  { border: '#FDBA74', lightBg: '#FEF9F8', iconBg: '#FDBA74', iconText: '#9A3412', accentText: '#9A3412' }, // Soft orange
+  { border: '#C4B5FD', lightBg: '#FCF9FE', iconBg: '#C4B5FD', iconText: '#4C1D95', accentText: '#4C1D95' }, // Lavender
+  { border: '#A3E692', lightBg: '#FAFDFA', iconBg: '#A3E692', iconText: '#14532D', accentText: '#14532D' }, // Lime green
+  { border: '#FBA4B8', lightBg: '#FEF9F8', iconBg: '#FBA4B8', iconText: '#881337', accentText: '#881337' }, // Pink
 ];
 
 interface CategoryCardProps {
