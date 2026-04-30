@@ -27,7 +27,7 @@ export function QuickAccessRow({ links, onAdd, onRemove }: QuickAccessRowProps) 
     <section>
       <div className="flex items-center gap-1.5 mb-1.5">
         <Zap className="w-3.5 h-3.5 text-primary-500" />
-        <h2 className="text-xs font-semibold text-slate-600">Acesso rapido</h2>
+        <h2 className="text-sm font-bold text-slate-700">Acesso rapido</h2>
       </div>
 
       <div className="flex flex-wrap gap-1.5 items-center">
