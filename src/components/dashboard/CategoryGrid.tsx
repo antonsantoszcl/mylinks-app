@@ -78,6 +78,7 @@ export function CategoryGrid({
       </div>
 
       <DndContext
+        id="category-grid-dnd"
         sensors={sensors}
         collisionDetection={closestCenter}
         onDragEnd={handleCategoryDragEnd}

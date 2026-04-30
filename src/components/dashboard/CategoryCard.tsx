@@ -237,6 +237,7 @@ export function CategoryCard({
           )}
           {links.length > 0 ? (
             <DndContext
+              id={`links-dnd-${category.id}`}
               sensors={sensors}
               collisionDetection={closestCenter}
               modifiers={[restrictToVerticalAxis, restrictToParentElement]}
