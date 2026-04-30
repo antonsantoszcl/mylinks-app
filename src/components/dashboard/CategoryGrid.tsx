@@ -70,7 +70,7 @@ export function CategoryGrid({
 
   return (
     <section>
-      <div className="flex items-center gap-1.5 mb-2">
+      <div className="flex items-center gap-1.5 mb-4">
         <div className="bg-primary-100 p-1 rounded-md">
           <LayoutGrid className="w-3.5 h-3.5 text-primary-600" />
         </div>

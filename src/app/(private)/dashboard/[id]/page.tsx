@@ -293,8 +293,8 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
   if (isLoading) return <Spinner />;
 
   return (
-    <div className="max-w-full space-y-3 pb-3">
-      <header className="flex items-center gap-2">
+    <div className="max-w-full space-y-7 pb-6">
+      <header className="flex items-center gap-2 pt-4">
         <Hand className="w-4 h-4 text-primary-500" />
         <span className="text-sm font-bold text-slate-700">
           {greeting}, {profile.displayName || 'bem-vindo'}!
