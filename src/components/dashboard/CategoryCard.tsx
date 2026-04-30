@@ -281,8 +281,8 @@ export function CategoryCard({
 
       <ConfirmModal
         open={showDeleteModal}
-        title="Excluir secao"
-        message="Excluir secao e todos os links?"
+        title="Excluir seção"
+        message="Excluir seção e todos os links?"
         onCancel={() => setShowDeleteModal(false)}
         onConfirm={() => {
           setShowDeleteModal(false);

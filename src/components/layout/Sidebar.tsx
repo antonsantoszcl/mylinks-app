@@ -443,7 +443,7 @@ function SidebarContent({
       <ConfirmModal
         open={pendingDeleteDash !== null}
         title="Excluir Painel"
-        message={`Excluir o painel "${pendingDashTitle}"? As secoes dentro dele tambem serao removidas.`}
+        message={`Excluir o painel "${pendingDashTitle}"? As seções dentro dele tambem serao removidas.`}
         onCancel={() => setPendingDeleteDash(null)}
         onConfirm={confirmDeleteDashboard}
       />
