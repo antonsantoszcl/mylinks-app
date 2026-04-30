@@ -142,7 +142,7 @@ export function CategoryCard({
           <div className="flex items-center gap-2 min-w-0">
             <div
               className="p-1.5 rounded-lg transition-all flex-shrink-0"
-              style={{ backgroundColor: colors.iconBg, color: colors.iconText }}
+              style={{ backgroundColor: colors.iconBg, color: colors.iconText, opacity: 0.45 }}
             >
               <IconComponent className="w-3.5 h-3.5" />
             </div>
