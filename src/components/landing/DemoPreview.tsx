@@ -1,11 +1,12 @@
 import Image from 'next/image';
 import {
-  Newspaper,
-  DollarSign,
-  Wrench,
   Star,
+  Users,
+  Newspaper,
+  ShoppingCart,
+  Banknote,
   Tv2,
-  Sun,
+  Wrench,
 } from 'lucide-react';
 
 interface DemoLink {
@@ -23,47 +24,57 @@ interface DemoCategory {
 
 const demoCategories: DemoCategory[] = [
   {
+    id: 'meus-favoritos',
+    title: 'Meus Favoritos',
+    Icon: Star,
+    links: [],
+  },
+  {
+    id: 'redes-sociais',
+    title: 'Redes Sociais',
+    Icon: Users,
+    links: [
+      { title: 'Facebook', domain: 'facebook.com', url: 'https://facebook.com' },
+      { title: 'WhatsApp', domain: 'web.whatsapp.com', url: 'https://web.whatsapp.com' },
+      { title: 'Instagram', domain: 'instagram.com', url: 'https://instagram.com' },
+      { title: 'TikTok', domain: 'tiktok.com', url: 'https://tiktok.com' },
+      { title: 'X.com', domain: 'x.com', url: 'https://x.com' },
+    ],
+  },
+  {
     id: 'noticias',
     title: 'Noticias',
     Icon: Newspaper,
     links: [
       { title: 'Globo.com', domain: 'globo.com', url: 'https://globo.com' },
       { title: 'UOL', domain: 'uol.com.br', url: 'https://uol.com.br' },
-      { title: 'G1', domain: 'g1.globo.com', url: 'https://g1.globo.com' },
-      { title: 'CNN Brasil', domain: 'cnnbrasil.com.br', url: 'https://cnnbrasil.com.br' },
+      { title: 'CNN', domain: 'cnnbrasil.com.br', url: 'https://cnnbrasil.com.br' },
+      { title: 'msn', domain: 'msn.com', url: 'https://msn.com' },
+      { title: 'Yahoo', domain: 'yahoo.com.br', url: 'https://yahoo.com.br' },
+    ],
+  },
+  {
+    id: 'compras',
+    title: 'Compras',
+    Icon: ShoppingCart,
+    links: [
+      { title: 'Buscape', domain: 'buscape.com.br', url: 'https://buscape.com.br' },
+      { title: 'Mercado Livre', domain: 'mercadolivre.com.br', url: 'https://mercadolivre.com.br' },
+      { title: 'Amazon', domain: 'amazon.com.br', url: 'https://amazon.com.br' },
+      { title: 'Shopee', domain: 'shopee.com.br', url: 'https://shopee.com.br' },
+      { title: 'Tudo Celular', domain: 'tudocelular.com', url: 'https://tudocelular.com' },
     ],
   },
   {
     id: 'financas',
     title: 'Financas',
-    Icon: DollarSign,
+    Icon: Banknote,
     links: [
       { title: 'Banco do Brasil', domain: 'bb.com.br', url: 'https://bb.com.br' },
       { title: 'Itau', domain: 'itau.com.br', url: 'https://itau.com.br' },
-      { title: 'InfoMoney', domain: 'infomoney.com.br', url: 'https://infomoney.com.br' },
+      { title: 'Infomoney', domain: 'infomoney.com.br', url: 'https://infomoney.com.br' },
       { title: 'Yahoo Finance', domain: 'finance.yahoo.com', url: 'https://finance.yahoo.com' },
-    ],
-  },
-  {
-    id: 'ferramentas',
-    title: 'Ferramentas',
-    Icon: Wrench,
-    links: [
-      { title: 'Google Drive', domain: 'drive.google.com', url: 'https://drive.google.com' },
-      { title: 'Gmail', domain: 'gmail.com', url: 'https://gmail.com' },
-      { title: 'Canva', domain: 'canva.com', url: 'https://canva.com' },
-      { title: 'ChatGPT', domain: 'chat.openai.com', url: 'https://chat.openai.com' },
-    ],
-  },
-  {
-    id: 'utilidades',
-    title: 'Utilidades',
-    Icon: Star,
-    links: [
-      { title: 'Google Tradutor', domain: 'translate.google.com', url: 'https://translate.google.com' },
-      { title: 'Calculadora Google', domain: 'google.com', url: 'https://google.com/search?q=calculadora' },
-      { title: 'Buscape', domain: 'buscape.com.br', url: 'https://buscape.com.br' },
-      { title: 'Wikipedia', domain: 'pt.wikipedia.org', url: 'https://pt.wikipedia.org' },
+      { title: 'Calculadora do Cidadao', domain: 'calculadoradocidadao.com.br', url: 'https://calculadoradocidadao.com.br' },
     ],
   },
   {
@@ -71,22 +82,22 @@ const demoCategories: DemoCategory[] = [
     title: 'Entretenimento',
     Icon: Tv2,
     links: [
-      { title: 'YouTube', domain: 'youtube.com', url: 'https://youtube.com' },
+      { title: 'Youtube', domain: 'youtube.com', url: 'https://youtube.com' },
       { title: 'Netflix', domain: 'netflix.com', url: 'https://netflix.com' },
       { title: 'Spotify', domain: 'spotify.com', url: 'https://spotify.com' },
-      { title: 'Prime Video', domain: 'primevideo.com', url: 'https://primevideo.com' },
-      { title: 'History Channel', domain: 'historychannel.com.br', url: 'https://historychannel.com.br' },
-      { title: 'History Channel (YouTube)', domain: 'youtube.com', url: 'https://youtube.com/c/historychannel' },
+      { title: 'Globo Esporte', domain: 'ge.globo.com', url: 'https://ge.globo.com' },
+      { title: 'Series', domain: 'justwatch.com', url: 'https://justwatch.com' },
     ],
   },
   {
-    id: 'dia-a-dia',
-    title: 'Dia a Dia',
-    Icon: Sun,
+    id: 'uteis',
+    title: 'Uteis',
+    Icon: Wrench,
     links: [
-      { title: 'Clima Tempo', domain: 'climatempo.com.br', url: 'https://climatempo.com.br' },
-      { title: 'GE Esportes', domain: 'ge.globo.com', url: 'https://ge.globo.com' },
-      { title: 'iFood', domain: 'ifood.com.br', url: 'https://ifood.com.br' },
+      { title: 'Gov.br', domain: 'gov.br', url: 'https://gov.br' },
+      { title: 'Wikipedia', domain: 'pt.wikipedia.org', url: 'https://pt.wikipedia.org' },
+      { title: 'ClimaTempo', domain: 'climatempo.com.br', url: 'https://climatempo.com.br' },
+      { title: 'Calculadora', domain: 'google.com', url: 'https://google.com/search?q=calculadora' },
       { title: 'Google Maps', domain: 'maps.google.com', url: 'https://maps.google.com' },
     ],
   },
@@ -168,7 +179,7 @@ export function DemoPreview() {
 
           {/* Dashboard content */}
           <div className="bg-slate-50 p-4">
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-2">
               {demoCategories.map((cat) => (
                 <DemoCategoryCard key={cat.id} category={cat} />
               ))}

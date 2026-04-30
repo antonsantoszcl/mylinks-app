@@ -9,70 +9,86 @@ function faviconUrl(domain: string) {
   return `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
 }
 
+const DEFAULT_QUICK_ACCESS: Array<{ title: string; url: string; domain: string }> = [
+  { title: 'Google', url: 'https://google.com', domain: 'google.com' },
+  { title: 'ChatGPT', url: 'https://chat.openai.com', domain: 'chat.openai.com' },
+  { title: 'Gmail', url: 'https://gmail.com', domain: 'gmail.com' },
+  { title: 'Tradutor', url: 'https://translate.google.com', domain: 'translate.google.com' },
+];
+
 const DEFAULT_CATEGORIES: Array<{
   title: string;
   iconName: string;
   links: Array<{ title: string; url: string; domain: string }>;
 }> = [
   {
-    title: 'Notícias',
+    title: 'Meus Favoritos',
+    iconName: 'star',
+    links: [],
+  },
+  {
+    title: 'Redes Sociais',
+    iconName: 'users',
+    links: [
+      { title: 'Facebook', url: 'https://facebook.com', domain: 'facebook.com' },
+      { title: 'WhatsApp', url: 'https://web.whatsapp.com', domain: 'web.whatsapp.com' },
+      { title: 'Instagram', url: 'https://instagram.com', domain: 'instagram.com' },
+      { title: 'TikTok', url: 'https://tiktok.com', domain: 'tiktok.com' },
+      { title: 'X.com', url: 'https://x.com', domain: 'x.com' },
+    ],
+  },
+  {
+    title: 'Noticias',
     iconName: 'newspaper',
     links: [
       { title: 'Globo.com', url: 'https://globo.com', domain: 'globo.com' },
       { title: 'UOL', url: 'https://uol.com.br', domain: 'uol.com.br' },
-      { title: 'G1', url: 'https://g1.globo.com', domain: 'g1.globo.com' },
-      { title: 'CNN Brasil', url: 'https://cnnbrasil.com.br', domain: 'cnnbrasil.com.br' },
+      { title: 'CNN', url: 'https://cnnbrasil.com.br', domain: 'cnnbrasil.com.br' },
+      { title: 'msn', url: 'https://msn.com', domain: 'msn.com' },
+      { title: 'Yahoo', url: 'https://yahoo.com.br', domain: 'yahoo.com.br' },
     ],
   },
   {
-    title: 'Finanças',
+    title: 'Compras',
+    iconName: 'shopping-cart',
+    links: [
+      { title: 'Buscape', url: 'https://buscape.com.br', domain: 'buscape.com.br' },
+      { title: 'Mercado Livre', url: 'https://mercadolivre.com.br', domain: 'mercadolivre.com.br' },
+      { title: 'Amazon', url: 'https://amazon.com.br', domain: 'amazon.com.br' },
+      { title: 'Shopee', url: 'https://shopee.com.br', domain: 'shopee.com.br' },
+      { title: 'Tudo Celular', url: 'https://tudocelular.com', domain: 'tudocelular.com' },
+    ],
+  },
+  {
+    title: 'Financas',
     iconName: 'banknote',
     links: [
       { title: 'Banco do Brasil', url: 'https://bb.com.br', domain: 'bb.com.br' },
-      { title: 'Itaú', url: 'https://itau.com.br', domain: 'itau.com.br' },
-      { title: 'InfoMoney', url: 'https://infomoney.com.br', domain: 'infomoney.com.br' },
+      { title: 'Itau', url: 'https://itau.com.br', domain: 'itau.com.br' },
+      { title: 'Infomoney', url: 'https://infomoney.com.br', domain: 'infomoney.com.br' },
       { title: 'Yahoo Finance', url: 'https://finance.yahoo.com', domain: 'finance.yahoo.com' },
-    ],
-  },
-  {
-    title: 'Ferramentas',
-    iconName: 'wrench',
-    links: [
-      { title: 'Google Drive', url: 'https://drive.google.com', domain: 'drive.google.com' },
-      { title: 'Gmail', url: 'https://gmail.com', domain: 'gmail.com' },
-      { title: 'Canva', url: 'https://canva.com', domain: 'canva.com' },
-      { title: 'ChatGPT', url: 'https://chat.openai.com', domain: 'chat.openai.com' },
-    ],
-  },
-  {
-    title: 'Utilidades',
-    iconName: 'star',
-    links: [
-      { title: 'Google Tradutor', url: 'https://translate.google.com', domain: 'translate.google.com' },
-      { title: 'Calculadora', url: 'https://google.com/search?q=calculadora', domain: 'google.com' },
-      { title: 'Buscapé', url: 'https://buscape.com.br', domain: 'buscape.com.br' },
-      { title: 'Wikipedia', url: 'https://pt.wikipedia.org', domain: 'pt.wikipedia.org' },
+      { title: 'Calculadora do Cidadao', url: 'https://calculadoradocidadao.com.br', domain: 'calculadoradocidadao.com.br' },
     ],
   },
   {
     title: 'Entretenimento',
     iconName: 'tv',
     links: [
-      { title: 'YouTube', url: 'https://youtube.com', domain: 'youtube.com' },
+      { title: 'Youtube', url: 'https://youtube.com', domain: 'youtube.com' },
       { title: 'Netflix', url: 'https://netflix.com', domain: 'netflix.com' },
       { title: 'Spotify', url: 'https://spotify.com', domain: 'spotify.com' },
-      { title: 'Prime Video', url: 'https://primevideo.com', domain: 'primevideo.com' },
-      { title: 'History Channel', url: 'https://historychannel.com.br', domain: 'historychannel.com.br' },
-      { title: 'History Channel YouTube', url: 'https://youtube.com/c/historychannel', domain: 'youtube.com' },
+      { title: 'Globo Esporte', url: 'https://ge.globo.com', domain: 'ge.globo.com' },
+      { title: 'Series', url: 'https://justwatch.com', domain: 'justwatch.com' },
     ],
   },
   {
-    title: 'Dia a Dia',
-    iconName: 'calendar',
+    title: 'Uteis',
+    iconName: 'wrench',
     links: [
-      { title: 'Clima Tempo', url: 'https://climatempo.com.br', domain: 'climatempo.com.br' },
-      { title: 'GE Esportes', url: 'https://ge.globo.com', domain: 'ge.globo.com' },
-      { title: 'iFood', url: 'https://ifood.com.br', domain: 'ifood.com.br' },
+      { title: 'Gov.br', url: 'https://gov.br', domain: 'gov.br' },
+      { title: 'Wikipedia', url: 'https://pt.wikipedia.org', domain: 'pt.wikipedia.org' },
+      { title: 'ClimaTempo', url: 'https://climatempo.com.br', domain: 'climatempo.com.br' },
+      { title: 'Calculadora', url: 'https://google.com/search?q=calculadora', domain: 'google.com' },
       { title: 'Google Maps', url: 'https://maps.google.com', domain: 'maps.google.com' },
     ],
   },
@@ -196,6 +212,24 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
 
   const seedDefaultDashboard = async (uid: string, dashboardId: string): Promise<void> => {
     const supabase = getSupabaseClient();
+
+    // Seed quick access links (only if none exist yet)
+    const { count: qaCount } = await supabase
+      .from('quick_access')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', uid);
+    if ((qaCount ?? 0) === 0) {
+      const qaRows = DEFAULT_QUICK_ACCESS.map((q, qi) => ({
+        user_id: uid,
+        title: q.title,
+        url: q.url,
+        icon_url: faviconUrl(q.domain),
+        sort_order: qi + 1,
+      }));
+      await supabase.from('quick_access').insert(qaRows);
+    }
+
+    // Seed categories and their links
     for (let ci = 0; ci < DEFAULT_CATEGORIES.length; ci++) {
       const cat = DEFAULT_CATEGORIES[ci];
       const { data: catData } = await supabase
@@ -210,6 +244,7 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
         .select()
         .single();
       if (!catData) continue;
+      if (cat.links.length === 0) continue;
       const linkRows = cat.links.map((l, li) => ({
         user_id: uid,
         category_id: catData.id as string,
