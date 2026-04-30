@@ -91,7 +91,7 @@ export default function Home() {
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-sm border-b border-slate-100">
         <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center">
+            <div className="w-7 h-7 rounded-lg bg-primary-800 flex items-center justify-center">
               <Link2 className="w-3.5 h-3.5 text-white" />
             </div>
             <span className="font-bold text-slate-900 text-sm">MyLinks</span>
@@ -235,7 +235,7 @@ export default function Home() {
       <footer className="border-t border-slate-100 py-8">
         <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center">
+            <div className="w-6 h-6 rounded-md bg-primary-800 flex items-center justify-center">
               <Link2 className="w-3 h-3 text-white" />
             </div>
             <span className="font-bold text-slate-700 text-sm">MyLinks</span>

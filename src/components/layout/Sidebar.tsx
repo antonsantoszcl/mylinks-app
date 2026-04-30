@@ -238,14 +238,14 @@ function SidebarContent({
         >
           {!collapsed && (
             <h1 className="text-base font-bold text-slate-800 flex items-center gap-1.5">
-              <div className="w-6 h-6 rounded-md bg-primary-600 flex items-center justify-center flex-shrink-0">
+              <div className="w-6 h-6 rounded-md bg-primary-800 flex items-center justify-center flex-shrink-0">
                 <Globe className="text-white w-3.5 h-3.5" />
               </div>
               MyLinks
             </h1>
           )}
           {collapsed && (
-            <div className="w-6 h-6 rounded-md bg-primary-600 flex items-center justify-center">
+            <div className="w-6 h-6 rounded-md bg-primary-800 flex items-center justify-center">
               <Globe className="text-white w-3.5 h-3.5" />
             </div>
           )}
