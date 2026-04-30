@@ -165,7 +165,7 @@ export function CategoryCard({
               />
             ) : (
               <h3
-                className="text-xs font-semibold cursor-text truncate text-slate-800"
+                className="text-sm md:text-xs font-semibold cursor-text truncate text-slate-800"
                 onClick={() => setIsEditingTitle(true)}
               >
                 {category.title}
