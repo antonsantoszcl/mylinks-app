@@ -146,14 +146,14 @@ function DemoCategoryCard({ category }: { category: DemoCategory }) {
 
 export function DemoPreview() {
   return (
-    <section className="py-20">
+    <section className="py-14 sm:py-20">
       <div className="max-w-6xl mx-auto px-4">
         <div className="text-center mb-10">
           <span className="inline-flex items-center gap-2 bg-primary-50 text-primary-600 text-xs font-medium px-3 py-1.5 rounded-full mb-4 border border-primary-100">
             <span className="w-1.5 h-1.5 rounded-full bg-primary-500" />
             Preview ao vivo
           </span>
-          <h2 className="text-3xl font-bold text-slate-900 mb-3">
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-3">
             Veja como fica seu dashboard
           </h2>
           <p className="text-slate-500 text-base max-w-xl mx-auto">
@@ -177,9 +177,9 @@ export function DemoPreview() {
             </div>
           </div>
 
-          {/* Dashboard content */}
-          <div className="bg-slate-50 p-4">
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-2">
+          {/* Dashboard content — scrollable on mobile */}
+          <div className="bg-slate-50 p-3 sm:p-4 overflow-x-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-2 min-w-[300px]">
               {demoCategories.map((cat) => (
                 <DemoCategoryCard key={cat.id} category={cat} />
               ))}

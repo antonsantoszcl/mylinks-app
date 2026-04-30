@@ -21,11 +21,11 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 w-full max-w-2xl mx-4 relative"
+        className="bg-white rounded-2xl shadow-xl border border-slate-100 p-4 sm:p-6 w-full max-w-2xl relative max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -46,7 +46,7 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
           <video
             key="instrucoes-video"
             src="/videos/instrucoes.mp4"
-            style={{ width: '100%', borderRadius: '12px', maxHeight: '420px' }}
+            style={{ width: '100%', borderRadius: '12px', maxHeight: '340px' }}
             autoPlay
             loop
             muted
@@ -74,26 +74,26 @@ export function TopNav() {
 
   return (
     <>
-      {/* Floating top-right controls - no bar background */}
+      {/* Floating top-right controls — shifted right on desktop, left-aware on mobile */}
       <div className="fixed top-2 right-3 z-20 flex items-center gap-2">
         <button
           onClick={() => setInstrucoesOpen(true)}
-          className="flex items-center px-3 py-1 rounded-lg border border-slate-300 text-xs font-semibold text-slate-500 hover:text-primary-600 hover:border-primary-400 transition-colors tracking-wider bg-white/90 backdrop-blur-sm shadow-sm"
+          className="flex items-center px-2.5 sm:px-3 py-1 rounded-lg border border-slate-300 text-xs font-semibold text-slate-500 hover:text-primary-600 hover:border-primary-400 transition-colors tracking-wider bg-white/90 backdrop-blur-sm shadow-sm min-h-[36px]"
         >
           INSTRUCOES
         </button>
 
         <button
           onClick={handleSignOut}
-          className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-800 transition-colors px-2 py-1 rounded-lg hover:bg-slate-100 bg-white/90 backdrop-blur-sm shadow-sm"
+          className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-800 transition-colors px-2 py-1 rounded-lg hover:bg-slate-100 bg-white/90 backdrop-blur-sm shadow-sm min-h-[36px]"
         >
           <LogOut className="w-3.5 h-3.5" />
-          Sair
+          <span className="hidden sm:inline">Sair</span>
         </button>
 
         <Link
           href="/dashboard/settings"
-          className="w-7 h-7 rounded-full overflow-hidden ring-2 ring-slate-100 cursor-pointer hover:ring-primary-500 transition-all flex items-center justify-center bg-primary-100 shadow-sm"
+          className="w-8 h-8 sm:w-7 sm:h-7 rounded-full overflow-hidden ring-2 ring-slate-100 cursor-pointer hover:ring-primary-500 transition-all flex items-center justify-center bg-primary-100 shadow-sm"
           title="Configuracoes de perfil"
         >
           {profile.avatarUrl ? (

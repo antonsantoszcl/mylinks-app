@@ -20,6 +20,7 @@ import {
   Trash2,
   Check,
   X,
+  Menu,
 } from 'lucide-react';
 import { useProfile, getInitials } from '@/context/ProfileContext';
 import { useDashboards } from '@/context/DashboardsContext';
@@ -158,14 +159,21 @@ function DashboardNavItem({
   );
 }
 
-// ── Sidebar ───────────────────────────────────────────────────────────────────
+// ── Sidebar inner content (shared between mobile drawer and desktop) ──────────
 
-export function Sidebar() {
+function SidebarContent({
+  collapsed,
+  onToggle,
+  onClose,
+}: {
+  collapsed: boolean;
+  onToggle: () => void;
+  onClose?: () => void;
+}) {
   const { profile } = useProfile();
   const { dashboards, isLoading: dashLoading, createDashboard, renameDashboard, deleteDashboard } =
     useDashboards();
   const initials = getInitials(profile.displayName);
-  const [collapsed, setCollapsed] = useState(true);
   const [showNewDash, setShowNewDash] = useState(false);
   const [newDashName, setNewDashName] = useState('');
   const newDashInputRef = useRef<HTMLInputElement>(null);
@@ -176,7 +184,6 @@ export function Sidebar() {
   const publicHref = profile.username ? `/${profile.username}` : '/me';
 
   const otherNavItems = [
-    // { icon: Globe, label: 'Publico', href: publicHref, inactive: false, hidden: true },
     { icon: Star, label: 'Favoritos', href: '/favoritos', inactive: true, hidden: false },
     { icon: Clock, label: 'Recentes', href: '/recentes', inactive: true, hidden: false },
     { icon: Tags, label: 'Tags', href: '/tags', inactive: true, hidden: false },
@@ -184,27 +191,10 @@ export function Sidebar() {
   ];
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(SIDEBAR_KEY);
-      if (stored !== null) setCollapsed(stored === 'true');
-    } catch {}
-  }, []);
-
-  useEffect(() => {
     if (showNewDash) {
       setTimeout(() => newDashInputRef.current?.focus(), 0);
     }
   }, [showNewDash]);
-
-  const toggle = () => {
-    setCollapsed((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem(SIDEBAR_KEY, String(next));
-      } catch {}
-      return next;
-    });
-  };
 
   const handleCreateDashboard = async () => {
     const title = newDashName.trim();
@@ -214,6 +204,7 @@ export function Sidebar() {
     setShowNewDash(false);
     if (created) {
       router.push(`/dashboard/${created.id}`);
+      onClose?.();
     }
   };
 
@@ -240,9 +231,7 @@ export function Sidebar() {
 
   return (
     <>
-      <aside
-        className={`${collapsed ? 'w-14' : 'w-56'} bg-white border-r border-slate-200 flex flex-col h-full shadow-sm transition-all duration-200 flex-shrink-0`}
-      >
+      <aside className="flex flex-col h-full">
         {/* Logo + toggle */}
         <div
           className={`flex items-center ${collapsed ? 'justify-center py-3' : 'justify-between px-3 py-3'} border-b border-slate-100`}
@@ -260,20 +249,33 @@ export function Sidebar() {
               <Globe className="text-white w-3.5 h-3.5" />
             </div>
           )}
-          <button
-            onClick={toggle}
-            className={`${collapsed ? 'hidden' : ''} p-1 rounded-md text-slate-400 hover:text-primary-600 hover:bg-slate-100 transition-colors`}
-            aria-label="Collapse sidebar"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
+          {/* Desktop collapse button */}
+          {!collapsed && (
+            <button
+              onClick={onToggle}
+              className="hidden md:flex p-1 rounded-md text-slate-400 hover:text-primary-600 hover:bg-slate-100 transition-colors"
+              aria-label="Collapse sidebar"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+          )}
+          {/* Mobile close button (always shown when drawer is open) */}
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="md:hidden p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+              aria-label="Fechar menu"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
         </div>
 
-        {/* Expand button when collapsed */}
+        {/* Expand button when collapsed (desktop only) */}
         {collapsed && (
           <button
-            onClick={toggle}
-            className="mt-1 mx-auto p-1 rounded-md text-slate-400 hover:text-primary-600 hover:bg-slate-100 transition-colors"
+            onClick={onToggle}
+            className="hidden md:flex mt-1 mx-auto p-1 rounded-md text-slate-400 hover:text-primary-600 hover:bg-slate-100 transition-colors"
             aria-label="Expand sidebar"
           >
             <ChevronRight className="w-4 h-4" />
@@ -445,6 +447,77 @@ export function Sidebar() {
         onCancel={() => setPendingDeleteDash(null)}
         onConfirm={confirmDeleteDashboard}
       />
+    </>
+  );
+}
+
+// ── Sidebar ───────────────────────────────────────────────────────────────────
+
+export function Sidebar() {
+  const [collapsed, setCollapsed] = useState(true);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
+
+  // Close mobile drawer on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(SIDEBAR_KEY);
+      if (stored !== null) setCollapsed(stored === 'true');
+    } catch {}
+  }, []);
+
+  const toggle = () => {
+    setCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem(SIDEBAR_KEY, String(next));
+      } catch {}
+      return next;
+    });
+  };
+
+  return (
+    <>
+      {/* ── Mobile hamburger button ── */}
+      <button
+        onClick={() => setMobileOpen(true)}
+        className="md:hidden fixed top-2 left-3 z-30 p-2 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-600 hover:text-primary-600 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+        aria-label="Abrir menu"
+      >
+        <Menu className="w-5 h-5" />
+      </button>
+
+      {/* ── Mobile overlay ── */}
+      {mobileOpen && (
+        <div
+          className="md:hidden fixed inset-0 z-40 bg-black/40"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      {/* ── Mobile drawer ── */}
+      <div
+        className={`md:hidden fixed top-0 left-0 z-50 h-full w-64 bg-white border-r border-slate-200 shadow-xl transition-transform duration-200 ${
+          mobileOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <SidebarContent
+          collapsed={false}
+          onToggle={() => {}}
+          onClose={() => setMobileOpen(false)}
+        />
+      </div>
+
+      {/* ── Desktop sidebar ── */}
+      <div
+        className={`hidden md:flex ${collapsed ? 'w-14' : 'w-56'} bg-white border-r border-slate-200 flex-col h-full shadow-sm transition-all duration-200 flex-shrink-0`}
+      >
+        <SidebarContent collapsed={collapsed} onToggle={toggle} />
+      </div>
     </>
   );
 }

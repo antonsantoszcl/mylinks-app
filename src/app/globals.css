@@ -10,6 +10,23 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
+  /* Prevent horizontal overflow on mobile */
+  overflow-x: hidden;
 }
 
+/* Custom scrollbar utility used in category cards */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #e2e8f0 transparent;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #e2e8f0;
+  border-radius: 2px;
+}
 

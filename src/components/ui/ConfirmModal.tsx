@@ -34,11 +34,11 @@ export function ConfirmModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
       onClick={onCancel}
     >
       <div
-        className="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 w-full max-w-sm mx-4"
+        className="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 w-full max-w-sm"
         onClick={(e) => e.stopPropagation()}
       >
         <h3 className="text-sm font-bold text-slate-800">{title}</h3>
@@ -46,13 +46,13 @@ export function ConfirmModal({
         <div className="flex justify-end gap-2 mt-5">
           <button
             onClick={onCancel}
-            className="px-4 py-2 text-xs font-medium rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
+            className="px-4 py-2.5 text-xs font-medium rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors min-h-[44px]"
           >
             {cancelLabel}
           </button>
           <button
             onClick={onConfirm}
-            className="px-4 py-2 text-xs font-medium rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors"
+            className="px-4 py-2.5 text-xs font-medium rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors min-h-[44px]"
           >
             {confirmLabel}
           </button>

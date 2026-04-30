@@ -211,7 +211,7 @@ export default function PublicProfilePage({
         <section className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="h-20 bg-gradient-to-br from-primary-500 to-primary-700" />
 
-          <div className="px-8 pb-8">
+          <div className="px-4 sm:px-8 pb-6 sm:pb-8">
             <div className="-mt-12 mb-4">
               <div className="w-24 h-24 rounded-full overflow-hidden ring-4 ring-white bg-primary-100 flex items-center justify-center shadow-md">
                 {data.avatarUrl ? (
@@ -242,11 +242,11 @@ export default function PublicProfilePage({
               <p className="text-slate-500 text-sm leading-relaxed max-w-lg mb-4">{data.bio}</p>
             )}
 
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-3">
               {data.contactEmail && (
                 <a
                   href={`mailto:${data.contactEmail}`}
-                  className="inline-flex items-center gap-2 bg-primary-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-primary-700 transition-colors shadow-sm shadow-primary-500/20"
+                  className="inline-flex items-center justify-center gap-2 bg-primary-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-primary-700 transition-colors shadow-sm shadow-primary-500/20 min-h-[44px]"
                 >
                   <Mail className="w-4 h-4" />
                   Entrar em contato
@@ -257,7 +257,7 @@ export default function PublicProfilePage({
                   href={`https://wa.me/${data.contactPhone.replace(/\D/g, '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 border-2 border-primary-200 text-primary-700 px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-primary-50 transition-colors"
+                  className="inline-flex items-center justify-center gap-2 border-2 border-primary-200 text-primary-700 px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-primary-50 transition-colors min-h-[44px]"
                 >
                   <Phone className="w-4 h-4" />
                   WhatsApp

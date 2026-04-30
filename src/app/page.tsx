@@ -118,42 +118,42 @@ export default function Home() {
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] bg-gradient-to-b from-primary-50 to-transparent rounded-full blur-3xl opacity-60" />
         </div>
-        <div className="max-w-4xl mx-auto px-4 pt-24 pb-20 text-center">
-          <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-600 text-xs font-medium px-3 py-1.5 rounded-full mb-6 border border-primary-100">
+        <div className="max-w-4xl mx-auto px-4 pt-16 sm:pt-24 pb-14 sm:pb-20 text-center">
+          <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-600 text-xs font-medium px-3 py-1.5 rounded-full mb-5 border border-primary-100">
             <span className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse" />
             Organize. Compartilhe. Simplifique.
           </div>
-          <h1 className="text-5xl font-bold text-slate-900 leading-tight mb-6 tracking-tight">
+          <h1 className="text-3xl sm:text-5xl font-bold text-slate-900 leading-tight mb-5 tracking-tight">
             Seu dashboard pessoal{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-primary-700">
               de links
             </span>
           </h1>
-          <p className="text-xl text-slate-500 mb-10 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-xl text-slate-500 mb-8 max-w-2xl mx-auto leading-relaxed">
             Pare de perder tempo procurando links. Organize tudo por categorias, acesse de qualquer lugar
             e compartilhe sua página pública com um link só.
           </p>
-          <div className="flex items-center justify-center gap-3 flex-wrap">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/register"
-              className="inline-flex items-center gap-2 bg-primary-600 text-white font-semibold px-6 py-3 rounded-xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-200 hover:shadow-primary-300 hover:-translate-y-0.5"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-primary-600 text-white font-semibold px-6 py-3.5 rounded-xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-200 hover:shadow-primary-300 hover:-translate-y-0.5 min-h-[44px]"
             >
               Criar minha página grátis
               <ChevronRight className="w-4 h-4" />
             </Link>
             <Link
               href="/login"
-              className="inline-flex items-center gap-2 text-slate-600 font-medium px-5 py-3 rounded-xl hover:bg-slate-100 transition-colors"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-slate-600 font-medium px-5 py-3.5 rounded-xl hover:bg-slate-100 transition-colors min-h-[44px]"
             >
               Já tenho conta
             </Link>
           </div>
-          <div className="flex items-center justify-center gap-3 mt-4 flex-wrap">
+          <div className="flex items-center justify-center gap-3 mt-3 flex-wrap">
             <button
               type="button"
               onClick={() => handleOAuth('google')}
               disabled={!!oauthLoading}
-              className="inline-flex items-center gap-2 border border-slate-200 bg-white text-slate-600 font-medium px-4 py-2 rounded-lg text-sm hover:bg-slate-50 transition-colors disabled:opacity-60 shadow-sm"
+              className="inline-flex items-center gap-2 border border-slate-200 bg-white text-slate-600 font-medium px-4 py-2.5 rounded-lg text-sm hover:bg-slate-50 transition-colors disabled:opacity-60 shadow-sm min-h-[44px]"
             >
               <GoogleIcon />
               {oauthLoading === 'google' ? 'Redirecionando...' : 'Entrar com Google'}
@@ -176,19 +176,19 @@ export default function Home() {
       </div>
 
       {/* Features */}
-      <section className="py-20 bg-slate-50">
+      <section className="py-14 sm:py-20 bg-slate-50">
         <div className="max-w-5xl mx-auto px-4">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl font-bold text-slate-900 mb-3">Tudo que você precisa</h2>
+          <div className="text-center mb-10 sm:mb-14">
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-3">Tudo que você precisa</h2>
             <p className="text-slate-500 text-base">
               Simples de usar, poderoso o suficiente para organizar sua vida digital.
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             {features.map(({ icon: Icon, title, desc }) => (
               <div
                 key={title}
-                className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition-shadow"
+                className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-100 hover:shadow-md transition-shadow"
               >
                 <div className="w-9 h-9 rounded-xl bg-primary-50 flex items-center justify-center mb-3">
                   <Icon className="w-5 h-5 text-primary-600" />
@@ -202,13 +202,13 @@ export default function Home() {
       </section>
 
       {/* How it works */}
-      <section className="py-20">
+      <section className="py-14 sm:py-20">
         <div className="max-w-4xl mx-auto px-4">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl font-bold text-slate-900 mb-3">Como funciona</h2>
+          <div className="text-center mb-10 sm:mb-14">
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-3">Como funciona</h2>
             <p className="text-slate-500 text-base">Três passos para organizar sua vida digital.</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-10">
             {steps.map(({ step, title, desc }) => (
               <div key={step} className="text-center">
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 text-white font-bold text-lg flex items-center justify-center mx-auto mb-4 shadow-lg shadow-primary-200">
@@ -219,10 +219,10 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <div className="text-center mt-14">
+          <div className="text-center mt-10 sm:mt-14">
             <Link
               href="/register"
-              className="inline-flex items-center gap-2 bg-primary-600 text-white font-semibold px-8 py-3.5 rounded-xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-200 hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 bg-primary-600 text-white font-semibold px-8 py-3.5 rounded-xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-200 hover:-translate-y-0.5 min-h-[44px]"
             >
               Começar agora — é grátis
               <ChevronRight className="w-4 h-4" />
@@ -233,7 +233,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-slate-100 py-8">
-        <div className="max-w-6xl mx-auto px-4 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded-md bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center">
               <Link2 className="w-3 h-3 text-white" />

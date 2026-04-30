@@ -19,7 +19,8 @@ export default function PrivateLayout({
               <Sidebar />
               <div className="flex-1 flex flex-col min-w-0">
                 <TopNav />
-                <main className="flex-1 overflow-y-auto p-3 pt-2">{children}</main>
+                {/* pt-12 on mobile to clear the floating hamburger + topnav buttons */}
+                <main className="flex-1 overflow-y-auto p-3 pt-12 md:pt-2">{children}</main>
               </div>
             </div>
           </DashboardsProvider>

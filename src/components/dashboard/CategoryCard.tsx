@@ -210,25 +210,25 @@ export function CategoryCard({
                 value={linkTitle}
                 onChange={(e) => setLinkTitle(e.target.value)}
                 placeholder="Titulo do link"
-                className="w-full rounded border border-slate-200 px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-primary-300 bg-white"
+                className="w-full rounded border border-slate-200 px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-primary-300 bg-white min-h-[36px]"
               />
               <input
                 value={linkUrl}
                 onChange={(e) => setLinkUrl(e.target.value)}
                 placeholder="https://exemplo.com"
-                className="w-full rounded border border-slate-200 px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-primary-300 bg-white"
+                className="w-full rounded border border-slate-200 px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-primary-300 bg-white min-h-[36px]"
               />
               <div className="flex justify-end gap-1.5">
                 <button
                   type="button"
                   onClick={() => setShowAddLink(false)}
-                  className="px-2 py-1 text-xs rounded bg-slate-200 text-slate-600 hover:bg-slate-300"
+                  className="px-2 py-1.5 text-xs rounded bg-slate-200 text-slate-600 hover:bg-slate-300 min-h-[36px]"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-2 py-1 text-xs rounded bg-primary-600 text-white hover:bg-primary-700"
+                  className="px-2 py-1.5 text-xs rounded bg-primary-600 text-white hover:bg-primary-700 min-h-[36px]"
                 >
                   Adicionar
                 </button>
