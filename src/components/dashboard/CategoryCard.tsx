@@ -30,7 +30,7 @@ const CATEGORY_COLORS = [
   { border: '#E5E7EB', insetColor: 'rgba(234, 179, 8, 0.25)',   insetColorMobile: 'rgba(234, 179, 8, 0.40)',   lightBg: '#FFFFFF', iconBg: '#FEF9C3', iconText: '#713F12', accentText: '#78716C' }, // Muted yellow
   { border: '#E5E7EB', insetColor: 'rgba(52, 168, 120, 0.22)',  insetColorMobile: 'rgba(52, 168, 120, 0.38)',  lightBg: '#FFFFFF', iconBg: '#D1FAE5', iconText: '#065F46', accentText: '#78716C' }, // Muted mint
   { border: '#E5E7EB', insetColor: 'rgba(234, 126, 60, 0.22)',  insetColorMobile: 'rgba(234, 126, 60, 0.38)',  lightBg: '#FFFFFF', iconBg: '#FFEDD5', iconText: '#7C2D12', accentText: '#78716C' }, // Muted orange
-  { border: '#E5E7EB', insetColor: 'rgba(139, 92, 246, 0.22)',  insetColorMobile: 'rgba(139, 92, 246, 0.38)',  lightBg: '#FFFFFF', iconBg: '#EDE9FE', iconText: '#4C1D95', accentText: '#78716C' }, // Muted lavender
+  { border: '#E5E7EB', insetColor: 'rgba(24, 119, 242, 0.22)',  insetColorMobile: 'rgba(24, 119, 242, 0.38)',  lightBg: '#FFFFFF', iconBg: '#D6EAFF', iconText: '#0F4FA6', accentText: '#78716C' }, // Muted blue
   { border: '#E5E7EB', insetColor: 'rgba(101, 183, 72, 0.22)',  insetColorMobile: 'rgba(101, 183, 72, 0.38)',  lightBg: '#FFFFFF', iconBg: '#DCFCE7', iconText: '#14532D', accentText: '#78716C' }, // Muted lime
   { border: '#E5E7EB', insetColor: 'rgba(236, 100, 140, 0.22)', insetColorMobile: 'rgba(236, 100, 140, 0.38)', lightBg: '#FFFFFF', iconBg: '#FCE7F3', iconText: '#831843', accentText: '#78716C' }, // Muted pink
 ];
