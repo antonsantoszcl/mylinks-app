@@ -31,3 +31,27 @@ body {
   border-radius: 2px;
 }
 
+/* ── Mobile-only contrast refinements (< 768px) ─────────────────────────── */
+@media (max-width: 767px) {
+  /* Darken page background so cards stand out more */
+  body {
+    background-color: #EEF2F7;
+  }
+
+  /* Darken inner card body background for better contrast */
+  .card-body-inner {
+    background: #F1F5F9 !important;
+  }
+
+  /* Stronger card shadow on mobile */
+  .category-card {
+    box-shadow: inset 3px 0 0 var(--card-inset-color, rgba(0,0,0,0.1)),
+                0 6px 16px rgba(0,0,0,0.08) !important;
+  }
+
+  /* Stronger left accent line on mobile */
+  .category-card {
+    --card-accent-opacity-boost: 0.15;
+  }
+}
+

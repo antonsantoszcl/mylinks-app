@@ -25,13 +25,14 @@ import { ConfirmModal } from '@/components/ui/ConfirmModal';
 
 // Soft, desaturated accent colors per category index (0-based)
 // All cards share white bg and subtle gray border; only the inset left accent color varies
+// insetColorMobile uses higher opacity (0.38-0.40) for better visual identity on mobile
 const CATEGORY_COLORS = [
-  { border: '#E5E7EB', insetColor: 'rgba(234, 179, 8, 0.25)',   lightBg: '#FFFFFF', iconBg: '#FEF9C3', iconText: '#713F12', accentText: '#78716C' }, // Muted yellow
-  { border: '#E5E7EB', insetColor: 'rgba(52, 168, 120, 0.22)',  lightBg: '#FFFFFF', iconBg: '#D1FAE5', iconText: '#065F46', accentText: '#78716C' }, // Muted mint
-  { border: '#E5E7EB', insetColor: 'rgba(234, 126, 60, 0.22)',  lightBg: '#FFFFFF', iconBg: '#FFEDD5', iconText: '#7C2D12', accentText: '#78716C' }, // Muted orange
-  { border: '#E5E7EB', insetColor: 'rgba(139, 92, 246, 0.22)',  lightBg: '#FFFFFF', iconBg: '#EDE9FE', iconText: '#4C1D95', accentText: '#78716C' }, // Muted lavender
-  { border: '#E5E7EB', insetColor: 'rgba(101, 183, 72, 0.22)',  lightBg: '#FFFFFF', iconBg: '#DCFCE7', iconText: '#14532D', accentText: '#78716C' }, // Muted lime
-  { border: '#E5E7EB', insetColor: 'rgba(236, 100, 140, 0.22)', lightBg: '#FFFFFF', iconBg: '#FCE7F3', iconText: '#831843', accentText: '#78716C' }, // Muted pink
+  { border: '#E5E7EB', insetColor: 'rgba(234, 179, 8, 0.25)',   insetColorMobile: 'rgba(234, 179, 8, 0.40)',   lightBg: '#FFFFFF', iconBg: '#FEF9C3', iconText: '#713F12', accentText: '#78716C' }, // Muted yellow
+  { border: '#E5E7EB', insetColor: 'rgba(52, 168, 120, 0.22)',  insetColorMobile: 'rgba(52, 168, 120, 0.38)',  lightBg: '#FFFFFF', iconBg: '#D1FAE5', iconText: '#065F46', accentText: '#78716C' }, // Muted mint
+  { border: '#E5E7EB', insetColor: 'rgba(234, 126, 60, 0.22)',  insetColorMobile: 'rgba(234, 126, 60, 0.38)',  lightBg: '#FFFFFF', iconBg: '#FFEDD5', iconText: '#7C2D12', accentText: '#78716C' }, // Muted orange
+  { border: '#E5E7EB', insetColor: 'rgba(139, 92, 246, 0.22)',  insetColorMobile: 'rgba(139, 92, 246, 0.38)',  lightBg: '#FFFFFF', iconBg: '#EDE9FE', iconText: '#4C1D95', accentText: '#78716C' }, // Muted lavender
+  { border: '#E5E7EB', insetColor: 'rgba(101, 183, 72, 0.22)',  insetColorMobile: 'rgba(101, 183, 72, 0.38)',  lightBg: '#FFFFFF', iconBg: '#DCFCE7', iconText: '#14532D', accentText: '#78716C' }, // Muted lime
+  { border: '#E5E7EB', insetColor: 'rgba(236, 100, 140, 0.22)', insetColorMobile: 'rgba(236, 100, 140, 0.38)', lightBg: '#FFFFFF', iconBg: '#FCE7F3', iconText: '#831843', accentText: '#78716C' }, // Muted pink
 ];
 
 interface CategoryCardProps {
@@ -124,7 +125,7 @@ export function CategoryCard({
   return (
     <>
       <article
-        className="rounded-xl flex flex-col group/card"
+        className="rounded-xl flex flex-col group/card category-card"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         style={{
@@ -135,6 +136,7 @@ export function CategoryCard({
             : `inset 3px 0 0 ${colors.insetColor}, 0 6px 16px rgba(0,0,0,0.05)`,
           transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
           transition: 'all 0.2s ease',
+          ['--card-inset-color' as string]: colors.insetColorMobile,
         }}
       >
         {/* Colored header area */}
@@ -205,7 +207,7 @@ export function CategoryCard({
 
         {/* White body area */}
         <div
-          className="mx-2 rounded-lg flex-1 overflow-y-auto custom-scrollbar p-3"
+          className="mx-2 rounded-lg flex-1 overflow-y-auto custom-scrollbar p-3 card-body-inner"
           style={{ background: '#F8FAFC' }}
         >
           {showAddLink && (
