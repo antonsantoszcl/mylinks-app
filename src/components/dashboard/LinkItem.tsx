@@ -30,7 +30,7 @@ export function LinkItem({ link, onDelete, dragHandleListeners, dragHandleAttrib
           </span>
         </Link>
 
-        <div className="flex items-center gap-0.5 flex-shrink-0 md:-mr-2">
+        <div className="flex items-center gap-0.5 flex-shrink-0 -mr-2">
           {dragHandleListeners && dragHandleAttributes && (
             <div
               className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 hover:text-primary-500 opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity cursor-grab active:cursor-grabbing"
