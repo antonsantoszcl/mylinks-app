@@ -23,14 +23,15 @@ import {
 import { restrictToVerticalAxis, restrictToParentElement } from '@dnd-kit/modifiers';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 
-// Exact RGB colors per category index (0-based)
+// Soft, desaturated accent colors per category index (0-based)
+// All cards share white bg and subtle gray border; only the inset left accent color varies
 const CATEGORY_COLORS = [
-  { border: '#FDE089', insetColor: 'rgba(253, 224, 137, 0.4)', lightBg: '#FEFCF7', iconBg: '#FDE089', iconText: '#92400E', accentText: '#92400E' }, // Warm yellow
-  { border: '#86E0BD', insetColor: 'rgba(134, 224, 189, 0.4)', lightBg: '#FAFDFA', iconBg: '#86E0BD', iconText: '#065F46', accentText: '#065F46' }, // Mint green
-  { border: '#FDBA74', insetColor: 'rgba(253, 186, 116, 0.4)', lightBg: '#FEF9F8', iconBg: '#FDBA74', iconText: '#9A3412', accentText: '#9A3412' }, // Soft orange
-  { border: '#C4B5FD', insetColor: 'rgba(196, 181, 253, 0.4)', lightBg: '#FCF9FE', iconBg: '#C4B5FD', iconText: '#4C1D95', accentText: '#4C1D95' }, // Lavender
-  { border: '#A3E692', insetColor: 'rgba(163, 230, 146, 0.4)', lightBg: '#FAFDFA', iconBg: '#A3E692', iconText: '#14532D', accentText: '#14532D' }, // Lime green
-  { border: '#FBA4B8', insetColor: 'rgba(251, 164, 184, 0.4)', lightBg: '#FEF9F8', iconBg: '#FBA4B8', iconText: '#881337', accentText: '#881337' }, // Pink
+  { border: '#E5E7EB', insetColor: 'rgba(234, 179, 8, 0.25)',   lightBg: '#FFFFFF', iconBg: '#FEF9C3', iconText: '#713F12', accentText: '#78716C' }, // Muted yellow
+  { border: '#E5E7EB', insetColor: 'rgba(52, 168, 120, 0.22)',  lightBg: '#FFFFFF', iconBg: '#D1FAE5', iconText: '#065F46', accentText: '#78716C' }, // Muted mint
+  { border: '#E5E7EB', insetColor: 'rgba(234, 126, 60, 0.22)',  lightBg: '#FFFFFF', iconBg: '#FFEDD5', iconText: '#7C2D12', accentText: '#78716C' }, // Muted orange
+  { border: '#E5E7EB', insetColor: 'rgba(139, 92, 246, 0.22)',  lightBg: '#FFFFFF', iconBg: '#EDE9FE', iconText: '#4C1D95', accentText: '#78716C' }, // Muted lavender
+  { border: '#E5E7EB', insetColor: 'rgba(101, 183, 72, 0.22)',  lightBg: '#FFFFFF', iconBg: '#DCFCE7', iconText: '#14532D', accentText: '#78716C' }, // Muted lime
+  { border: '#E5E7EB', insetColor: 'rgba(236, 100, 140, 0.22)', lightBg: '#FFFFFF', iconBg: '#FCE7F3', iconText: '#831843', accentText: '#78716C' }, // Muted pink
 ];
 
 interface CategoryCardProps {
@@ -127,11 +128,11 @@ export function CategoryCard({
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         style={{
-          border: `1px solid ${colors.border}`,
-          backgroundColor: colors.lightBg,
+          border: '1px solid #E5E7EB',
+          backgroundColor: '#FFFFFF',
           boxShadow: isHovered
-            ? `inset 3px 0 0 ${colors.insetColor}, 0 10px 24px rgba(0,0,0,0.08)`
-            : `inset 3px 0 0 ${colors.insetColor}, 0 6px 18px rgba(0,0,0,0.06)`,
+            ? `inset 3px 0 0 ${colors.insetColor}, 0 8px 20px rgba(0,0,0,0.07)`
+            : `inset 3px 0 0 ${colors.insetColor}, 0 6px 16px rgba(0,0,0,0.05)`,
           transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
           transition: 'all 0.2s ease',
         }}
@@ -139,7 +140,7 @@ export function CategoryCard({
         {/* Colored header area */}
         <header
           className="flex items-center justify-between px-3 py-2 rounded-t-lg"
-          style={{ backgroundColor: colors.lightBg }}
+          style={{ backgroundColor: '#FFFFFF' }}
         >
           <div className="flex items-center gap-2 min-w-0">
             <div
@@ -205,7 +206,7 @@ export function CategoryCard({
         {/* White body area */}
         <div
           className="mx-2 rounded-lg flex-1 overflow-y-auto custom-scrollbar p-3"
-          style={{ background: 'linear-gradient(180deg, #FFFFFF 0%, #FBFCFF 100%)' }}
+          style={{ background: '#F8FAFC' }}
         >
           {showAddLink && (
             <form onSubmit={submitNewLink} className="mb-2 p-2 rounded-lg border border-slate-200 bg-white/80 space-y-1.5">
@@ -264,7 +265,7 @@ export function CategoryCard({
         {!showAddLink && (
           <div
             className="mx-2 mb-2 mt-1 px-2 py-1.5 rounded-b-lg"
-            style={{ backgroundColor: colors.lightBg }}
+            style={{ backgroundColor: '#FFFFFF' }}
           >
             <button
               className="text-xs font-medium hover:opacity-75 transition-opacity flex items-center gap-1 min-h-[44px] md:min-h-0 py-2 md:py-0"
