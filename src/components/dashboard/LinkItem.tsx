@@ -18,7 +18,7 @@ export function LinkItem({ link, onDelete, dragHandleListeners, dragHandleAttrib
 
   return (
     <>
-      <div className="group/link flex items-center justify-between py-1 px-1.5 rounded-lg hover:bg-white/70 transition-all cursor-pointer">
+      <div className="group/link flex items-center justify-between py-1 pl-1.5 pr-0 rounded-lg hover:bg-white/70 transition-all cursor-pointer">
         <Link href={link.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 flex-1 min-w-0">
           <img
             src={link.iconUrl}
@@ -30,25 +30,27 @@ export function LinkItem({ link, onDelete, dragHandleListeners, dragHandleAttrib
           </span>
         </Link>
 
-        {dragHandleListeners && dragHandleAttributes && (
-          <div
-            className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-0.5 text-slate-300 hover:text-primary-500 opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity cursor-grab active:cursor-grabbing flex-shrink-0"
-            aria-label="Drag to reorder link"
-            style={{ touchAction: 'none' }}
-            {...dragHandleAttributes}
-            {...dragHandleListeners}
-          >
-            <GripVertical className="w-5 h-5 md:w-3 md:h-3" />
-          </div>
-        )}
+        <div className="flex items-center gap-0.5 flex-shrink-0 md:-mr-2">
+          {dragHandleListeners && dragHandleAttributes && (
+            <div
+              className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 hover:text-primary-500 opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity cursor-grab active:cursor-grabbing"
+              aria-label="Drag to reorder link"
+              style={{ touchAction: 'none' }}
+              {...dragHandleAttributes}
+              {...dragHandleListeners}
+            >
+              <GripVertical className="w-5 h-5 md:w-3.5 md:h-3.5" />
+            </div>
+          )}
 
-        <button
-          className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-0.5 text-slate-300 hover:text-red-500 rounded opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity flex-shrink-0"
-          title="Excluir link"
-          onClick={() => setShowDeleteModal(true)}
-        >
-          <Trash2 className="w-5 h-5 md:w-3 md:h-3" />
-        </button>
+          <button
+            className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 hover:text-red-500 rounded opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity"
+            title="Excluir link"
+            onClick={() => setShowDeleteModal(true)}
+          >
+            <Trash2 className="w-5 h-5 md:w-3 md:h-3" />
+          </button>
+        </div>
       </div>
 
       <ConfirmModal
