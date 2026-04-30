@@ -25,7 +25,7 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 w-full max-w-md mx-4 relative"
+        className="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 w-full max-w-2xl mx-4 relative"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -43,12 +43,15 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
         </p>
 
         {open && (
-          <iframe
-            key={open ? 'open' : 'closed'}
-            src="https://drive.google.com/file/d/1uAvDq5qZqt8ywpkuG98J_myeeZYPPUh1/preview?autoplay=1&loop=1&mute=1"
-            style={{ width: '100%', aspectRatio: '16/9', border: 'none', borderRadius: '12px' }}
-            allow="autoplay; fullscreen"
-            allowFullScreen
+          <video
+            key="instrucoes-video"
+            src="/videos/instrucoes.mp4"
+            style={{ width: '100%', borderRadius: '12px', maxHeight: '420px' }}
+            autoPlay
+            loop
+            muted
+            playsInline
+            controls
           />
         )}
       </div>
@@ -71,17 +74,18 @@ export function TopNav() {
 
   return (
     <>
-      <header className="h-12 bg-white border-b border-slate-200 shadow-sm flex items-center justify-end px-4 sticky top-0 z-10 gap-2">
+      {/* Floating top-right controls - no bar background */}
+      <div className="fixed top-2 right-3 z-20 flex items-center gap-2">
         <button
           onClick={() => setInstrucoesOpen(true)}
-          className="flex items-center px-3 py-1 rounded-lg border border-slate-300 text-xs font-semibold text-slate-500 hover:text-primary-600 hover:border-primary-400 transition-colors tracking-wider"
+          className="flex items-center px-3 py-1 rounded-lg border border-slate-300 text-xs font-semibold text-slate-500 hover:text-primary-600 hover:border-primary-400 transition-colors tracking-wider bg-white/90 backdrop-blur-sm shadow-sm"
         >
           INSTRUCOES
         </button>
 
         <button
           onClick={handleSignOut}
-          className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-800 transition-colors px-2 py-1 rounded-lg hover:bg-slate-100"
+          className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-800 transition-colors px-2 py-1 rounded-lg hover:bg-slate-100 bg-white/90 backdrop-blur-sm shadow-sm"
         >
           <LogOut className="w-3.5 h-3.5" />
           Sair
@@ -89,7 +93,7 @@ export function TopNav() {
 
         <Link
           href="/dashboard/settings"
-          className="w-7 h-7 rounded-full overflow-hidden ring-2 ring-slate-100 cursor-pointer hover:ring-primary-500 transition-all flex items-center justify-center bg-primary-100"
+          className="w-7 h-7 rounded-full overflow-hidden ring-2 ring-slate-100 cursor-pointer hover:ring-primary-500 transition-all flex items-center justify-center bg-primary-100 shadow-sm"
           title="Configuracoes de perfil"
         >
           {profile.avatarUrl ? (
@@ -103,7 +107,7 @@ export function TopNav() {
             <span className="text-xs font-bold text-primary-600">{initials}</span>
           )}
         </Link>
-      </header>
+      </div>
 
       <InstrucoesModal open={instrucoesOpen} onClose={() => setInstrucoesOpen(false)} />
     </>

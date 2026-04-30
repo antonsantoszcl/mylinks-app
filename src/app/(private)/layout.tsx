@@ -19,7 +19,7 @@ export default function PrivateLayout({
               <Sidebar />
               <div className="flex-1 flex flex-col min-w-0">
                 <TopNav />
-                <main className="flex-1 overflow-y-auto p-3">{children}</main>
+                <main className="flex-1 overflow-y-auto p-3 pt-2">{children}</main>
               </div>
             </div>
           </DashboardsProvider>
