@@ -83,23 +83,22 @@ export function CategoryGrid({
         onDragEnd={handleCategoryDragEnd}
       >
         <SortableContext items={categories.map((c) => c.id)} strategy={rectSortingStrategy}>
-          <div className="masonry-grid">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 items-start">
             {categories.map((category, index) => (
-              <div key={category.id} className="masonry-item">
-                <SortableCategoryCard
-                  category={category}
-                  colorIndex={index}
-                  links={links.filter((link) => link.categoryId === category.id).sort((a, b) => a.order - b.order)}
-                  onRenameCategory={onRenameCategory}
-                  onAddLink={onAddLink}
-                  onDeleteLink={onDeleteLink}
-                  onDeleteCategory={onDeleteCategory}
-                  onReorderLinks={onReorderLinks}
-                />
-              </div>
+              <SortableCategoryCard
+                key={category.id}
+                category={category}
+                colorIndex={index}
+                links={links.filter((link) => link.categoryId === category.id).sort((a, b) => a.order - b.order)}
+                onRenameCategory={onRenameCategory}
+                onAddLink={onAddLink}
+                onDeleteLink={onDeleteLink}
+                onDeleteCategory={onDeleteCategory}
+                onReorderLinks={onReorderLinks}
+              />
             ))}
 
-            <article className="masonry-item bg-white rounded-xl shadow-sm border border-dashed border-slate-300 p-2 flex flex-col hover:shadow-md transition-shadow">
+            <article className="bg-white rounded-xl shadow-sm border border-dashed border-slate-300 p-2 flex flex-col hover:shadow-md transition-shadow">
               {!showAddCategory ? (
                 <button
                   onClick={() => setShowAddCategory(true)}
