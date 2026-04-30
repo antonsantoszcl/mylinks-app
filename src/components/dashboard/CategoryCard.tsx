@@ -75,7 +75,7 @@ export function CategoryCard({
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 5 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
@@ -185,6 +185,7 @@ export function CategoryCard({
               <div
                 className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 transition-colors cursor-grab active:cursor-grabbing rounded"
                 aria-label="Drag to reorder section"
+                style={{ touchAction: 'none' }}
                 {...dragHandleAttributes}
                 {...dragHandleListeners}
               >

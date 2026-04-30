@@ -34,6 +34,7 @@ export function LinkItem({ link, onDelete, dragHandleListeners, dragHandleAttrib
           <div
             className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-0.5 text-slate-300 hover:text-primary-500 opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity cursor-grab active:cursor-grabbing flex-shrink-0"
             aria-label="Drag to reorder link"
+            style={{ touchAction: 'none' }}
             {...dragHandleAttributes}
             {...dragHandleListeners}
           >
