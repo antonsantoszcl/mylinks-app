@@ -26,7 +26,7 @@ export function QuickAccessCard({ link, onRemove }: QuickAccessCardProps) {
         <div className="w-5 h-5 bg-slate-100 rounded flex items-center justify-center overflow-hidden flex-shrink-0">
           <img src={link.iconUrl} alt={link.title} className="w-4 h-4 object-contain" />
         </div>
-        <span className="text-xs font-medium text-slate-700 group-hover:text-primary-700 transition-colors whitespace-nowrap">
+        <span className="text-xs font-semibold text-slate-700 group-hover:text-primary-700 transition-colors whitespace-nowrap">
           {link.title}
         </span>
       </Link>

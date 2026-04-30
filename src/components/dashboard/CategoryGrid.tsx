@@ -74,7 +74,7 @@ export function CategoryGrid({
         <div className="bg-primary-100 p-1 rounded-md">
           <LayoutGrid className="w-3.5 h-3.5 text-primary-600" />
         </div>
-        <h2 className="text-sm font-bold text-slate-700">Categorias</h2>
+        <h2 className="text-sm font-bold text-slate-700">Secoes</h2>
       </div>
 
       <DndContext
@@ -107,15 +107,15 @@ export function CategoryGrid({
                   <div className="w-8 h-8 rounded-lg bg-primary-50 text-primary-600 flex items-center justify-center">
                     <Plus className="w-4 h-4" />
                   </div>
-                  <span className="text-xs font-semibold">Nova categoria</span>
+                  <span className="text-xs font-semibold">Nova secao</span>
                 </button>
               ) : (
                 <form onSubmit={submitCategory} className="space-y-2">
-                  <h3 className="text-xs font-bold text-slate-800">Nova categoria</h3>
+                  <h3 className="text-xs font-bold text-slate-800">Nova secao</h3>
                   <input
                     value={newCategoryName}
                     onChange={(e) => setNewCategoryName(e.target.value)}
-                    placeholder="Nome da categoria"
+                    placeholder="Nome da secao"
                     className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-xs outline-none focus:ring-2 focus:ring-primary-300"
                     autoFocus
                   />

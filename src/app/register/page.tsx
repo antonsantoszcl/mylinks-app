@@ -132,12 +132,12 @@ export default function RegisterPage() {
                   </div>
                 )}
                 <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1.5">Nome</label>
+                  <label className="block text-xs font-medium text-slate-700 mb-1.5">Primeiro nome</label>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Seu nome"
+                    placeholder="Seu primeiro nome"
                     autoComplete="name"
                     className="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                   />
