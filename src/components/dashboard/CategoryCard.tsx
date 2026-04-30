@@ -172,29 +172,29 @@ export function CategoryCard({
           </div>
           <div className="flex items-center gap-0.5 flex-shrink-0">
             <button
-              className="p-1 text-slate-400 hover:bg-white/60 rounded transition-colors"
+              className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-400 hover:bg-white/60 rounded transition-colors"
               style={{ ['--hover-color' as string]: colors.accentText }}
               aria-label="Add new link to section"
               onClick={() => setShowAddLink(true)}
             >
-              <Icons.Plus className="w-3.5 h-3.5" />
+              <Icons.Plus className="w-5 h-5 md:w-3.5 md:h-3.5" />
             </button>
             {dragHandleListeners && dragHandleAttributes && (
               <div
-                className="p-1 text-slate-300 transition-colors cursor-grab active:cursor-grabbing rounded"
+                className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 transition-colors cursor-grab active:cursor-grabbing rounded"
                 aria-label="Drag to reorder section"
                 {...dragHandleAttributes}
                 {...dragHandleListeners}
               >
-                <GripVertical className="w-3.5 h-3.5" />
+                <GripVertical className="w-5 h-5 md:w-3.5 md:h-3.5" />
               </div>
             )}
             <button
-              className="p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+              className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
               onClick={() => setShowDeleteModal(true)}
               aria-label="Delete section"
             >
-              <Icons.Trash2 className="w-3 h-3" />
+              <Icons.Trash2 className="w-5 h-5 md:w-3 md:h-3" />
             </button>
           </div>
         </header>
@@ -264,7 +264,7 @@ export function CategoryCard({
             style={{ backgroundColor: colors.lightBg }}
           >
             <button
-              className="text-xs font-medium hover:opacity-75 transition-opacity flex items-center gap-1"
+              className="text-xs font-medium hover:opacity-75 transition-opacity flex items-center gap-1 min-h-[44px] md:min-h-0 py-2 md:py-0"
               style={{ color: colors.accentText }}
               onClick={() => setShowAddLink(true)}
             >

@@ -32,21 +32,21 @@ export function LinkItem({ link, onDelete, dragHandleListeners, dragHandleAttrib
 
         {dragHandleListeners && dragHandleAttributes && (
           <div
-            className="p-0.5 text-slate-300 hover:text-primary-500 opacity-0 group-hover/link:opacity-100 transition-opacity cursor-grab active:cursor-grabbing flex-shrink-0"
+            className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-0.5 text-slate-300 hover:text-primary-500 opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity cursor-grab active:cursor-grabbing flex-shrink-0"
             aria-label="Drag to reorder link"
             {...dragHandleAttributes}
             {...dragHandleListeners}
           >
-            <GripVertical className="w-3 h-3" />
+            <GripVertical className="w-5 h-5 md:w-3 md:h-3" />
           </div>
         )}
 
         <button
-          className="p-0.5 text-slate-300 hover:text-red-500 rounded opacity-0 group-hover/link:opacity-100 transition-opacity flex-shrink-0"
+          className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-0.5 text-slate-300 hover:text-red-500 rounded opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity flex-shrink-0"
           title="Excluir link"
           onClick={() => setShowDeleteModal(true)}
         >
-          <Trash2 className="w-3 h-3" />
+          <Trash2 className="w-5 h-5 md:w-3 md:h-3" />
         </button>
       </div>
 

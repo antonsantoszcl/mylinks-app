@@ -124,13 +124,13 @@ export function CategoryGrid({
                     <button
                       type="button"
                       onClick={() => { setShowAddCategory(false); setNewCategoryName(''); }}
-                      className="px-2 py-1 text-xs rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200"
+                      className="px-2 py-1 text-xs rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 min-h-[44px] md:min-h-0"
                     >
                       Cancelar
                     </button>
                     <button
                       type="submit"
-                      className="px-2 py-1 text-xs rounded-lg bg-primary-600 text-white hover:bg-primary-700"
+                      className="px-2 py-1 text-xs rounded-lg bg-primary-600 text-white hover:bg-primary-700 min-h-[44px] md:min-h-0"
                     >
                       Criar
                     </button>
