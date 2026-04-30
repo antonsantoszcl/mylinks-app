@@ -83,8 +83,8 @@ function DashboardNavItem({
         title={dashboard.title}
         className={`flex items-center justify-center py-2 rounded-lg transition-colors ${
           isActive
-            ? 'bg-primary-50 text-primary-600'
-            : 'text-slate-600 hover:bg-slate-50 hover:text-primary-600'
+            ? 'text-[#2F5FD0] bg-[rgba(47,95,208,0.10)]'
+            : 'text-[#6B7280] hover:bg-slate-50 hover:text-[#2F5FD0]'
         }`}
       >
         <DashIcon className="w-4 h-4 flex-shrink-0" />
@@ -130,8 +130,8 @@ function DashboardNavItem({
         href={`/dashboard/${dashboard.id}`}
         className={`flex-1 flex items-center gap-2.5 px-2 py-2 rounded-lg transition-colors ${
           isActive
-            ? 'bg-primary-50 text-primary-600'
-            : 'text-slate-600 hover:bg-slate-50 hover:text-primary-600'
+            ? 'text-[#2F5FD0] bg-[rgba(47,95,208,0.10)]'
+            : 'text-[#6B7280] hover:bg-slate-50 hover:text-[#2F5FD0]'
         }`}
       >
         <DashIcon className="w-4 h-4 flex-shrink-0" />
@@ -141,7 +141,7 @@ function DashboardNavItem({
         <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity pr-1">
           <button
             onClick={() => setEditing(true)}
-            className="p-1 rounded text-slate-400 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+            className="p-1 rounded text-slate-400 hover:text-[#2F5FD0] hover:bg-[rgba(47,95,208,0.08)] transition-colors"
             title="Renomear"
           >
             <Pencil className="w-3 h-3" />
@@ -253,7 +253,7 @@ function SidebarContent({
           {!collapsed && (
             <button
               onClick={onToggle}
-              className="hidden md:flex p-1 rounded-md text-slate-400 hover:text-primary-600 hover:bg-slate-100 transition-colors"
+              className="hidden md:flex p-1 rounded-md text-slate-400 hover:text-[#2F5FD0] hover:bg-slate-100 transition-colors"
               aria-label="Collapse sidebar"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -275,7 +275,7 @@ function SidebarContent({
         {collapsed && (
           <button
             onClick={onToggle}
-            className="hidden md:flex mt-1 mx-auto p-1 rounded-md text-slate-400 hover:text-primary-600 hover:bg-slate-100 transition-colors"
+            className="hidden md:flex mt-1 mx-auto p-1 rounded-md text-slate-400 hover:text-[#2F5FD0] hover:bg-slate-100 transition-colors"
             aria-label="Expand sidebar"
           >
             <ChevronRight className="w-4 h-4" />
@@ -336,7 +336,7 @@ function SidebarContent({
               ) : (
                 <button
                   onClick={() => setShowNewDash(true)}
-                  className="flex items-center gap-2 px-2 py-1.5 w-full text-xs text-slate-400 hover:text-primary-600 hover:bg-slate-50 rounded-lg transition-colors"
+                  className="flex items-center gap-2 px-2 py-1.5 w-full text-xs text-[#6B7280] hover:text-[#2F5FD0] hover:bg-slate-50 rounded-lg transition-colors"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   Novo Painel
@@ -368,7 +368,7 @@ function SidebarContent({
               className={`flex items-center ${collapsed ? 'justify-center px-0' : 'gap-2.5 px-2'} py-2 rounded-lg transition-colors ${
                 item.inactive
                   ? 'text-gray-300 cursor-default pointer-events-none'
-                  : 'text-slate-600 hover:bg-slate-50 hover:text-primary-600'
+                  : 'text-[#6B7280] hover:bg-slate-50 hover:text-[#2F5FD0]'
               }`}
             >
               <item.icon className="w-4 h-4 flex-shrink-0" />
@@ -386,7 +386,7 @@ function SidebarContent({
               className={`flex items-center ${collapsed ? 'justify-center px-0' : 'gap-2.5 px-2'} py-2 rounded-lg transition-colors ${
                 item.inactive
                   ? 'text-gray-300 cursor-default pointer-events-none'
-                  : 'text-slate-600 hover:bg-slate-50 hover:text-primary-600'
+                  : 'text-[#6B7280] hover:bg-slate-50 hover:text-[#2F5FD0]'
               }`}
             >
               <item.icon className="w-4 h-4 flex-shrink-0" />
@@ -401,7 +401,7 @@ function SidebarContent({
             title={collapsed ? profile.displayName : undefined}
             className={`flex items-center ${collapsed ? 'justify-center' : 'gap-2 px-2'} py-2 rounded-lg hover:bg-slate-50 transition-colors group`}
           >
-            <div className="w-7 h-7 rounded-full overflow-hidden ring-2 ring-slate-100 group-hover:ring-primary-300 transition-all flex items-center justify-center bg-primary-100 flex-shrink-0">
+            <div className="w-7 h-7 rounded-full overflow-hidden ring-2 ring-slate-100 group-hover:ring-slate-200 transition-all flex items-center justify-center bg-slate-100 flex-shrink-0">
               {profile.avatarUrl ? (
                 <img
                   src={profile.avatarUrl}
@@ -412,7 +412,7 @@ function SidebarContent({
                   }}
                 />
               ) : (
-                <span className="text-xs font-bold text-primary-600">{initials}</span>
+                <span className="text-xs font-bold text-[#2F5FD0]">{initials}</span>
               )}
             </div>
             {!collapsed && (
@@ -426,13 +426,13 @@ function SidebarContent({
           </Link>
 
           {!collapsed && (
-            <div className="bg-primary-50 rounded-lg p-2.5 border border-primary-100">
+            <div className="bg-slate-50 rounded-lg p-2.5 border border-slate-200">
               <div className="flex items-center gap-1.5 mb-1">
-                <Zap className="w-3.5 h-3.5 text-primary-600" />
-                <h4 className="text-xs font-semibold text-primary-700">Assine o Pro</h4>
+                <Zap className="w-3.5 h-3.5 text-[#2F5FD0]" />
+                <h4 className="text-xs font-semibold text-slate-700">Assine o Pro</h4>
               </div>
-              <p className="text-xs text-primary-600 mb-2">Desbloqueie recursos avancados.</p>
-              <button className="w-full bg-primary-600 text-white rounded-md py-1.5 text-xs font-medium hover:bg-primary-700 transition-colors">
+              <p className="text-xs text-slate-500 mb-2">Desbloqueie recursos avancados.</p>
+              <button className="w-full bg-[#2F5FD0] text-white rounded-md py-1.5 text-xs font-medium hover:bg-[#1E40AF] transition-colors">
                 Fazer upgrade
               </button>
             </div>
@@ -485,7 +485,7 @@ export function Sidebar() {
       {/* ── Mobile hamburger button ── */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="md:hidden fixed top-2 left-3 z-30 p-2 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-600 hover:text-primary-600 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+        className="md:hidden fixed top-2 left-3 z-30 p-2 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-600 hover:text-[#2F5FD0] transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
         aria-label="Abrir menu"
       >
         <Menu className="w-5 h-5" />
