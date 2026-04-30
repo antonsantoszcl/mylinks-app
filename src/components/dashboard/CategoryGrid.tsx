@@ -32,36 +32,6 @@ interface CategoryGridProps {
   onReorderLinks: (categoryId: string, oldIndex: number, newIndex: number) => void;
 }
 
-/**
- * Reorders items so that when CSS columns (column-count: C) places them
- * top-to-bottom per column, the visual reading order is left-to-right.
- *
- * For N items in C columns:
- *   rows = ceil(N / C)
- *   reordered[idx] = original[row * C + col]
- *   where row = idx % rows, col = floor(idx / rows)
- *
- * Returns an array of { item, originalIndex } pairs.
- */
-function reorderForMasonry<T>(items: T[], columns: number): { item: T; originalIndex: number }[] {
-  const n = items.length;
-  if (n === 0 || columns <= 1) return items.map((item, i) => ({ item, originalIndex: i }));
-
-  const rows = Math.ceil(n / columns);
-  const result: { item: T; originalIndex: number }[] = [];
-
-  for (let idx = 0; idx < n; idx++) {
-    const row = idx % rows;
-    const col = Math.floor(idx / rows);
-    const originalIndex = row * columns + col;
-    if (originalIndex < n) {
-      result.push({ item: items[originalIndex], originalIndex });
-    }
-  }
-
-  return result;
-}
-
 export function CategoryGrid({
   categories,
   links,
@@ -82,19 +52,9 @@ export function CategoryGrid({
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
-  // Determine column count based on breakpoints (mirrors CSS)
-  // We use 4 as the desktop column count for reorder calculation.
-  // On mobile/tablet the CSS columns override this, but the array order
-  // still reads sensibly at lower column counts.
-  const DESKTOP_COLUMNS = 4;
-
-  // Build the display order: reordered for masonry column filling
-  const reorderedCategories = reorderForMasonry(categories, DESKTOP_COLUMNS);
-
   const handleCategoryDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
-    // Map by id back to ORIGINAL categories array indices
     const oldIndex = categories.findIndex((c) => c.id === active.id);
     const newIndex = categories.findIndex((c) => c.id === over.id);
     if (oldIndex !== -1 && newIndex !== -1) {
@@ -109,10 +69,6 @@ export function CategoryGrid({
     setNewCategoryName('');
     setShowAddCategory(false);
   };
-
-  // SortableContext items must match DOM render order so dnd-kit hit-testing works.
-  // We pass the reordered IDs so they align with the masonry DOM order.
-  const sortableIds = reorderedCategories.map(({ item }) => item.id);
 
   return (
     <section>
@@ -129,64 +85,61 @@ export function CategoryGrid({
         collisionDetection={closestCenter}
         onDragEnd={handleCategoryDragEnd}
       >
-        <SortableContext items={sortableIds} strategy={rectSortingStrategy}>
-          <div className="masonry-grid">
-            {reorderedCategories.map(({ item: category, originalIndex }) => (
-              <div key={category.id} className="masonry-item">
-                <SortableCategoryCard
-                  category={category}
-                  colorIndex={originalIndex}
-                  links={links.filter((link) => link.categoryId === category.id).sort((a, b) => a.order - b.order)}
-                  onRenameCategory={onRenameCategory}
-                  onAddLink={onAddLink}
-                  onDeleteLink={onDeleteLink}
-                  onDeleteCategory={onDeleteCategory}
-                  onReorderLinks={onReorderLinks}
-                />
-              </div>
+        <SortableContext items={categories.map((c) => c.id)} strategy={rectSortingStrategy}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 items-start">
+            {categories.map((category, index) => (
+              <SortableCategoryCard
+                key={category.id}
+                category={category}
+                colorIndex={index}
+                links={links.filter((link) => link.categoryId === category.id).sort((a, b) => a.order - b.order)}
+                onRenameCategory={onRenameCategory}
+                onAddLink={onAddLink}
+                onDeleteLink={onDeleteLink}
+                onDeleteCategory={onDeleteCategory}
+                onReorderLinks={onReorderLinks}
+              />
             ))}
 
-            <div className="masonry-item">
-              <article className="bg-white rounded-xl shadow-sm border border-dashed border-slate-300 p-2 flex flex-col hover:shadow-md transition-shadow">
-                {!showAddCategory ? (
-                  <button
-                    onClick={() => setShowAddCategory(true)}
-                    className="w-full h-full min-h-[80px] flex flex-col items-center justify-center gap-2 text-slate-500 hover:text-primary-600 transition-colors"
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-primary-50 text-primary-600 flex items-center justify-center">
-                      <Plus className="w-4 h-4" />
-                    </div>
-                    <span className="text-xs font-semibold">Nova secao</span>
-                  </button>
-                ) : (
-                  <form onSubmit={submitCategory} className="space-y-2">
-                    <h3 className="text-xs font-bold text-slate-800">Nova secao</h3>
-                    <input
-                      value={newCategoryName}
-                      onChange={(e) => setNewCategoryName(e.target.value)}
-                      placeholder="Nome da secao"
-                      className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-xs outline-none focus:ring-2 focus:ring-primary-300"
-                      autoFocus
-                    />
-                    <div className="flex justify-end gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => { setShowAddCategory(false); setNewCategoryName(''); }}
-                        className="px-2 py-1 text-xs rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 min-h-[44px] md:min-h-0"
-                      >
-                        Cancelar
-                      </button>
-                      <button
-                        type="submit"
-                        className="px-2 py-1 text-xs rounded-lg bg-primary-600 text-white hover:bg-primary-700 min-h-[44px] md:min-h-0"
-                      >
-                        Criar
-                      </button>
-                    </div>
-                  </form>
-                )}
-              </article>
-            </div>
+            <article className="bg-white rounded-xl shadow-sm border border-dashed border-slate-300 p-2 flex flex-col hover:shadow-md transition-shadow">
+              {!showAddCategory ? (
+                <button
+                  onClick={() => setShowAddCategory(true)}
+                  className="w-full h-full min-h-[80px] flex flex-col items-center justify-center gap-2 text-slate-500 hover:text-primary-600 transition-colors"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-primary-50 text-primary-600 flex items-center justify-center">
+                    <Plus className="w-4 h-4" />
+                  </div>
+                  <span className="text-xs font-semibold">Nova secao</span>
+                </button>
+              ) : (
+                <form onSubmit={submitCategory} className="space-y-2">
+                  <h3 className="text-xs font-bold text-slate-800">Nova secao</h3>
+                  <input
+                    value={newCategoryName}
+                    onChange={(e) => setNewCategoryName(e.target.value)}
+                    placeholder="Nome da secao"
+                    className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-xs outline-none focus:ring-2 focus:ring-primary-300"
+                    autoFocus
+                  />
+                  <div className="flex justify-end gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => { setShowAddCategory(false); setNewCategoryName(''); }}
+                      className="px-2 py-1 text-xs rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 min-h-[44px] md:min-h-0"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-2 py-1 text-xs rounded-lg bg-primary-600 text-white hover:bg-primary-700 min-h-[44px] md:min-h-0"
+                    >
+                      Criar
+                    </button>
+                  </div>
+                </form>
+              )}
+            </article>
           </div>
         </SortableContext>
       </DndContext>
