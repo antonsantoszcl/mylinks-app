@@ -42,9 +42,15 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
           {`O conteudo inicial do Painel e uma compilacao dos sites mais acessados no Brasil.\nFunciona como exemplo e tanto pode ser mantido como alterado.\nInclua (+), Arraste (::), Exclua (X) Links e Secoes.\n\nInclua novas secoes com seus links mais usados.\nOrganize sua navegacao.`}
         </p>
 
-        <div className="border-2 border-dashed border-slate-300 rounded-xl aspect-video flex items-center justify-center text-slate-400 text-xs font-medium">
-          Video em breve
-        </div>
+        {open && (
+          <iframe
+            key={open ? 'open' : 'closed'}
+            src="https://drive.google.com/file/d/1uAvDq5qZqt8ywpkuG98J_myeeZYPPUh1/preview?autoplay=1&loop=1&mute=1"
+            style={{ width: '100%', aspectRatio: '16/9', border: 'none', borderRadius: '12px' }}
+            allow="autoplay; fullscreen"
+            allowFullScreen
+          />
+        )}
       </div>
     </div>
   );
