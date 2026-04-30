@@ -12,10 +12,10 @@ export function QuickAccessCard({ link, onRemove }: QuickAccessCardProps) {
     <div className="relative flex-shrink-0 group">
       <button
         onClick={() => onRemove(link.id)}
-        className="absolute -top-1 -right-1 flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:p-0.5 rounded-full bg-white border border-slate-200 text-slate-400 hover:text-red-600 hover:bg-red-50 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-10"
+        className="absolute -top-1 -right-1 flex items-center justify-center min-w-[32px] min-h-[32px] md:min-w-0 md:min-h-0 md:p-0.5 rounded-full bg-white border border-slate-200 text-slate-400 hover:text-red-600 hover:bg-red-50 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-10"
         aria-label="Remove quick access item"
       >
-        <X className="w-5 h-5 md:w-3.5 md:h-3.5" />
+        <X className="w-4 h-4 md:w-3.5 md:h-3.5" />
       </button>
       <Link
         href={link.url}
