@@ -36,7 +36,7 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
           <X className="w-4 h-4" />
         </button>
 
-        <h2 className="text-sm font-bold text-slate-800 mb-4">Instrucoes</h2>
+        <h2 className="text-sm font-bold text-slate-800 mb-4">Instruções</h2>
 
         <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-line mb-5">
           {`O conteudo inicial do Painel e uma compilacao dos sites mais acessados no Brasil.\nFunciona como exemplo, e tanto pode ser mantido como alterado.\nInclua (+), Arraste (::), Exclua (X) Links e Seções.\n\nInclua novas seções com seus links mais usados.\nOrganize sua navegacao.`}
@@ -80,7 +80,7 @@ export function TopNav() {
           onClick={() => setInstrucoesOpen(true)}
           className="flex items-center px-2.5 sm:px-3 py-1 rounded-lg border border-slate-300 text-xs font-semibold text-slate-500 hover:text-primary-600 hover:border-primary-400 transition-colors tracking-wider bg-white/90 backdrop-blur-sm shadow-sm min-h-[36px]"
         >
-          INSTRUCOES
+          INSTRUÇÕES
         </button>
 
         <button
