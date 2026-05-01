@@ -148,7 +148,7 @@ export function CategoryGrid({
         <div className="bg-primary-100 p-1 rounded-md">
           <LayoutGrid className="w-3.5 h-3.5 text-primary-600" />
         </div>
-        <h2 className="text-base md:text-sm font-bold text-slate-700">Seções</h2>
+        <h2 className="text-sm font-bold text-slate-700">Seções</h2>
       </div>
 
       <DndContext
