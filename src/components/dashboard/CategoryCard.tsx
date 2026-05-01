@@ -208,7 +208,7 @@ export function CategoryCard({
         {/* White body area */}
         <div
           className="mx-2 rounded-lg flex-1 overflow-y-auto custom-scrollbar p-3 card-body-inner"
-          style={{ background: '#F8FAFC' }}
+          style={{ background: '#F1F5F9' }}
         >
           {showAddLink && (
             <form onSubmit={submitNewLink} className="mb-2 p-2 rounded-lg border border-slate-200 bg-white/80 space-y-1.5">

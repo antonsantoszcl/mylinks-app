@@ -40,7 +40,7 @@ body {
 
   /* Darken inner card body background for better contrast */
   .card-body-inner {
-    background: #F1F5F9 !important;
+    background: #E8EDF4 !important;
   }
 
   /* Stronger card shadow on mobile */
