@@ -67,7 +67,7 @@ const DEFAULT_CATEGORIES: Array<{
       { title: 'Itau', url: 'https://itau.com.br', domain: 'itau.com.br' },
       { title: 'Infomoney', url: 'https://infomoney.com.br', domain: 'infomoney.com.br' },
       { title: 'Yahoo Finance', url: 'https://finance.yahoo.com', domain: 'finance.yahoo.com' },
-      { title: 'Calculadora do Cidadao', url: 'https://calculadoradocidadao.com.br', domain: 'calculadoradocidadao.com.br' },
+      { title: 'Calculadora do Cidadao', url: 'https://www3.bcb.gov.br/CALCIDADAO/publico/corrigirPorIndice.do?method=corrigirPorIndice', domain: 'www3.bcb.gov.br' },
     ],
   },
   {

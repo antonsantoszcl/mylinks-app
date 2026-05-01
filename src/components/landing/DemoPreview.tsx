@@ -74,7 +74,7 @@ const demoCategories: DemoCategory[] = [
       { title: 'Itau', domain: 'itau.com.br', url: 'https://itau.com.br' },
       { title: 'Infomoney', domain: 'infomoney.com.br', url: 'https://infomoney.com.br' },
       { title: 'Yahoo Finance', domain: 'finance.yahoo.com', url: 'https://finance.yahoo.com' },
-      { title: 'Calculadora do Cidadao', domain: 'calculadoradocidadao.com.br', url: 'https://calculadoradocidadao.com.br' },
+      { title: 'Calculadora do Cidadao', domain: 'www3.bcb.gov.br', url: 'https://www3.bcb.gov.br/CALCIDADAO/publico/corrigirPorIndice.do?method=corrigirPorIndice' },
     ],
   },
   {
