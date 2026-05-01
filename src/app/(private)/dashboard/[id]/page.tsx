@@ -296,7 +296,7 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
     <div className="max-w-full space-y-7 pb-6">
       <header className="flex items-center gap-2 pt-4">
         <Hand className="w-4 h-4 text-primary-500" />
-        <span className="text-sm font-bold text-slate-700">
+        <span className="text-base md:text-sm font-bold text-slate-700">
           {greeting}, {profile.displayName || 'bem-vindo'}!
         </span>
         {dashboardTitle && (
