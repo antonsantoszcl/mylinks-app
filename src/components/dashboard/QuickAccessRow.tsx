@@ -101,9 +101,9 @@ export function QuickAccessRow({ links, onAdd, onRemove }: QuickAccessRowProps) 
 
         {/* Chevron hint — mobile only, hidden when scrolled to end */}
         {showChevron && (
-          <div className="quick-access-chevron pointer-events-none absolute right-0 top-0 bottom-1 flex items-center">
-            <div className="w-8 h-full bg-gradient-to-l from-[#EEF2F7] to-transparent" />
-            <ChevronRight className="w-4 h-4 text-slate-500 flex-shrink-0 mr-0.5" style={{ opacity: 0.45 }} />
+          <div className="quick-access-chevron pointer-events-none absolute right-0 top-0 bottom-1 flex items-center z-10">
+            <div className="w-10 h-full bg-gradient-to-l from-[#EEF2F7] to-transparent" />
+            <ChevronRight className="w-5 h-5 text-slate-600 flex-shrink-0 mr-0.5" />
           </div>
         )}
       </div>
