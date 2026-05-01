@@ -31,6 +31,24 @@ body {
   border-radius: 2px;
 }
 
+/* ── Quick Access scroll row ─────────────────────────────────────────────── */
+/* Hide scrollbar on mobile only; keep it on desktop */
+@media (max-width: 767px) {
+  .quick-access-scroll {
+    scrollbar-width: none; /* Firefox */
+  }
+  .quick-access-scroll::-webkit-scrollbar {
+    display: none; /* Chrome / Safari */
+  }
+}
+
+/* The chevron overlay is only meaningful on mobile */
+@media (min-width: 768px) {
+  .quick-access-chevron {
+    display: none;
+  }
+}
+
 /* ── Mobile-only contrast refinements (< 768px) ─────────────────────────── */
 @media (max-width: 767px) {
   /* Darken page background so cards stand out more */
