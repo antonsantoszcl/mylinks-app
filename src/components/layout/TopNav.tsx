@@ -39,7 +39,7 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
         <h2 className="text-sm font-bold text-slate-800 mb-4">Instruções</h2>
 
         <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-line mb-5">
-          {`O conteudo inicial do Painel e uma compilacao dos sites mais acessados no Brasil.\nFunciona como exemplo, e tanto pode ser mantido como alterado.\nInclua (+), Arraste (::), Exclua (X) Links e Seções.\n\nInclua novas seções com seus links mais usados.\nOrganize sua navegacao.`}
+          {`O conteúdo inicial do Painel é uma compilacao dos sites mais acessados no Brasil.\nFunciona como exemplo, e tanto pode ser mantido como alterado.\nInclua (+), Arraste (::), Exclua (X) Links e Seções.\n\nInclua novas seções com seus links mais usados.\nOrganize sua navegacao.`}
         </p>
 
         {open && (
