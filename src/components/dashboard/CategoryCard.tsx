@@ -14,6 +14,7 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
+  PointerSensorOptions,
 } from '@dnd-kit/core';
 import {
   SortableContext,
@@ -22,6 +23,50 @@ import {
 } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis, restrictToParentElement } from '@dnd-kit/modifiers';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
+
+// Custom PointerSensor that refuses to activate when the pointer is on an
+// element (or ancestor) marked with data-no-dnd="true". This prevents the
+// inner link-reorder DndContext from stealing events that start on the
+// category drag handle, which — even though it lives outside this inner
+// context's DOM subtree — still triggers the shared document-level listener.
+class NoDndPointerSensor extends PointerSensor {
+  static activators = [
+    {
+      eventName: 'onPointerDown' as const,
+      handler: (
+        { nativeEvent: event }: { nativeEvent: PointerEvent },
+        _options: PointerSensorOptions,
+      ) => {
+        let el: Element | null = event.target as Element;
+        while (el) {
+          if (el.getAttribute?.('data-no-dnd') === 'true') return false;
+          el = el.parentElement;
+        }
+        return true;
+      },
+    },
+  ];
+}
+
+class NoDndTouchSensor extends TouchSensor {
+  static activators = [
+    {
+      eventName: 'onTouchStart' as const,
+      handler: (
+        { nativeEvent: event }: { nativeEvent: TouchEvent },
+        _options: unknown,
+      ) => {
+        const touch = event.touches[0];
+        let el: Element | null = document.elementFromPoint(touch.clientX, touch.clientY);
+        while (el) {
+          if (el.getAttribute?.('data-no-dnd') === 'true') return false;
+          el = el.parentElement;
+        }
+        return true;
+      },
+    },
+  ];
+}
 
 // Soft, desaturated accent colors per category index (0-based)
 // All cards share white bg and subtle gray border; only the inset left accent color varies
@@ -75,9 +120,11 @@ export function CategoryCard({
 
   const colors = CATEGORY_COLORS[colorIndex % CATEGORY_COLORS.length];
 
+  // Use custom sensors that ignore pointer/touch events starting on elements
+  // marked data-no-dnd="true" (i.e. the category drag handle).
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
+    useSensor(NoDndPointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(NoDndTouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
@@ -188,6 +235,7 @@ export function CategoryCard({
               <div
                 className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 transition-colors cursor-grab active:cursor-grabbing rounded"
                 aria-label="Drag to reorder section"
+                data-no-dnd="true"
                 style={{ touchAction: 'none' }}
                 {...dragHandleAttributes}
                 {...dragHandleListeners}
