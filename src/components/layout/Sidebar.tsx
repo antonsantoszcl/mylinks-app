@@ -452,15 +452,20 @@ function SidebarContent({
 
 // ── Sidebar ───────────────────────────────────────────────────────────────────
 
-export function Sidebar() {
+export function Sidebar({
+  mobileOpen,
+  onMobileOpenChange,
+}: {
+  mobileOpen: boolean;
+  onMobileOpenChange: (open: boolean) => void;
+}) {
   const [collapsed, setCollapsed] = useState(true);
-  const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
 
   // Close mobile drawer on route change
   useEffect(() => {
-    setMobileOpen(false);
-  }, [pathname]);
+    onMobileOpenChange(false);
+  }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     try {
@@ -481,24 +486,11 @@ export function Sidebar() {
 
   return (
     <>
-      {/* ── Mobile menu button (logo + text + chevron, mirrors sidebar header) ── */}
-      <button
-        onClick={() => setMobileOpen(true)}
-        className="md:hidden fixed top-2 left-3 z-30 flex items-center gap-1.5 bg-white border border-slate-200 shadow-sm rounded-xl px-2 py-1.5 min-h-[44px] hover:border-[#4C78D4]/40 transition-colors"
-        aria-label="Abrir menu"
-      >
-        <div className="w-6 h-6 rounded-md bg-primary-800 flex items-center justify-center flex-shrink-0">
-          <Globe className="text-white w-3.5 h-3.5" />
-        </div>
-        <span className="text-base font-bold text-slate-800">MyLinks</span>
-        <ChevronRight className="w-4 h-4 text-slate-400" />
-      </button>
-
       {/* ── Mobile overlay ── */}
       {mobileOpen && (
         <div
           className="md:hidden fixed inset-0 z-40 bg-black/40"
-          onClick={() => setMobileOpen(false)}
+          onClick={() => onMobileOpenChange(false)}
         />
       )}
 
@@ -511,7 +503,7 @@ export function Sidebar() {
         <SidebarContent
           collapsed={false}
           onToggle={() => {}}
-          onClose={() => setMobileOpen(false)}
+          onClose={() => onMobileOpenChange(false)}
         />
       </div>
 

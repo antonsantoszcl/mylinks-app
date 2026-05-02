@@ -4,6 +4,7 @@ import { ProfileProvider } from "@/context/ProfileContext";
 import { PublicDataProvider } from "@/context/PublicDataContext";
 import { DashboardsProvider } from "@/context/DashboardsContext";
 import { AuthGuard } from "@/components/auth/AuthGuard";
+import { MobileLayout } from "@/components/layout/MobileLayout";
 
 export default function PrivateLayout({
   children,
@@ -15,14 +16,7 @@ export default function PrivateLayout({
       <ProfileProvider>
         <PublicDataProvider>
           <DashboardsProvider>
-            <div className="flex h-screen bg-white overflow-hidden">
-              <Sidebar />
-              <div className="flex-1 flex flex-col min-w-0">
-                <TopNav />
-                {/* pt-12 on mobile to clear the floating hamburger + topnav buttons */}
-                <main className="flex-1 overflow-y-auto p-3 pt-16 md:pt-2">{children}</main>
-              </div>
-            </div>
+            <MobileLayout>{children}</MobileLayout>
           </DashboardsProvider>
         </PublicDataProvider>
       </ProfileProvider>

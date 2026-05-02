@@ -87,8 +87,8 @@ export function TopNav() {
 
   return (
     <>
-      {/* Floating top-right controls — shifted right on desktop, left-aware on mobile */}
-      <div className="fixed top-2 right-3 z-20 flex items-center gap-2">
+      {/* Top-right controls — normal flow on mobile (inline in top bar), fixed on desktop */}
+      <div className="flex items-center gap-2 px-3 py-3 md:p-0 md:fixed md:top-2 md:right-3 md:z-20">
         <button
           onClick={() => setInstrucoesOpen(true)}
           className="flex items-center px-2.5 sm:px-3 py-1 rounded-lg border border-slate-300 text-xs font-semibold text-slate-500 hover:text-primary-600 hover:border-primary-400 transition-colors tracking-wider bg-white/90 backdrop-blur-sm shadow-sm min-h-[36px]"
