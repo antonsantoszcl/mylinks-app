@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { LogOut, X } from 'lucide-react';
+import { LogOut, X, Plus, GripVertical, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useProfile, getInitials } from '@/context/ProfileContext';
@@ -38,9 +38,22 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
 
         <h2 className="text-sm font-bold text-slate-800 mb-4">Instruções</h2>
 
-        <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-line mb-5">
-          {`O conteúdo inicial do Painel é uma compilacao dos sites mais acessados no Brasil.\nFunciona como exemplo, e tanto pode ser mantido como alterado.\nInclua (+), Arraste (::), Exclua (X) Links e Seções.\n\nInclua novas seções com seus links mais usados.\nOrganize sua navegacao.`}
-        </p>
+        <div className="text-sm text-slate-600 leading-relaxed mb-5 space-y-1">
+          <p>O conteúdo inicial do Painel é uma compilação dos sites mais acessados no Brasil.</p>
+          <p>Pode ser mantido, alterado ou excluído.</p>
+        </div>
+
+        <div className="text-sm text-slate-600 leading-relaxed mb-5 space-y-2">
+          <p>Tudo que você precisa saber é que, para links e Seções:</p>
+          <p className="flex items-center gap-2"><Plus className="w-4 h-4 shrink-0" /> – Inclui</p>
+          <p className="flex items-center gap-2"><GripVertical className="w-4 h-4 shrink-0" /> – Arrasta</p>
+          <p className="flex items-center gap-2"><Trash2 className="w-4 h-4 shrink-0" /> – Deleta</p>
+        </div>
+
+        <div className="text-sm text-slate-600 leading-relaxed mb-5 space-y-1">
+          <p>E pronto!</p>
+          <p>Monte a página ao seu jeito!</p>
+        </div>
 
         {open && (
           <video
