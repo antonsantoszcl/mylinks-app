@@ -20,7 +20,6 @@ import {
   Trash2,
   Check,
   X,
-  Menu,
 } from 'lucide-react';
 import { useProfile, getInitials } from '@/context/ProfileContext';
 import { useDashboards } from '@/context/DashboardsContext';
@@ -482,13 +481,16 @@ export function Sidebar() {
 
   return (
     <>
-      {/* ── Mobile hamburger button ── */}
+      {/* ── Mobile menu button (logo + chevron) ── */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="md:hidden fixed top-2 left-3 z-30 p-2 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-600 hover:text-[#2F5FD0] transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+        className="md:hidden fixed top-2 left-3 z-30 flex items-center gap-1 bg-white border border-slate-200 shadow-sm rounded-xl px-2 py-1.5 min-h-[44px] hover:border-[#4C78D4]/40 transition-colors"
         aria-label="Abrir menu"
       >
-        <Menu className="w-5 h-5" />
+        <div className="w-7 h-7 rounded-full bg-[#4C78D4] flex items-center justify-center flex-shrink-0">
+          <Globe className="text-white w-4 h-4" />
+        </div>
+        <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
       </button>
 
       {/* ── Mobile overlay ── */}
