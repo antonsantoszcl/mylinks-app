@@ -52,7 +52,7 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
 
         <div className="text-sm text-slate-600 leading-relaxed mb-5 space-y-1">
           <p>E pronto!</p>
-          <p>Monte a página ao seu jeito!</p>
+          <p>Amplie o vídeo abaixo para entender como funciona.</p>
         </div>
 
         {open && (
