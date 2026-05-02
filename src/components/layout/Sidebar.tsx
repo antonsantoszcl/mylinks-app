@@ -481,16 +481,17 @@ export function Sidebar() {
 
   return (
     <>
-      {/* ── Mobile menu button (logo + chevron) ── */}
+      {/* ── Mobile menu button (logo + text + chevron, mirrors sidebar header) ── */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="md:hidden fixed top-2 left-3 z-30 flex items-center gap-1 bg-white border border-slate-200 shadow-sm rounded-xl px-2 py-1.5 min-h-[44px] hover:border-[#4C78D4]/40 transition-colors"
+        className="md:hidden fixed top-2 left-3 z-30 flex items-center gap-1.5 bg-white border border-slate-200 shadow-sm rounded-xl px-2 py-1.5 min-h-[44px] hover:border-[#4C78D4]/40 transition-colors"
         aria-label="Abrir menu"
       >
-        <div className="w-7 h-7 rounded-full bg-[#4C78D4] flex items-center justify-center flex-shrink-0">
-          <Globe className="text-white w-4 h-4" />
+        <div className="w-6 h-6 rounded-md bg-primary-800 flex items-center justify-center flex-shrink-0">
+          <Globe className="text-white w-3.5 h-3.5" />
         </div>
-        <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+        <span className="text-base font-bold text-slate-800">MyLinks</span>
+        <ChevronRight className="w-4 h-4 text-slate-400" />
       </button>
 
       {/* ── Mobile overlay ── */}
