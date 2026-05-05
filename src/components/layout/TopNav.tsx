@@ -21,52 +21,91 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 py-6"
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl shadow-xl border border-slate-100 p-4 sm:p-6 w-full max-w-2xl relative max-h-[90vh] overflow-y-auto"
+        className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-lg relative max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-3 p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
-          aria-label="Fechar"
-        >
-          <X className="w-4 h-4" />
-        </button>
-
-        <h2 className="text-sm font-bold text-slate-800 mb-4">Instruções</h2>
-
-        <div className="text-sm text-slate-600 leading-relaxed mb-5 space-y-1">
-          <p>O conteúdo inicial do Painel é uma compilação dos sites mais acessados no Brasil.</p>
-          <p>Pode ser mantido, alterado ou excluído.</p>
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-slate-100">
+          <div>
+            <h2 className="text-base font-bold text-slate-900 tracking-tight">Instruções</h2>
+            <p className="text-xs text-slate-400 mt-0.5">Como usar o Painel</p>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+            aria-label="Fechar"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
 
-        <div className="text-sm text-slate-600 leading-relaxed mb-5 space-y-2">
-          <p>Tudo que você precisa saber é que, para links e Seções:</p>
-          <p className="flex items-center gap-2"><Plus className="w-4 h-4 shrink-0" /> – Inclui</p>
-          <p className="flex items-center gap-2"><GripVertical className="w-4 h-4 shrink-0" /> – Arrasta</p>
-          <p className="flex items-center gap-2"><Trash2 className="w-4 h-4 shrink-0" /> – Deleta</p>
-        </div>
+        {/* Body */}
+        <div className="px-6 py-5 space-y-6">
 
-        <div className="text-sm text-slate-600 leading-relaxed mb-5 space-y-1">
-          <p>E pronto!</p>
-          <p>Amplie o vídeo abaixo para entender como funciona.</p>
-        </div>
+          {/* Intro section */}
+          <div className="space-y-1.5">
+            <p className="text-sm text-slate-700 leading-relaxed">
+              O conteúdo inicial do Painel é uma compilação dos sites mais acessados no Brasil.
+            </p>
+            <p className="text-sm text-slate-500 leading-relaxed">
+              Pode ser mantido, alterado ou excluído.
+            </p>
+          </div>
 
-        {open && (
-          <video
-            key="instrucoes-video"
-            src="/videos/instrucoes.mp4"
-            style={{ width: '100%', borderRadius: '12px', maxHeight: '340px' }}
-            autoPlay
-            loop
-            muted
-            playsInline
-            controls
-          />
-        )}
+          {/* Icons legend */}
+          <div className="space-y-3">
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Para links e Seções
+            </p>
+            <div className="bg-slate-50 rounded-xl border border-slate-100 divide-y divide-slate-100">
+              <div className="flex items-center gap-3 px-4 py-3">
+                <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-600">
+                  <Plus className="w-3.5 h-3.5" />
+                </span>
+                <span className="text-sm text-slate-700 font-medium">Inclui</span>
+              </div>
+              <div className="flex items-center gap-3 px-4 py-3">
+                <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-600">
+                  <GripVertical className="w-3.5 h-3.5" />
+                </span>
+                <span className="text-sm text-slate-700 font-medium">Arrasta</span>
+              </div>
+              <div className="flex items-center gap-3 px-4 py-3">
+                <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-600">
+                  <Trash2 className="w-3.5 h-3.5" />
+                </span>
+                <span className="text-sm text-slate-700 font-medium">Deleta</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Closing text */}
+          <div className="space-y-1">
+            <p className="text-sm font-semibold text-slate-800">E pronto!</p>
+            <p className="text-sm text-slate-500 leading-relaxed">
+              Amplie o vídeo abaixo para entender como funciona.
+            </p>
+          </div>
+
+          {/* Video */}
+          <div className="rounded-xl overflow-hidden border border-slate-200 shadow-sm">
+            <video
+              key="instrucoes-video"
+              src="/videos/instrucoes.mp4"
+              style={{ width: '100%', display: 'block', maxHeight: '320px', objectFit: 'cover' }}
+              autoPlay
+              loop
+              muted
+              playsInline
+              controls
+            />
+          </div>
+
+        </div>
       </div>
     </div>
   );
