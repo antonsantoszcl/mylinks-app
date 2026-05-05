@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "destination": "https://www.alllinks.app/:path*",
+      "permanent": true
+    }
+  ]
+}
