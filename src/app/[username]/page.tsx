@@ -192,7 +192,7 @@ export default function PublicProfilePage({
             <div className="w-7 h-7 rounded-lg bg-primary-600 flex items-center justify-center">
               <Globe className="w-4 h-4 text-white" />
             </div>
-            MyLinks
+            alllinks.app
           </Link>
 
           <button
@@ -388,7 +388,7 @@ export default function PublicProfilePage({
       <footer className="text-center py-8 text-sm text-slate-400 border-t border-slate-200 mt-4 bg-white">
         Feito com <span className="text-red-400">♥</span> por{' '}
         <Link href="/" className="text-primary-600 font-medium hover:underline">
-          MyLinks
+          alllinks.app
         </Link>
         {' '}&middot;{' '}
         <span>© {new Date().getFullYear()}</span>

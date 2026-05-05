@@ -84,7 +84,7 @@ export default function RegisterPage() {
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center mx-auto mb-3">
               <Link2 className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-xl font-bold text-slate-900">MyLinks</h1>
+            <h1 className="text-xl font-bold text-slate-900">alllinks.app</h1>
           </Link>
           <p className="text-sm text-slate-500 mt-1">Crie sua conta grátis</p>
         </div>

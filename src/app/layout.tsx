@@ -7,7 +7,7 @@ import Script from "next/script";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "MyLinks",
+  title: "alllinks.app",
   description: "Personal link management platform",
 };
 

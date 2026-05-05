@@ -21,7 +21,7 @@ export function MobileLayout({ children }: { children: React.ReactNode }) {
           <div className="w-6 h-6 rounded-md bg-primary-800 flex items-center justify-center flex-shrink-0">
             <Globe className="text-white w-3.5 h-3.5" />
           </div>
-          <span className="text-base font-bold text-slate-800">MyLinks</span>
+          <span className="text-base font-bold text-slate-800">alllinks.app</span>
           <ChevronRight className="w-4 h-4 text-slate-400" />
         </button>
         {/* Nav controls pushed to the right */}
