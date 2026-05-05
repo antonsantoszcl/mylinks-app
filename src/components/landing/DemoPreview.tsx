@@ -17,6 +17,9 @@ interface DemoCategory {
   title: string;
   Icon: React.ElementType;
   links: DemoLink[];
+  iconBg: string;
+  iconText: string;
+  insetColor: string;
 }
 
 const demoCategories: DemoCategory[] = [
@@ -30,16 +33,9 @@ const demoCategories: DemoCategory[] = [
       { title: 'Google Drive', domain: 'drive.google.com', url: 'https://drive.google.com' },
       { title: 'ChatGPT', domain: 'chat.openai.com', url: 'https://chat.openai.com' },
     ],
-  },
-  {
-    id: 'compras',
-    title: 'Compras',
-    Icon: ShoppingCart,
-    links: [
-      { title: 'Amazon', domain: 'amazon.com.br', url: 'https://amazon.com.br' },
-      { title: 'Mercado Livre', domain: 'mercadolivre.com.br', url: 'https://mercadolivre.com.br' },
-      { title: 'Shopee', domain: 'shopee.com.br', url: 'https://shopee.com.br' },
-    ],
+    iconBg: '#FEF9C3',
+    iconText: '#713F12',
+    insetColor: 'rgba(234, 179, 8, 0.28)',
   },
   {
     id: 'entretenimento',
@@ -51,56 +47,75 @@ const demoCategories: DemoCategory[] = [
       { title: 'Twitch', domain: 'twitch.tv', url: 'https://twitch.tv' },
       { title: 'Disney+', domain: 'disneyplus.com', url: 'https://disneyplus.com' },
     ],
+    iconBg: '#FFEDD5',
+    iconText: '#7C2D12',
+    insetColor: 'rgba(234, 126, 60, 0.25)',
   },
   {
-    id: 'uteis',
-    title: 'Úteis',
-    Icon: Wrench,
+    id: 'compras',
+    title: 'Compras',
+    Icon: ShoppingCart,
     links: [
-      { title: 'Google Maps', domain: 'maps.google.com', url: 'https://maps.google.com' },
-      { title: 'ClimaTempo', domain: 'climatempo.com.br', url: 'https://climatempo.com.br' },
-      { title: 'Wikipedia', domain: 'pt.wikipedia.org', url: 'https://pt.wikipedia.org' },
+      { title: 'Amazon', domain: 'amazon.com.br', url: 'https://amazon.com.br' },
+      { title: 'Mercado Livre', domain: 'mercadolivre.com.br', url: 'https://mercadolivre.com.br' },
+      { title: 'Shopee', domain: 'shopee.com.br', url: 'https://shopee.com.br' },
+      { title: 'Shein', domain: 'shein.com', url: 'https://shein.com' },
     ],
+    iconBg: '#D1FAE5',
+    iconText: '#065F46',
+    insetColor: 'rgba(52, 168, 120, 0.25)',
   },
 ];
 
 function DemoCategoryCard({ category }: { category: DemoCategory }) {
-  const { Icon, title, links } = category;
+  const { Icon, title, links, iconBg, iconText, insetColor } = category;
   return (
-    <article className="bg-white rounded-xl shadow-sm border border-slate-200 p-3 flex flex-col">
-      <header className="flex items-center gap-2 mb-2.5 pb-2.5 border-b border-slate-100">
-        <div className="p-1.5 rounded-lg bg-primary-100/50 text-primary-600 flex-shrink-0">
+    <article
+      className="rounded-xl flex flex-col"
+      style={{
+        border: '1px solid #E5E7EB',
+        backgroundColor: '#FFFFFF',
+        boxShadow: `inset 3px 0 0 ${insetColor}, 0 6px 16px rgba(0,0,0,0.05)`,
+      }}
+    >
+      {/* Card header */}
+      <header className="flex items-center gap-2 px-3 py-2.5">
+        <div
+          className="p-1.5 rounded-lg flex-shrink-0"
+          style={{ backgroundColor: iconBg, color: iconText, opacity: 0.7 }}
+        >
           <Icon className="w-3.5 h-3.5" />
         </div>
-        <h3 className="text-xs font-semibold text-slate-700 truncate">{title}</h3>
-        <span className="ml-auto bg-slate-100 text-slate-400 text-xs font-medium px-1.5 rounded-full leading-4 flex-shrink-0">
+        <h3 className="text-xs font-semibold text-slate-800 truncate flex-1">{title}</h3>
+        <span className="text-slate-400 text-xs font-medium px-1.5 rounded-full flex-shrink-0 leading-4">
           {links.length}
         </span>
       </header>
-      <ul className="space-y-1">
+
+      {/* Links area — gray background matching real card body */}
+      <div
+        className="mx-2 mb-2 rounded-lg p-2 space-y-0.5"
+        style={{ background: '#F1F5F9' }}
+      >
         {links.map((link) => (
-          <li key={link.domain + link.title}>
-            <a
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2.5 px-2 py-1.5 rounded-lg hover:bg-primary-50 group/link transition-colors"
-            >
-              <Image
-                src={`https://www.google.com/s2/favicons?domain=${link.domain}&sz=32`}
-                alt=""
-                width={14}
-                height={14}
-                className="w-3.5 h-3.5 rounded-sm flex-shrink-0"
-                unoptimized
-              />
-              <span className="text-xs text-slate-600 group-hover/link:text-primary-600 transition-colors truncate">
-                {link.title}
-              </span>
-            </a>
-          </li>
+          <div
+            key={link.domain + link.title}
+            className="flex items-center gap-2 py-1 pl-1.5 pr-2 rounded-lg"
+          >
+            <Image
+              src={`https://www.google.com/s2/favicons?domain=${link.domain}&sz=32`}
+              alt=""
+              width={16}
+              height={16}
+              className="w-4 h-4 rounded-sm flex-shrink-0 object-contain"
+              unoptimized
+            />
+            <span className="text-xs font-semibold text-slate-700 truncate">
+              {link.title}
+            </span>
+          </div>
         ))}
-      </ul>
+      </div>
     </article>
   );
 }
@@ -138,9 +153,18 @@ export function DemoPreview() {
             </div>
           </div>
 
-          {/* Dashboard content */}
-          <div className="bg-slate-50 p-5 sm:p-6">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {/* Dashboard content area */}
+          <div className="bg-[#F8FAFC] p-5 sm:p-7">
+            {/* Mini top bar inside preview */}
+            <div className="flex items-center justify-between mb-5">
+              <div className="h-3 w-24 rounded-full bg-slate-200" />
+              <div className="flex items-center gap-2">
+                <div className="h-3 w-16 rounded-full bg-slate-200" />
+                <div className="w-6 h-6 rounded-full bg-slate-200" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {demoCategories.map((cat) => (
                 <DemoCategoryCard key={cat.id} category={cat} />
               ))}
