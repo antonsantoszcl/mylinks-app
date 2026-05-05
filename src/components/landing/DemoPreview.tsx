@@ -71,11 +71,13 @@ function DemoCategoryCard({ category }: { category: DemoCategory }) {
   const { Icon, title, links, iconBg, iconText, insetColor } = category;
   return (
     <article
-      className="rounded-xl flex flex-col"
       style={{
         border: '1px solid #E5E7EB',
         backgroundColor: '#FFFFFF',
         boxShadow: `inset 3px 0 0 ${insetColor}, 0 6px 16px rgba(0,0,0,0.05)`,
+        borderRadius: '0.75rem',
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
       {/* Card header */}
@@ -164,7 +166,7 @@ export function DemoPreview() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '1rem' }}>
               {demoCategories.map((cat) => (
                 <DemoCategoryCard key={cat.id} category={cat} />
               ))}
