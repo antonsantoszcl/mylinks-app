@@ -153,10 +153,16 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
       sortOrder: d.sort_order as number,
     }));
 
+    // Track whether we just created a brand-new dashboard in this call
+    let dashboardJustCreated = false;
+
     // If no dashboards, create the default one (handles users created before the migration)
     if (list.length === 0) {
       const created = await insertDefaultDashboard(uid);
-      if (created) list = [created];
+      if (created) {
+        list = [created];
+        dashboardJustCreated = true;
+      }
     } else {
       // Migrate orphan categories (no dashboard_id) to the default dashboard
       const defaultDash = list.find((d) => d.isDefault) ?? list[0];
@@ -169,16 +175,19 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    // Seed example data if the default dashboard has no categories yet
-    const defaultDash = list.find((d) => d.isDefault) ?? list[0];
-    if (defaultDash) {
-      const { count } = await supabase
-        .from('categories')
-        .select('id', { count: 'exact', head: true })
-        .eq('user_id', uid)
-        .eq('dashboard_id', defaultDash.id);
-      if ((count ?? 0) === 0) {
-        await seedDefaultDashboard(uid, defaultDash.id);
+    // Seed example data ONLY if the dashboard was just created AND the user has
+    // zero categories across ALL dashboards (i.e. truly a brand-new account).
+    // Never seed if the dashboard already existed, even if it has 0 categories.
+    if (dashboardJustCreated) {
+      const defaultDash = list.find((d) => d.isDefault) ?? list[0];
+      if (defaultDash) {
+        const { count: totalCount } = await supabase
+          .from('categories')
+          .select('id', { count: 'exact', head: true })
+          .eq('user_id', uid);
+        if ((totalCount ?? 0) === 0) {
+          await seedDefaultDashboard(uid, defaultDash.id);
+        }
       }
     }
 
