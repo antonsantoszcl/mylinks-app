@@ -7,6 +7,7 @@ interface RecentAccessRowProps {
 }
 
 export function RecentAccessRow({ items }: RecentAccessRowProps) {
+  if (!items.length) return null;
   return (
     <section>
       <div className="flex items-center gap-1.5 mb-1.5">

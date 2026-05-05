@@ -1,10 +1,7 @@
 import Image from 'next/image';
 import {
   Star,
-  Users,
-  Newspaper,
   ShoppingCart,
-  Banknote,
   Tv2,
   Wrench,
 } from 'lucide-react';
@@ -27,30 +24,11 @@ const demoCategories: DemoCategory[] = [
     id: 'meus-favoritos',
     title: 'Meus Favoritos',
     Icon: Star,
-    links: [],
-  },
-  {
-    id: 'redes-sociais',
-    title: 'Redes Sociais',
-    Icon: Users,
     links: [
-      { title: 'Facebook', domain: 'facebook.com', url: 'https://facebook.com' },
-      { title: 'WhatsApp', domain: 'web.whatsapp.com', url: 'https://web.whatsapp.com' },
-      { title: 'Instagram', domain: 'instagram.com', url: 'https://instagram.com' },
-      { title: 'TikTok', domain: 'tiktok.com', url: 'https://tiktok.com' },
-      { title: 'X.com', domain: 'x.com', url: 'https://x.com' },
-    ],
-  },
-  {
-    id: 'noticias',
-    title: 'Noticias',
-    Icon: Newspaper,
-    links: [
-      { title: 'Globo.com', domain: 'globo.com', url: 'https://globo.com' },
-      { title: 'UOL', domain: 'uol.com.br', url: 'https://uol.com.br' },
-      { title: 'CNN', domain: 'cnnbrasil.com.br', url: 'https://cnnbrasil.com.br' },
-      { title: 'msn', domain: 'msn.com', url: 'https://msn.com' },
-      { title: 'Yahoo', domain: 'yahoo.com.br', url: 'https://yahoo.com.br' },
+      { title: 'YouTube', domain: 'youtube.com', url: 'https://youtube.com' },
+      { title: 'Gmail', domain: 'gmail.com', url: 'https://gmail.com' },
+      { title: 'Google Drive', domain: 'drive.google.com', url: 'https://drive.google.com' },
+      { title: 'ChatGPT', domain: 'chat.openai.com', url: 'https://chat.openai.com' },
     ],
   },
   {
@@ -58,23 +36,9 @@ const demoCategories: DemoCategory[] = [
     title: 'Compras',
     Icon: ShoppingCart,
     links: [
-      { title: 'Buscape', domain: 'buscape.com.br', url: 'https://buscape.com.br' },
-      { title: 'Mercado Livre', domain: 'mercadolivre.com.br', url: 'https://mercadolivre.com.br' },
       { title: 'Amazon', domain: 'amazon.com.br', url: 'https://amazon.com.br' },
+      { title: 'Mercado Livre', domain: 'mercadolivre.com.br', url: 'https://mercadolivre.com.br' },
       { title: 'Shopee', domain: 'shopee.com.br', url: 'https://shopee.com.br' },
-      { title: 'Tudo Celular', domain: 'tudocelular.com', url: 'https://tudocelular.com' },
-    ],
-  },
-  {
-    id: 'financas',
-    title: 'Financas',
-    Icon: Banknote,
-    links: [
-      { title: 'Banco do Brasil', domain: 'bb.com.br', url: 'https://bb.com.br' },
-      { title: 'Itau', domain: 'itau.com.br', url: 'https://itau.com.br' },
-      { title: 'Infomoney', domain: 'infomoney.com.br', url: 'https://infomoney.com.br' },
-      { title: 'Yahoo Finance', domain: 'finance.yahoo.com', url: 'https://finance.yahoo.com' },
-      { title: 'Calculadora do Cidadao', domain: 'www3.bcb.gov.br', url: 'https://www3.bcb.gov.br/CALCIDADAO/publico/corrigirPorIndice.do?method=corrigirPorIndice' },
     ],
   },
   {
@@ -82,23 +46,20 @@ const demoCategories: DemoCategory[] = [
     title: 'Entretenimento',
     Icon: Tv2,
     links: [
-      { title: 'Youtube', domain: 'youtube.com', url: 'https://youtube.com' },
       { title: 'Netflix', domain: 'netflix.com', url: 'https://netflix.com' },
       { title: 'Spotify', domain: 'spotify.com', url: 'https://spotify.com' },
-      { title: 'Globo Esporte', domain: 'ge.globo.com', url: 'https://ge.globo.com' },
-      { title: 'Series', domain: 'justwatch.com', url: 'https://justwatch.com' },
+      { title: 'Twitch', domain: 'twitch.tv', url: 'https://twitch.tv' },
+      { title: 'Disney+', domain: 'disneyplus.com', url: 'https://disneyplus.com' },
     ],
   },
   {
     id: 'uteis',
-    title: 'Uteis',
+    title: 'Úteis',
     Icon: Wrench,
     links: [
-      { title: 'Gov.br', domain: 'gov.br', url: 'https://gov.br' },
-      { title: 'Wikipedia', domain: 'pt.wikipedia.org', url: 'https://pt.wikipedia.org' },
-      { title: 'ClimaTempo', domain: 'climatempo.com.br', url: 'https://climatempo.com.br' },
-      { title: 'Calculadora', domain: 'google.com', url: 'https://google.com/search?q=calculadora' },
       { title: 'Google Maps', domain: 'maps.google.com', url: 'https://maps.google.com' },
+      { title: 'ClimaTempo', domain: 'climatempo.com.br', url: 'https://climatempo.com.br' },
+      { title: 'Wikipedia', domain: 'pt.wikipedia.org', url: 'https://pt.wikipedia.org' },
     ],
   },
 ];
@@ -106,9 +67,9 @@ const demoCategories: DemoCategory[] = [
 function DemoCategoryCard({ category }: { category: DemoCategory }) {
   const { Icon, title, links } = category;
   return (
-    <article className="bg-white rounded-xl shadow-sm border border-slate-200 p-2 flex flex-col">
-      <header className="flex items-center gap-1.5 mb-1.5 pb-1.5 border-b border-slate-100">
-        <div className="p-1 rounded-lg bg-primary-100/50 text-primary-600 flex-shrink-0">
+    <article className="bg-white rounded-xl shadow-sm border border-slate-200 p-3 flex flex-col">
+      <header className="flex items-center gap-2 mb-2.5 pb-2.5 border-b border-slate-100">
+        <div className="p-1.5 rounded-lg bg-primary-100/50 text-primary-600 flex-shrink-0">
           <Icon className="w-3.5 h-3.5" />
         </div>
         <h3 className="text-xs font-semibold text-slate-700 truncate">{title}</h3>
@@ -116,14 +77,14 @@ function DemoCategoryCard({ category }: { category: DemoCategory }) {
           {links.length}
         </span>
       </header>
-      <ul className="space-y-0.5">
+      <ul className="space-y-1">
         {links.map((link) => (
           <li key={link.domain + link.title}>
             <a
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-1.5 py-1 rounded-lg hover:bg-primary-50 group/link transition-colors"
+              className="flex items-center gap-2.5 px-2 py-1.5 rounded-lg hover:bg-primary-50 group/link transition-colors"
             >
               <Image
                 src={`https://www.google.com/s2/favicons?domain=${link.domain}&sz=32`}
@@ -147,7 +108,7 @@ function DemoCategoryCard({ category }: { category: DemoCategory }) {
 export function DemoPreview() {
   return (
     <section className="py-14 sm:py-20">
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="max-w-5xl mx-auto px-4">
         <div className="text-center mb-10">
           <span className="inline-flex items-center gap-2 bg-primary-50 text-primary-600 text-xs font-medium px-3 py-1.5 rounded-full mb-4 border border-primary-100">
             <span className="w-1.5 h-1.5 rounded-full bg-primary-500" />
@@ -162,7 +123,7 @@ export function DemoPreview() {
         </div>
 
         {/* Browser chrome mockup */}
-        <div className="relative mx-auto max-w-5xl rounded-2xl shadow-2xl shadow-primary-100/60 border border-slate-200 overflow-hidden">
+        <div className="relative mx-auto max-w-3xl rounded-2xl shadow-2xl shadow-primary-100/60 border border-slate-200 overflow-hidden">
           {/* Browser top bar */}
           <div className="bg-slate-100 border-b border-slate-200 px-4 py-2.5 flex items-center gap-3">
             <div className="flex items-center gap-1.5">
@@ -172,14 +133,14 @@ export function DemoPreview() {
             </div>
             <div className="flex-1 mx-4">
               <div className="bg-white rounded-md px-3 py-1 text-xs text-slate-400 max-w-sm mx-auto text-center border border-slate-200">
-                mylinks.app/dashboard
+                alllinks.app/dashboard
               </div>
             </div>
           </div>
 
-          {/* Dashboard content — scrollable on mobile */}
-          <div className="bg-slate-50 p-3 sm:p-4 overflow-x-auto">
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-2 min-w-[300px]">
+          {/* Dashboard content */}
+          <div className="bg-slate-50 p-5 sm:p-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {demoCategories.map((cat) => (
                 <DemoCategoryCard key={cat.id} category={cat} />
               ))}
