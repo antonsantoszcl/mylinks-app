@@ -94,7 +94,7 @@ export default function Home() {
             <div className="w-7 h-7 rounded-lg bg-primary-800 flex items-center justify-center">
               <Link2 className="w-3.5 h-3.5 text-white" />
             </div>
-            <span className="font-bold italic text-sm"><span className="text-slate-700">alllinks</span><span className="text-[#4C78D4]">.app</span></span>
+            <span className="font-bold text-sm text-slate-800">alllinks.app</span>
           </div>
           <div className="flex items-center gap-3">
             <Link
@@ -228,7 +228,7 @@ export default function Home() {
             <div className="w-6 h-6 rounded-md bg-primary-800 flex items-center justify-center">
               <Link2 className="w-3 h-3 text-white" />
             </div>
-            <span className="font-bold italic text-sm"><span className="text-slate-700">alllinks</span><span className="text-[#4C78D4]">.app</span></span>
+            <span className="font-bold text-sm text-slate-800">alllinks.app</span>
           </div>
           <p className="text-xs text-slate-400">© 2024 alllinks.app. Todos os direitos reservados.</p>
         </div>
