@@ -240,7 +240,7 @@ function SidebarContent({
               <div className="w-6 h-6 rounded-md bg-primary-800 flex items-center justify-center flex-shrink-0">
                 <Globe className="text-white w-3.5 h-3.5" />
               </div>
-              <span className="text-slate-700">alllinks</span><span className="text-[#4C78D4]">.app</span>
+              <span className="italic text-slate-700">alllinks</span><span className="italic text-[#4C78D4]">.app</span>
             </h1>
           )}
           {collapsed && (
