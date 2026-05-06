@@ -7,7 +7,6 @@ import { QuickAccessRow } from '@/components/dashboard/QuickAccessRow';
 import { CategoryGrid } from '@/components/dashboard/CategoryGrid';
 import { RecentAccessRow } from '@/components/dashboard/RecentAccessRow';
 import { Hand } from 'lucide-react';
-import { InfoBar } from '@/components/dashboard/InfoBar';
 import { Category, Link, QuickAccessLink, RecentAccess } from '@/lib/types';
 import { arrayMove } from '@dnd-kit/sortable';
 import { getSupabaseClient } from '@/lib/supabase';
@@ -295,11 +294,6 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="max-w-full space-y-7 pb-6">
-      {/* InfoBar: negative margin to bleed edge-to-edge within the padded main column */}
-      <div className="-mx-3 md:-mx-3 -mt-3 md:-mt-2">
-        <InfoBar />
-      </div>
-
       <header className="flex items-center gap-2 pt-4">
         <Hand className="w-4 h-4 text-primary-500" />
         <span className="text-base md:text-sm font-bold text-slate-700">
