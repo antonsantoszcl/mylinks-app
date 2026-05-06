@@ -112,7 +112,6 @@ export function CategoryCard({
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleDraft, setTitleDraft] = useState(category.title);
   const [showAddLink, setShowAddLink] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   const [linkTitle, setLinkTitle] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -173,15 +172,10 @@ export function CategoryCard({
     <>
       <article
         className="rounded-xl flex flex-col group/card category-card"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
         style={{
           border: '1px solid #E5E7EB',
           backgroundColor: '#FFFFFF',
-          boxShadow: isHovered
-            ? `inset 3px 0 0 ${colors.insetColor}, 0 8px 20px rgba(0,0,0,0.07)`
-            : `inset 3px 0 0 ${colors.insetColor}, 0 6px 16px rgba(0,0,0,0.05)`,
-          transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
+          boxShadow: `inset 3px 0 0 ${colors.insetColor}, 0 6px 16px rgba(0,0,0,0.05)`,
           transition: 'all 0.2s ease',
           ['--card-inset-color' as string]: colors.insetColorMobile,
         }}

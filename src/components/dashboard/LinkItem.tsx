@@ -25,7 +25,7 @@ export function LinkItem({ link, onDelete, dragHandleListeners, dragHandleAttrib
             alt={link.title}
             className="w-5 h-5 object-contain flex-shrink-0 rounded-sm"
           />
-          <span className="text-sm md:text-xs font-semibold text-slate-700 truncate flex-1 group-hover/link:text-primary-600 transition-colors">
+          <span className="text-sm md:text-xs font-semibold text-slate-700 truncate flex-1">
             {link.title}
           </span>
         </Link>
