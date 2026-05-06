@@ -18,7 +18,7 @@ export function LinkItem({ link, onDelete, dragHandleListeners, dragHandleAttrib
 
   return (
     <>
-      <div className="group/link flex items-center justify-between py-1 pl-1.5 pr-0 rounded-lg hover:bg-[#F3F4F6] hover:-translate-y-px active:bg-[#E5E7EB] active:scale-[0.98] transition-[background-color,transform] duration-[120ms] ease-[ease] cursor-pointer focus-within:outline-none focus-within:ring-2 focus-within:ring-primary-200 focus-within:ring-offset-1">
+      <div className="group/link flex items-center justify-between py-1 pl-1.5 pr-0 rounded-lg hover:bg-white/70 transition-all cursor-pointer">
         <Link href={link.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 flex-1 min-w-0">
           <img
             src={link.iconUrl}
