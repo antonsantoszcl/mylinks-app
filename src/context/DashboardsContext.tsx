@@ -153,15 +153,32 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
       sortOrder: d.sort_order as number,
     }));
 
-    // Track whether we just created a brand-new dashboard in this call
-    let dashboardJustCreated = false;
+    // Track whether this user had zero dashboards before this call (i.e. brand-new account)
+    const hadNoDashboards = list.length === 0;
 
     // If no dashboards, create the default one (handles users created before the migration)
-    if (list.length === 0) {
+    if (hadNoDashboards) {
       const created = await insertDefaultDashboard(uid);
       if (created) {
         list = [created];
-        dashboardJustCreated = true;
+      } else {
+        // Insert may have succeeded but .single() returned null (e.g. RLS quirk).
+        // Re-fetch so we have the dashboard id for seeding.
+        const { data: refetched } = await supabase
+          .from('dashboards')
+          .select('*')
+          .eq('user_id', uid)
+          .order('sort_order')
+          .limit(1)
+          .single();
+        if (refetched) {
+          list = [{
+            id: refetched.id as string,
+            title: refetched.title as string,
+            isDefault: refetched.is_default as boolean,
+            sortOrder: refetched.sort_order as number,
+          }];
+        }
       }
     } else {
       // Migrate orphan categories (no dashboard_id) to the default dashboard
@@ -175,10 +192,9 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    // Seed example data ONLY if the dashboard was just created AND the user has
-    // zero categories across ALL dashboards (i.e. truly a brand-new account).
-    // Never seed if the dashboard already existed, even if it has 0 categories.
-    if (dashboardJustCreated) {
+    // Seed example data ONLY when the user had zero dashboards (brand-new account)
+    // AND still has zero categories (double-check to avoid re-seeding on re-render race).
+    if (hadNoDashboards) {
       const defaultDash = list.find((d) => d.isDefault) ?? list[0];
       if (defaultDash) {
         const { count: totalCount } = await supabase
