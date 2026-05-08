@@ -153,33 +153,10 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
       sortOrder: d.sort_order as number,
     }));
 
-    // Track whether this user had zero dashboards before this call (i.e. brand-new account)
-    const hadNoDashboards = list.length === 0;
-
-    // If no dashboards, create the default one (handles users created before the migration)
-    if (hadNoDashboards) {
+    // If no dashboards, create the default one
+    if (list.length === 0) {
       const created = await insertDefaultDashboard(uid);
-      if (created) {
-        list = [created];
-      } else {
-        // Insert may have succeeded but .single() returned null (e.g. RLS quirk).
-        // Re-fetch so we have the dashboard id for seeding.
-        const { data: refetched } = await supabase
-          .from('dashboards')
-          .select('*')
-          .eq('user_id', uid)
-          .order('sort_order')
-          .limit(1)
-          .single();
-        if (refetched) {
-          list = [{
-            id: refetched.id as string,
-            title: refetched.title as string,
-            isDefault: refetched.is_default as boolean,
-            sortOrder: refetched.sort_order as number,
-          }];
-        }
-      }
+      if (created) list = [created];
     } else {
       // Migrate orphan categories (no dashboard_id) to the default dashboard
       const defaultDash = list.find((d) => d.isDefault) ?? list[0];
@@ -192,18 +169,15 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    // Seed example data ONLY when the user had zero dashboards (brand-new account)
-    // AND still has zero categories (double-check to avoid re-seeding on re-render race).
-    if (hadNoDashboards) {
-      const defaultDash = list.find((d) => d.isDefault) ?? list[0];
-      if (defaultDash) {
-        const { count: totalCount } = await supabase
-          .from('categories')
-          .select('id', { count: 'exact', head: true })
-          .eq('user_id', uid);
-        if ((totalCount ?? 0) === 0) {
-          await seedDefaultDashboard(uid, defaultDash.id);
-        }
+    // Seed if user has zero categories (safe for new users; no-op for existing users)
+    const defaultDash = list.find((d) => d.isDefault) ?? list[0];
+    if (defaultDash) {
+      const { count: totalCount } = await supabase
+        .from('categories')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', uid);
+      if ((totalCount ?? 0) === 0) {
+        await seedDefaultDashboard(uid, defaultDash.id);
       }
     }
 
