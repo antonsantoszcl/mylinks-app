@@ -168,9 +168,9 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
           </span>
         </a>
 
-        <div className="flex items-center gap-0.5 flex-shrink-0 -mr-2">
+        <div className="flex items-center gap-0 md:gap-0.5 flex-shrink-0 -mr-2">
           <button
-            className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 hover:text-primary-500 rounded opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity"
+            className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 hover:text-primary-500 rounded opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity"
             title="Editar link"
             onClick={(e) => { e.stopPropagation(); openEdit(); }}
             data-no-dnd="true"
@@ -180,7 +180,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
 
           {dragHandleListeners && dragHandleAttributes && (
             <div
-              className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 hover:text-primary-500 opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity cursor-grab active:cursor-grabbing"
+              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 hover:text-primary-500 opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity cursor-grab active:cursor-grabbing"
               aria-label="Drag to reorder link"
               style={{ touchAction: 'none' }}
               {...dragHandleAttributes}
@@ -193,7 +193,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
           {canMove && (
             <div className="relative" ref={moveMenuRef} data-no-dnd="true">
               <button
-                className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 hover:text-primary-500 rounded opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity"
+                className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 hover:text-primary-500 rounded opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity"
                 title="Mover para outra seção"
                 onClick={(e) => { e.stopPropagation(); setShowMoveMenu((v) => !v); }}
                 data-no-dnd="true"
