@@ -201,7 +201,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
 
         <div className="flex items-center gap-0 md:gap-0.5 flex-shrink-0 -mr-2">
           <button
-            className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-200 md:text-slate-300 hover:text-primary-500 rounded opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity"
+            className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-[#d4dce8] md:text-slate-300 hover:text-primary-500 rounded opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity"
             title="Editar link"
             onClick={(e) => { e.stopPropagation(); openEdit(); }}
             data-no-dnd="true"
@@ -211,7 +211,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
 
           {dragHandleListeners && dragHandleAttributes && (
             <div
-              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-200 md:text-slate-300 hover:text-primary-500 opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity cursor-grab active:cursor-grabbing"
+              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-[#d4dce8] md:text-slate-300 hover:text-primary-500 opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity cursor-grab active:cursor-grabbing"
               aria-label="Drag to reorder link"
               style={{ touchAction: 'none' }}
               {...dragHandleAttributes}
@@ -224,7 +224,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
           {canMove && (
             <div data-no-dnd="true">
               <button
-                className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-200 md:text-slate-300 hover:text-primary-500 rounded opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity"
+                className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-[#d4dce8] md:text-slate-300 hover:text-primary-500 rounded opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity"
                 title="Mover para outra seção"
                 ref={moveButtonRef}
                 onClick={(e) => { e.stopPropagation(); setShowMoveMenu((v) => !v); }}
@@ -259,7 +259,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
           )}
 
           <button
-            className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-200 md:text-slate-300 hover:text-red-500 rounded opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity"
+            className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-[#d4dce8] md:text-slate-300 hover:text-red-500 rounded opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity"
             title="Excluir link"
             onClick={() => setShowDeleteModal(true)}
           >
