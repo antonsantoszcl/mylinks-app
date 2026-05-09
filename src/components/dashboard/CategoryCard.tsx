@@ -377,7 +377,7 @@ export function CategoryCard({
             style={{ backgroundColor: '#FFFFFF' }}
           >
             <button
-              className="text-sm md:text-xs font-medium hover:opacity-75 transition-opacity flex items-center gap-1 min-h-[32px] md:min-h-0 py-1 md:py-0"
+              className="text-sm md:text-xs font-medium hover:opacity-75 transition-opacity flex items-center gap-1 min-h-[24px] md:min-h-0 py-0.5 md:py-0"
               style={{ color: colors.accentText }}
               onClick={() => setShowAddLink(true)}
             >
