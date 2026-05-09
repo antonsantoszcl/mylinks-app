@@ -245,9 +245,9 @@ export function CategoryCard({
               {links.length}
             </span>
           </div>
-          <div className="flex items-center gap-0.5 flex-shrink-0">
+          <div className="flex items-center gap-0 md:gap-0.5 flex-shrink-0">
             <button
-              className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-400 hover:bg-white/60 rounded transition-colors"
+              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-400 hover:bg-white/60 rounded transition-colors"
               style={{ ['--hover-color' as string]: colors.accentText }}
               aria-label="Add new link to section"
               onClick={() => setShowAddLink(true)}
@@ -256,7 +256,7 @@ export function CategoryCard({
             </button>
             {dragHandleListeners && dragHandleAttributes && (
               <div
-                className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 transition-colors cursor-grab active:cursor-grabbing rounded"
+                className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 transition-colors cursor-grab active:cursor-grabbing rounded"
                 aria-label="Drag to reorder section"
                 data-no-dnd="true"
                 style={{ touchAction: 'none' }}
@@ -269,7 +269,7 @@ export function CategoryCard({
             {canMoveToPanel && (
               <div className="relative" ref={movePanelMenuRef} data-no-dnd="true">
                 <button
-                  className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-400 hover:text-primary-500 rounded transition-colors opacity-100 md:opacity-0 md:group-hover/card:opacity-100"
+                  className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-400 hover:text-primary-500 rounded transition-colors opacity-100 md:opacity-0 md:group-hover/card:opacity-100"
                   aria-label="Mover seção para outro painel"
                   title="Mover para outro painel"
                   data-no-dnd="true"
@@ -297,7 +297,7 @@ export function CategoryCard({
               </div>
             )}
             <button
-              className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
               onClick={() => setShowDeleteModal(true)}
               aria-label="Delete section"
             >
