@@ -87,6 +87,7 @@ interface CategoryCardProps {
   onRenameCategory: (categoryId: string, title: string) => void;
   onAddLink: (categoryId: string, title: string, url: string) => void;
   onDeleteLink: (linkId: string) => void;
+  onUpdateLink: (linkId: string, title: string, url: string) => void;
   onDeleteCategory: (categoryId: string) => void;
   onReorderLinks: (categoryId: string, oldIndex: number, newIndex: number) => void;
   dragHandleListeners?: SyntheticListenerMap;
@@ -100,6 +101,7 @@ export function CategoryCard({
   onRenameCategory,
   onAddLink,
   onDeleteLink,
+  onUpdateLink,
   onDeleteCategory,
   onReorderLinks,
   dragHandleListeners,
@@ -293,7 +295,7 @@ export function CategoryCard({
             >
               <SortableContext items={links.map((l) => l.id)} strategy={verticalListSortingStrategy}>
                 {links.map((link) => (
-                  <SortableLinkItem key={link.id} link={link} onDelete={onDeleteLink} />
+                  <SortableLinkItem key={link.id} link={link} onDelete={onDeleteLink} onUpdate={onUpdateLink} />
                 ))}
               </SortableContext>
             </DndContext>

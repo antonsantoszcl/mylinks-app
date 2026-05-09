@@ -26,6 +26,7 @@ interface CategoryGridProps {
   onRenameCategory: (categoryId: string, title: string) => void;
   onAddLink: (categoryId: string, title: string, url: string) => void;
   onDeleteLink: (linkId: string) => void;
+  onUpdateLink: (linkId: string, title: string, url: string) => void;
   onAddCategory: (title: string, iconName: string) => void;
   onDeleteCategory: (categoryId: string) => void;
   onReorderCategories: (oldIndex: number, newIndex: number) => void;
@@ -52,6 +53,7 @@ export function CategoryGrid({
   onRenameCategory,
   onAddLink,
   onDeleteLink,
+  onUpdateLink,
   onAddCategory,
   onDeleteCategory,
   onReorderCategories,
@@ -199,6 +201,7 @@ export function CategoryGrid({
                       onRenameCategory={onRenameCategory}
                       onAddLink={onAddLink}
                       onDeleteLink={onDeleteLink}
+                      onUpdateLink={onUpdateLink}
                       onDeleteCategory={onDeleteCategory}
                       onReorderLinks={onReorderLinks}
                     />

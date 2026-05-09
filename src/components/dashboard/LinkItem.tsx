@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link as LinkType } from '@/lib/types';
-import Link from 'next/link';
-import { GripVertical, Trash2 } from 'lucide-react';
+import { GripVertical, Pencil, Trash2 } from 'lucide-react';
 import { DraggableAttributes } from '@dnd-kit/core';
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
@@ -9,17 +8,136 @@ import { ConfirmModal } from '@/components/ui/ConfirmModal';
 interface LinkItemProps {
   link: LinkType;
   onDelete: (linkId: string) => void;
+  onUpdate: (linkId: string, title: string, url: string) => void;
   dragHandleListeners?: SyntheticListenerMap;
   dragHandleAttributes?: DraggableAttributes;
 }
 
-export function LinkItem({ link, onDelete, dragHandleListeners, dragHandleAttributes }: LinkItemProps) {
+export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHandleAttributes }: LinkItemProps) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState(link.title);
+  const [editUrl, setEditUrl] = useState(link.url);
+  const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const titleInputRef = useRef<HTMLInputElement>(null);
+
+  // Keep edit fields in sync if link prop changes (e.g. after save)
+  useEffect(() => {
+    if (!isEditing) {
+      setEditTitle(link.title);
+      setEditUrl(link.url);
+    }
+  }, [link.title, link.url, isEditing]);
+
+  // Auto-focus title input when edit mode opens
+  useEffect(() => {
+    if (isEditing) {
+      titleInputRef.current?.focus();
+      titleInputRef.current?.select();
+    }
+  }, [isEditing]);
+
+  const openEdit = () => {
+    setEditTitle(link.title);
+    setEditUrl(link.url);
+    setIsEditing(true);
+  };
+
+  const saveEdit = () => {
+    const cleanTitle = editTitle.trim();
+    const cleanUrl = editUrl.trim();
+    if (cleanTitle && cleanUrl) {
+      onUpdate(link.id, cleanTitle, cleanUrl);
+    }
+    setIsEditing(false);
+  };
+
+  const cancelEdit = () => {
+    setEditTitle(link.title);
+    setEditUrl(link.url);
+    setIsEditing(false);
+  };
+
+  const handleLinkClick = (e: React.MouseEvent) => {
+    // If a double-click timer is in flight, cancel navigation
+    if (clickTimerRef.current !== null) {
+      e.preventDefault();
+    }
+  };
+
+  const handleDoubleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    // Cancel any pending single-click timer
+    if (clickTimerRef.current !== null) {
+      clearTimeout(clickTimerRef.current);
+      clickTimerRef.current = null;
+    }
+    openEdit();
+  };
+
+  // Edit mode: render inline form
+  if (isEditing) {
+    return (
+      <div
+        className="rounded-lg border border-primary-200 bg-white shadow-sm p-2 my-0.5"
+        data-no-dnd="true"
+      >
+        <div className="space-y-1.5">
+          <input
+            ref={titleInputRef}
+            value={editTitle}
+            onChange={(e) => setEditTitle(e.target.value)}
+            placeholder="Título"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') saveEdit();
+              if (e.key === 'Escape') cancelEdit();
+            }}
+            className="w-full rounded border border-slate-200 px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-primary-300 bg-white min-h-[32px]"
+          />
+          <input
+            value={editUrl}
+            onChange={(e) => setEditUrl(e.target.value)}
+            placeholder="https://exemplo.com"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') saveEdit();
+              if (e.key === 'Escape') cancelEdit();
+            }}
+            className="w-full rounded border border-slate-200 px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-primary-300 bg-white min-h-[32px]"
+          />
+          <div className="flex justify-end gap-1.5">
+            <button
+              type="button"
+              onClick={cancelEdit}
+              className="px-2 py-1 text-xs rounded bg-slate-100 text-slate-600 hover:bg-slate-200 min-h-[32px]"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              onClick={saveEdit}
+              className="px-2 py-1 text-xs rounded bg-primary-600 text-white hover:bg-primary-700 min-h-[32px]"
+            >
+              Salvar
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
-      <div className="group/link flex items-center justify-between py-1 pl-1.5 pr-0 rounded-lg hover:bg-white/70 transition-all cursor-pointer">
-        <Link href={link.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 flex-1 min-w-0">
+      <div
+        className="group/link flex items-center justify-between py-1 pl-1.5 pr-0 rounded-lg hover:bg-white/70 transition-all cursor-pointer"
+        onDoubleClick={handleDoubleClick}
+      >
+        <a
+          href={link.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 flex-1 min-w-0"
+          onClick={handleLinkClick}
+        >
           <img
             src={link.iconUrl}
             alt={link.title}
@@ -28,9 +146,18 @@ export function LinkItem({ link, onDelete, dragHandleListeners, dragHandleAttrib
           <span className="text-sm md:text-xs font-semibold text-slate-700 truncate flex-1">
             {link.title}
           </span>
-        </Link>
+        </a>
 
         <div className="flex items-center gap-0.5 flex-shrink-0 -mr-2">
+          <button
+            className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 hover:text-primary-500 rounded opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity"
+            title="Editar link"
+            onClick={(e) => { e.stopPropagation(); openEdit(); }}
+            data-no-dnd="true"
+          >
+            <Pencil className="w-4 h-4 md:w-3 md:h-3" />
+          </button>
+
           {dragHandleListeners && dragHandleAttributes && (
             <div
               className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 hover:text-primary-500 opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity cursor-grab active:cursor-grabbing"

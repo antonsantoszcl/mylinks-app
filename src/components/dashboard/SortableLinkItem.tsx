@@ -8,9 +8,10 @@ import { LinkItem } from './LinkItem';
 interface SortableLinkItemProps {
   link: LinkType;
   onDelete: (linkId: string) => void;
+  onUpdate: (linkId: string, title: string, url: string) => void;
 }
 
-export function SortableLinkItem({ link, onDelete }: SortableLinkItemProps) {
+export function SortableLinkItem({ link, onDelete, onUpdate }: SortableLinkItemProps) {
   const {
     attributes,
     listeners,
@@ -32,6 +33,7 @@ export function SortableLinkItem({ link, onDelete }: SortableLinkItemProps) {
       <LinkItem
         link={link}
         onDelete={onDelete}
+        onUpdate={onUpdate}
         dragHandleListeners={listeners}
         dragHandleAttributes={attributes}
       />

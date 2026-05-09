@@ -12,6 +12,7 @@ interface SortableCategoryCardProps {
   onRenameCategory: (categoryId: string, title: string) => void;
   onAddLink: (categoryId: string, title: string, url: string) => void;
   onDeleteLink: (linkId: string) => void;
+  onUpdateLink: (linkId: string, title: string, url: string) => void;
   onDeleteCategory: (categoryId: string) => void;
   onReorderLinks: (categoryId: string, oldIndex: number, newIndex: number) => void;
 }
@@ -23,6 +24,7 @@ export function SortableCategoryCard({
   onRenameCategory,
   onAddLink,
   onDeleteLink,
+  onUpdateLink,
   onDeleteCategory,
   onReorderLinks,
 }: SortableCategoryCardProps) {
@@ -51,6 +53,7 @@ export function SortableCategoryCard({
         onRenameCategory={onRenameCategory}
         onAddLink={onAddLink}
         onDeleteLink={onDeleteLink}
+        onUpdateLink={onUpdateLink}
         onDeleteCategory={onDeleteCategory}
         onReorderLinks={onReorderLinks}
         dragHandleListeners={listeners}

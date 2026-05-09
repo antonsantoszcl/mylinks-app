@@ -290,6 +290,39 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
     );
   };
 
+  const moveLink = async (linkId: string, targetCategoryId: string) => {
+    if (!userId) return;
+    const supabase = getSupabaseClient();
+    const targetLinks = links.filter((l) => l.categoryId === targetCategoryId);
+    const newOrder = targetLinks.length + 1;
+    await supabase
+      .from('links')
+      .update({ category_id: targetCategoryId, sort_order: newOrder })
+      .eq('id', linkId);
+    setLinks((prev) =>
+      prev.map((l) =>
+        l.id === linkId ? { ...l, categoryId: targetCategoryId, order: newOrder } : l
+      )
+    );
+  };
+
+  const updateLink = async (linkId: string, title: string, url: string) => {
+    if (!userId) return;
+    const normalizedUrl = normalizeUrl(url);
+    const supabase = getSupabaseClient();
+    await supabase
+      .from('links')
+      .update({ title: title.trim(), url: normalizedUrl, icon_url: faviconFor(normalizedUrl, 32) })
+      .eq('id', linkId);
+    setLinks((prev) =>
+      prev.map((l) =>
+        l.id === linkId
+          ? { ...l, title: title.trim(), url: normalizedUrl, iconUrl: faviconFor(normalizedUrl, 32) }
+          : l
+      )
+    );
+  };
+
   if (isLoading) return <Spinner />;
 
   return (
@@ -314,6 +347,7 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
         onRenameCategory={renameCategory}
         onAddLink={addLinkToCategory}
         onDeleteLink={removeLink}
+        onUpdateLink={updateLink}
         onAddCategory={addCategory}
         onDeleteCategory={removeCategory}
         onReorderCategories={reorderCategories}
