@@ -22,9 +22,11 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
   const [editTitle, setEditTitle] = useState(link.title);
   const [editUrl, setEditUrl] = useState(link.url);
   const [showMoveMenu, setShowMoveMenu] = useState(false);
+  const [dropUp, setDropUp] = useState(false);
   const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
   const moveMenuRef = useRef<HTMLDivElement>(null);
+  const moveButtonRef = useRef<HTMLButtonElement>(null);
 
   // Keep edit fields in sync if link prop changes (e.g. after save)
   useEffect(() => {
@@ -52,6 +54,16 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
+  }, [showMoveMenu]);
+
+  // Detect if dropdown should open upward
+  useEffect(() => {
+    if (!showMoveMenu) return;
+    if (moveButtonRef.current) {
+      const rect = moveButtonRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      setDropUp(spaceBelow < 150);
+    }
   }, [showMoveMenu]);
 
   const openEdit = () => {
@@ -195,6 +207,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
               <button
                 className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 hover:text-primary-500 rounded opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity"
                 title="Mover para outra seção"
+                ref={moveButtonRef}
                 onClick={(e) => { e.stopPropagation(); setShowMoveMenu((v) => !v); }}
                 data-no-dnd="true"
               >
@@ -202,7 +215,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
               </button>
 
               {showMoveMenu && (
-                <div className="absolute right-0 top-full mt-1 bg-white rounded-lg border border-slate-200 shadow-lg z-50 min-w-[140px] py-1">
+                <div className={`absolute right-0 ${dropUp ? 'bottom-full mb-1' : 'top-full mt-1'} bg-white rounded-lg border border-slate-200 shadow-lg z-50 min-w-[140px] py-1`}>
                   {otherCategories.map((cat) => (
                     <button
                       key={cat.id}
