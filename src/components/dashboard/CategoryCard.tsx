@@ -92,6 +92,8 @@ interface CategoryCardProps {
   onReorderLinks: (categoryId: string, oldIndex: number, newIndex: number) => void;
   dragHandleListeners?: SyntheticListenerMap;
   dragHandleAttributes?: DraggableAttributes;
+  categories: Category[];
+  onMoveLink: (linkId: string, targetCategoryId: string) => void;
 }
 
 export function CategoryCard({
@@ -106,6 +108,8 @@ export function CategoryCard({
   onReorderLinks,
   dragHandleListeners,
   dragHandleAttributes,
+  categories,
+  onMoveLink,
 }: CategoryCardProps) {
   const IconComponent =
     category.iconName in Icons
@@ -295,7 +299,15 @@ export function CategoryCard({
             >
               <SortableContext items={links.map((l) => l.id)} strategy={verticalListSortingStrategy}>
                 {links.map((link) => (
-                  <SortableLinkItem key={link.id} link={link} onDelete={onDeleteLink} onUpdate={onUpdateLink} />
+                  <SortableLinkItem
+                    key={link.id}
+                    link={link}
+                    onDelete={onDeleteLink}
+                    onUpdate={onUpdateLink}
+                    categories={categories}
+                    currentCategoryId={category.id}
+                    onMove={onMoveLink}
+                  />
                 ))}
               </SortableContext>
             </DndContext>
