@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { LogOut, X, Plus, Pencil, GripVertical, ArrowRightLeft, Trash2 } from 'lucide-react';
+import { LogOut, X, Plus, Pencil, GripVertical, ArrowRightLeft, Trash2, Globe } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useProfile, getInitials } from '@/context/ProfileContext';
@@ -60,6 +60,14 @@ function VideoOverlay({ open, onClose }: { open: boolean; onClose: () => void })
   );
 }
 
+const ICONS_LEGEND = [
+  { icon: Plus,           label: 'Inclui',    desc: 'Adiciona novo link ou seção' },
+  { icon: Pencil,         label: 'Edita',     desc: 'Altera nome ou URL' },
+  { icon: GripVertical,   label: 'Arrasta',   desc: 'Reordena por arrastar e soltar' },
+  { icon: ArrowRightLeft, label: 'Transfere', desc: 'Move para outra seção ou painel' },
+  { icon: Trash2,         label: 'Deleta',    desc: 'Remove permanentemente' },
+];
+
 function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [videoOpen, setVideoOpen] = useState(false);
 
@@ -80,14 +88,19 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-lg relative max-h-[90vh] overflow-y-auto"
+        className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-2xl relative"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-slate-100">
-          <div>
-            <h2 className="text-base font-bold text-slate-900 tracking-tight">Instruções</h2>
-            <p className="text-xs text-slate-400 mt-0.5">Como usar o Painel</p>
+        {/* Header with branding */}
+        <div className="flex items-center justify-between px-6 pt-5 pb-4 bg-gradient-to-r from-slate-50 to-white rounded-t-2xl border-b border-slate-100">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-primary-800 flex items-center justify-center shadow-sm flex-shrink-0">
+              <Globe className="text-white w-5 h-5" />
+            </div>
+            <div>
+              <h1 className="text-base font-bold text-slate-800 leading-tight tracking-tight">alllinks.app</h1>
+              <p className="text-xs text-slate-400 leading-tight mt-0.5">Instruções de uso</p>
+            </div>
           </div>
           <button
             onClick={onClose}
@@ -98,71 +111,74 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
           </button>
         </div>
 
-        {/* Body */}
-        <div className="px-6 py-5 space-y-6">
+        {/* Body — 2-column layout */}
+        <div className="px-6 py-5 grid grid-cols-1 sm:grid-cols-2 gap-6">
 
-          {/* Intro section */}
-          <div className="space-y-1.5">
-            <p className="text-sm text-slate-700 leading-relaxed">
-              O conteúdo inicial do Painel é uma compilação dos sites mais acessados no Brasil.
-            </p>
-            <p className="text-sm text-slate-500 leading-relaxed">
-              Pode ser mantido, alterado ou excluído.
-            </p>
-          </div>
+          {/* Left column: intro + icons legend */}
+          <div className="space-y-5">
+            {/* Intro */}
+            <div className="space-y-1.5">
+              <p className="text-sm text-slate-700 leading-relaxed">
+                O conteúdo inicial do Painel é uma compilação dos sites mais acessados no Brasil.
+              </p>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                Pode ser mantido, alterado ou excluído conforme sua preferência.
+              </p>
+            </div>
 
-          {/* Icons legend */}
-          <div className="space-y-3">
-            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-              Para links e Seções
-            </p>
-            <div className="bg-slate-50 rounded-xl border border-slate-100 divide-y divide-slate-100">
-              <div className="flex items-center gap-3 px-4 py-3">
-                <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-600">
-                  <Plus className="w-3.5 h-3.5" />
-                </span>
-                <span className="text-sm text-slate-700 font-medium">Inclui</span>
-              </div>
-              <div className="flex items-center gap-3 px-4 py-3">
-                <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-600">
-                  <Pencil className="w-3.5 h-3.5" />
-                </span>
-                <span className="text-sm text-slate-700 font-medium">Edita</span>
-              </div>
-              <div className="flex items-center gap-3 px-4 py-3">
-                <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-600">
-                  <GripVertical className="w-3.5 h-3.5" />
-                </span>
-                <span className="text-sm text-slate-700 font-medium">Arrasta</span>
-              </div>
-              <div className="flex items-center gap-3 px-4 py-3">
-                <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-600">
-                  <ArrowRightLeft className="w-3.5 h-3.5" />
-                </span>
-                <span className="text-sm text-slate-700 font-medium">Transfere</span>
-              </div>
-              <div className="flex items-center gap-3 px-4 py-3">
-                <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-600">
-                  <Trash2 className="w-3.5 h-3.5" />
-                </span>
-                <span className="text-sm text-slate-700 font-medium">Deleta</span>
+            {/* Icons legend */}
+            <div className="space-y-2">
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                Ícones — Links &amp; Seções
+              </p>
+              <div className="space-y-1.5">
+                {ICONS_LEGEND.map(({ icon: Icon, label }) => (
+                  <div key={label} className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                    <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-600 flex-shrink-0">
+                      <Icon className="w-3.5 h-3.5" />
+                    </span>
+                    <span className="text-sm font-semibold text-slate-700">{label}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
 
-          {/* Closing text */}
-          <div className="space-y-1">
-            <p className="text-sm font-semibold text-slate-800">E pronto!</p>
-            <p className="text-sm text-slate-500 leading-relaxed">
-              Clique{' '}
-              <span
-                className="text-[#4C78D4] underline cursor-pointer"
+          {/* Right column: video CTA */}
+          <div className="flex flex-col gap-4">
+            <div className="flex-1 flex flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed border-primary-200 bg-primary-50/40 p-6 text-center">
+              <div className="w-12 h-12 rounded-2xl bg-primary-100 flex items-center justify-center">
+                <svg className="w-6 h-6 text-primary-600" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-semibold text-slate-700">Vídeo explicativo</p>
+                <p className="text-xs text-slate-500 leading-relaxed">Veja como usar todos os recursos do painel em poucos minutos.</p>
+              </div>
+              <button
                 onClick={() => setVideoOpen(true)}
+                className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold shadow-sm transition-colors"
               >
-                aqui
+                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+                Assistir agora
+              </button>
+            </div>
+
+            {/* "E pronto" closing note */}
+            <div className="flex items-start gap-3 px-4 py-3 rounded-xl bg-emerald-50 border border-emerald-100">
+              <span className="text-emerald-500 mt-0.5 flex-shrink-0">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
               </span>
-              {' '}para assistir ao vídeo explicativo.
-            </p>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                <span className="font-semibold text-slate-700">E pronto!</span> É só usar — seu painel está sempre sincronizado e disponível em{' '}
+                <span className="font-medium text-primary-600">qualquer dispositivo</span>.
+              </p>
+            </div>
           </div>
 
         </div>
