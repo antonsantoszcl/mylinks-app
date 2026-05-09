@@ -211,7 +211,7 @@ export function CategoryCard({
       >
         {/* Colored header area */}
         <header
-          className="flex items-center justify-between px-3 py-2 rounded-t-lg"
+          className="flex items-center justify-between px-3 py-3 md:py-2 rounded-t-lg"
           style={{ backgroundColor: '#FFFFFF' }}
         >
           <div className="flex items-center gap-2 min-w-0">
@@ -377,7 +377,7 @@ export function CategoryCard({
             style={{ backgroundColor: '#FFFFFF' }}
           >
             <button
-              className="text-sm md:text-xs font-medium hover:opacity-75 transition-opacity flex items-center gap-1 min-h-[44px] md:min-h-0 py-2 md:py-0"
+              className="text-sm md:text-xs font-medium hover:opacity-75 transition-opacity flex items-center gap-1 min-h-[32px] md:min-h-0 py-1 md:py-0"
               style={{ color: colors.accentText }}
               onClick={() => setShowAddLink(true)}
             >
