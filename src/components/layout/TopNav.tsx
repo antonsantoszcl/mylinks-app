@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { LogOut, X, Plus, GripVertical, Trash2 } from 'lucide-react';
+import { LogOut, X, Plus, Pencil, GripVertical, ArrowRightLeft, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useProfile, getInitials } from '@/context/ProfileContext';
@@ -70,9 +70,21 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
               </div>
               <div className="flex items-center gap-3 px-4 py-3">
                 <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-600">
+                  <Pencil className="w-3.5 h-3.5" />
+                </span>
+                <span className="text-sm text-slate-700 font-medium">Edita</span>
+              </div>
+              <div className="flex items-center gap-3 px-4 py-3">
+                <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-600">
                   <GripVertical className="w-3.5 h-3.5" />
                 </span>
                 <span className="text-sm text-slate-700 font-medium">Arrasta</span>
+              </div>
+              <div className="flex items-center gap-3 px-4 py-3">
+                <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-600">
+                  <ArrowRightLeft className="w-3.5 h-3.5" />
+                </span>
+                <span className="text-sm text-slate-700 font-medium">Transfere</span>
               </div>
               <div className="flex items-center gap-3 px-4 py-3">
                 <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-600">
@@ -87,21 +99,31 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
           <div className="space-y-1">
             <p className="text-sm font-semibold text-slate-800">E pronto!</p>
             <p className="text-sm text-slate-500 leading-relaxed">
-              Amplie o vídeo abaixo para entender como funciona.
+              Clique para assistir ao vídeo explicativo.
             </p>
           </div>
 
           {/* Video */}
-          <div className="rounded-xl overflow-hidden border border-slate-200 shadow-sm">
+          <div
+            className="rounded-xl overflow-hidden border border-slate-200 shadow-sm cursor-pointer"
+            title="Clique para assistir em tela cheia"
+            onClick={() => {
+              const video = document.getElementById('instrucoes-video') as HTMLVideoElement | null;
+              if (video) {
+                if (video.requestFullscreen) {
+                  video.requestFullscreen();
+                }
+              }
+            }}
+          >
             <video
+              id="instrucoes-video"
               key="instrucoes-video"
               src="/videos/instrucoes.mp4"
               style={{ width: '100%', display: 'block', maxHeight: '320px', objectFit: 'cover' }}
-              autoPlay
               loop
               muted
               playsInline
-              controls
             />
           </div>
 

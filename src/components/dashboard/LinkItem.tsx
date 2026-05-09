@@ -178,6 +178,18 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
             <Pencil className="w-4 h-4 md:w-3 md:h-3" />
           </button>
 
+          {dragHandleListeners && dragHandleAttributes && (
+            <div
+              className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 hover:text-primary-500 opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity cursor-grab active:cursor-grabbing"
+              aria-label="Drag to reorder link"
+              style={{ touchAction: 'none' }}
+              {...dragHandleAttributes}
+              {...dragHandleListeners}
+            >
+              <GripVertical className="w-5 h-5 md:w-3.5 md:h-3.5" />
+            </div>
+          )}
+
           {canMove && (
             <div className="relative" ref={moveMenuRef} data-no-dnd="true">
               <button
@@ -206,18 +218,6 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
                   ))}
                 </div>
               )}
-            </div>
-          )}
-
-          {dragHandleListeners && dragHandleAttributes && (
-            <div
-              className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 hover:text-primary-500 opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity cursor-grab active:cursor-grabbing"
-              aria-label="Drag to reorder link"
-              style={{ touchAction: 'none' }}
-              {...dragHandleAttributes}
-              {...dragHandleListeners}
-            >
-              <GripVertical className="w-5 h-5 md:w-3.5 md:h-3.5" />
             </div>
           )}
 
