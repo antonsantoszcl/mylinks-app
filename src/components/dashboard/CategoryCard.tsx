@@ -241,9 +241,7 @@ export function CategoryCard({
                 {category.title}
               </h3>
             )}
-            <span className="bg-white/70 text-slate-400 text-xs font-medium px-1.5 py-0 rounded-full flex-shrink-0 leading-4">
-              {links.length}
-            </span>
+
           </div>
           <div className="flex items-center gap-0 md:gap-0.5 flex-shrink-0">
             <button
