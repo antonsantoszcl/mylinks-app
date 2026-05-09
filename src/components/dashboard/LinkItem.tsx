@@ -259,7 +259,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
           )}
 
           <button
-            className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-200 md:text-slate-300 hover:text-red-500 rounded opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity"
+            className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-200 md:text-slate-300 hover:text-red-500 rounded opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity"
             title="Excluir link"
             onClick={() => setShowDeleteModal(true)}
           >
