@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link as LinkType, Category } from '@/lib/types';
 import { ArrowRightLeft, GripVertical, Pencil, Trash2 } from 'lucide-react';
 import { DraggableAttributes } from '@dnd-kit/core';
@@ -22,7 +23,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
   const [editTitle, setEditTitle] = useState(link.title);
   const [editUrl, setEditUrl] = useState(link.url);
   const [showMoveMenu, setShowMoveMenu] = useState(false);
-  const [dropUp, setDropUp] = useState(false);
+  const [dropdownPos, setDropdownPos] = useState<{ top: number; right: number } | null>(null);
   const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
   const moveMenuRef = useRef<HTMLDivElement>(null);
@@ -48,7 +49,10 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
   useEffect(() => {
     if (!showMoveMenu) return;
     const handler = (e: MouseEvent) => {
-      if (moveMenuRef.current && !moveMenuRef.current.contains(e.target as Node)) {
+      if (
+        moveMenuRef.current && !moveMenuRef.current.contains(e.target as Node) &&
+        moveButtonRef.current && !moveButtonRef.current.contains(e.target as Node)
+      ) {
         setShowMoveMenu(false);
       }
     };
@@ -56,14 +60,29 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
     return () => document.removeEventListener('mousedown', handler);
   }, [showMoveMenu]);
 
-  // Detect if dropdown should open upward
+  // Calculate portal dropdown position when menu opens; close on scroll/resize
   useEffect(() => {
-    if (!showMoveMenu) return;
+    if (!showMoveMenu) {
+      setDropdownPos(null);
+      return;
+    }
     if (moveButtonRef.current) {
       const rect = moveButtonRef.current.getBoundingClientRect();
+      const DROPDOWN_HEIGHT = 160; // estimated max height
       const spaceBelow = window.innerHeight - rect.bottom;
-      setDropUp(spaceBelow < 150);
+      const top = spaceBelow >= DROPDOWN_HEIGHT
+        ? rect.bottom + 4
+        : rect.top - DROPDOWN_HEIGHT - 4;
+      const right = window.innerWidth - rect.right;
+      setDropdownPos({ top, right });
     }
+    const closeMenu = () => setShowMoveMenu(false);
+    window.addEventListener('scroll', closeMenu, true);
+    window.addEventListener('resize', closeMenu);
+    return () => {
+      window.removeEventListener('scroll', closeMenu, true);
+      window.removeEventListener('resize', closeMenu);
+    };
   }, [showMoveMenu]);
 
   const openEdit = () => {
@@ -203,7 +222,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
           )}
 
           {canMove && (
-            <div className="relative" ref={moveMenuRef} data-no-dnd="true">
+            <div data-no-dnd="true">
               <button
                 className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 hover:text-primary-500 rounded opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity"
                 title="Mover para outra seção"
@@ -214,8 +233,12 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
                 <ArrowRightLeft className="w-4 h-4 md:w-3 md:h-3" />
               </button>
 
-              {showMoveMenu && (
-                <div className={`absolute right-0 ${dropUp ? 'bottom-full mb-1' : 'top-full mt-1'} bg-white rounded-lg border border-slate-200 shadow-lg z-50 min-w-[140px] py-1`}>
+              {showMoveMenu && dropdownPos && createPortal(
+                <div
+                  ref={moveMenuRef}
+                  style={{ position: 'fixed', top: dropdownPos.top, right: dropdownPos.right, zIndex: 9999 }}
+                  className="bg-white rounded-lg border border-slate-200 shadow-lg min-w-[140px] py-1"
+                >
                   {otherCategories.map((cat) => (
                     <button
                       key={cat.id}
@@ -229,7 +252,8 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
                       {cat.title}
                     </button>
                   ))}
-                </div>
+                </div>,
+                document.body
               )}
             </div>
           )}
