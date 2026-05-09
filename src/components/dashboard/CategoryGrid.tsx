@@ -1,6 +1,6 @@
 'use client';
 
-import { Category, Link as LinkType } from '@/lib/types';
+import { Category, Dashboard, Link as LinkType } from '@/lib/types';
 import { SortableCategoryCard } from './SortableCategoryCard';
 import { LayoutGrid, Plus } from 'lucide-react';
 import { FormEvent, useState, useRef, useEffect, useCallback } from 'react';
@@ -32,6 +32,9 @@ interface CategoryGridProps {
   onReorderCategories: (oldIndex: number, newIndex: number) => void;
   onReorderLinks: (categoryId: string, oldIndex: number, newIndex: number) => void;
   onMoveLink: (linkId: string, targetCategoryId: string) => void;
+  dashboards: Dashboard[];
+  currentDashboardId: string;
+  onMoveCategoryToPanel: (categoryId: string, targetDashboardId: string) => void;
 }
 
 const GAP = 12; // px – matches gap-3 (0.75rem)
@@ -60,6 +63,9 @@ export function CategoryGrid({
   onReorderCategories,
   onReorderLinks,
   onMoveLink,
+  dashboards,
+  currentDashboardId,
+  onMoveCategoryToPanel,
 }: CategoryGridProps) {
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
@@ -208,6 +214,9 @@ export function CategoryGrid({
                       onReorderLinks={onReorderLinks}
                       categories={categories}
                       onMoveLink={onMoveLink}
+                      dashboards={dashboards}
+                      currentDashboardId={currentDashboardId}
+                      onMoveCategoryToPanel={onMoveCategoryToPanel}
                     />
                   </div>
                 );

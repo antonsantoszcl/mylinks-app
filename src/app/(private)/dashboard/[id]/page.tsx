@@ -290,6 +290,16 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
     );
   };
 
+  const moveCategoryToPanel = async (categoryId: string, targetDashboardId: string) => {
+    if (!userId) return;
+    const supabase = getSupabaseClient();
+    await supabase
+      .from('categories')
+      .update({ dashboard_id: targetDashboardId })
+      .eq('id', categoryId);
+    setCategories((prev) => prev.filter((c) => c.id !== categoryId));
+  };
+
   const moveLink = async (linkId: string, targetCategoryId: string) => {
     if (!userId) return;
     const supabase = getSupabaseClient();
@@ -353,6 +363,9 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
         onReorderCategories={reorderCategories}
         onReorderLinks={reorderLinks}
         onMoveLink={moveLink}
+        dashboards={dashboards}
+        currentDashboardId={dashboardId}
+        onMoveCategoryToPanel={moveCategoryToPanel}
       />
 
       <RecentAccessRow items={recentAccess} />

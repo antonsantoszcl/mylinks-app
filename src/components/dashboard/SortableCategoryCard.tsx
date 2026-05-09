@@ -2,7 +2,7 @@
 
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Category, Link as LinkType } from '@/lib/types';
+import { Category, Dashboard, Link as LinkType } from '@/lib/types';
 import { CategoryCard } from './CategoryCard';
 
 interface SortableCategoryCardProps {
@@ -17,6 +17,9 @@ interface SortableCategoryCardProps {
   onReorderLinks: (categoryId: string, oldIndex: number, newIndex: number) => void;
   categories: Category[];
   onMoveLink: (linkId: string, targetCategoryId: string) => void;
+  dashboards: Dashboard[];
+  currentDashboardId: string;
+  onMoveCategoryToPanel: (categoryId: string, targetDashboardId: string) => void;
 }
 
 export function SortableCategoryCard({
@@ -31,6 +34,9 @@ export function SortableCategoryCard({
   onReorderLinks,
   categories,
   onMoveLink,
+  dashboards,
+  currentDashboardId,
+  onMoveCategoryToPanel,
 }: SortableCategoryCardProps) {
   const {
     attributes,
@@ -64,6 +70,9 @@ export function SortableCategoryCard({
         dragHandleAttributes={attributes}
         categories={categories}
         onMoveLink={onMoveLink}
+        dashboards={dashboards}
+        currentDashboardId={currentDashboardId}
+        onMoveCategoryToPanel={onMoveCategoryToPanel}
       />
     </div>
   );

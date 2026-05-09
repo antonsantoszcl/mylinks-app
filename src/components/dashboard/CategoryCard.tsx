@@ -1,4 +1,4 @@
-import { Category, Link as LinkType } from '@/lib/types';
+import { Category, Dashboard, Link as LinkType } from '@/lib/types';
 import { SortableLinkItem } from './SortableLinkItem';
 import * as Icons from 'lucide-react';
 import { GripVertical } from 'lucide-react';
@@ -94,6 +94,9 @@ interface CategoryCardProps {
   dragHandleAttributes?: DraggableAttributes;
   categories: Category[];
   onMoveLink: (linkId: string, targetCategoryId: string) => void;
+  dashboards: Dashboard[];
+  currentDashboardId: string;
+  onMoveCategoryToPanel: (categoryId: string, targetDashboardId: string) => void;
 }
 
 export function CategoryCard({
@@ -110,6 +113,9 @@ export function CategoryCard({
   dragHandleAttributes,
   categories,
   onMoveLink,
+  dashboards,
+  currentDashboardId,
+  onMoveCategoryToPanel,
 }: CategoryCardProps) {
   const IconComponent =
     category.iconName in Icons
@@ -121,7 +127,24 @@ export function CategoryCard({
   const [linkTitle, setLinkTitle] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showMovePanelMenu, setShowMovePanelMenu] = useState(false);
   const titleInputRef = useRef<HTMLInputElement>(null);
+  const movePanelMenuRef = useRef<HTMLDivElement>(null);
+
+  const otherDashboards = dashboards.filter((d) => d.id !== currentDashboardId);
+  const canMoveToPanel = otherDashboards.length > 0;
+
+  // Close move-panel menu on outside click
+  useEffect(() => {
+    if (!showMovePanelMenu) return;
+    const handler = (e: MouseEvent) => {
+      if (movePanelMenuRef.current && !movePanelMenuRef.current.contains(e.target as Node)) {
+        setShowMovePanelMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showMovePanelMenu]);
 
   const colors = CATEGORY_COLORS[colorIndex % CATEGORY_COLORS.length];
 
@@ -241,6 +264,36 @@ export function CategoryCard({
                 {...dragHandleListeners}
               >
                 <GripVertical className="w-5 h-5 md:w-3.5 md:h-3.5" />
+              </div>
+            )}
+            {canMoveToPanel && (
+              <div className="relative" ref={movePanelMenuRef} data-no-dnd="true">
+                <button
+                  className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-400 hover:text-primary-500 rounded transition-colors opacity-100 md:opacity-0 md:group-hover/card:opacity-100"
+                  aria-label="Mover seção para outro painel"
+                  title="Mover para outro painel"
+                  data-no-dnd="true"
+                  onClick={(e) => { e.stopPropagation(); setShowMovePanelMenu((v) => !v); }}
+                >
+                  <Icons.FolderOutput className="w-5 h-5 md:w-3.5 md:h-3.5" />
+                </button>
+                {showMovePanelMenu && (
+                  <div className="absolute right-0 top-full mt-1 bg-white rounded-lg border border-slate-200 shadow-lg z-50 min-w-[160px] py-1" data-no-dnd="true">
+                    {otherDashboards.map((dash) => (
+                      <button
+                        key={dash.id}
+                        className="w-full text-left text-xs text-slate-700 px-3 py-1.5 hover:bg-slate-100 cursor-pointer truncate"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onMoveCategoryToPanel(category.id, dash.id);
+                          setShowMovePanelMenu(false);
+                        }}
+                      >
+                        {dash.title}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
             <button
