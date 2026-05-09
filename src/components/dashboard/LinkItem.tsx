@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link as LinkType } from '@/lib/types';
-import { GripVertical, Pencil, Trash2 } from 'lucide-react';
+import { Link as LinkType, Category } from '@/lib/types';
+import { ArrowRightLeft, GripVertical, Pencil, Trash2 } from 'lucide-react';
 import { DraggableAttributes } from '@dnd-kit/core';
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
@@ -11,15 +11,20 @@ interface LinkItemProps {
   onUpdate: (linkId: string, title: string, url: string) => void;
   dragHandleListeners?: SyntheticListenerMap;
   dragHandleAttributes?: DraggableAttributes;
+  categories?: Category[];
+  currentCategoryId?: string;
+  onMove?: (linkId: string, targetCategoryId: string) => void;
 }
 
-export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHandleAttributes }: LinkItemProps) {
+export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHandleAttributes, categories, currentCategoryId, onMove }: LinkItemProps) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(link.title);
   const [editUrl, setEditUrl] = useState(link.url);
+  const [showMoveMenu, setShowMoveMenu] = useState(false);
   const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
+  const moveMenuRef = useRef<HTMLDivElement>(null);
 
   // Keep edit fields in sync if link prop changes (e.g. after save)
   useEffect(() => {
@@ -36,6 +41,18 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
       titleInputRef.current?.select();
     }
   }, [isEditing]);
+
+  // Close move menu on outside click
+  useEffect(() => {
+    if (!showMoveMenu) return;
+    const handler = (e: MouseEvent) => {
+      if (moveMenuRef.current && !moveMenuRef.current.contains(e.target as Node)) {
+        setShowMoveMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showMoveMenu]);
 
   const openEdit = () => {
     setEditTitle(link.title);
@@ -74,6 +91,9 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
     }
     openEdit();
   };
+
+  const otherCategories = categories?.filter((c) => c.id !== currentCategoryId) ?? [];
+  const canMove = onMove && otherCategories.length > 0;
 
   // Edit mode: render inline form
   if (isEditing) {
@@ -157,6 +177,37 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
           >
             <Pencil className="w-4 h-4 md:w-3 md:h-3" />
           </button>
+
+          {canMove && (
+            <div className="relative" ref={moveMenuRef} data-no-dnd="true">
+              <button
+                className="flex items-center justify-center min-w-[44px] min-h-[44px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 hover:text-primary-500 rounded opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity"
+                title="Mover para outra seção"
+                onClick={(e) => { e.stopPropagation(); setShowMoveMenu((v) => !v); }}
+                data-no-dnd="true"
+              >
+                <ArrowRightLeft className="w-4 h-4 md:w-3 md:h-3" />
+              </button>
+
+              {showMoveMenu && (
+                <div className="absolute right-0 top-full mt-1 bg-white rounded-lg border border-slate-200 shadow-lg z-50 min-w-[140px] py-1">
+                  {otherCategories.map((cat) => (
+                    <button
+                      key={cat.id}
+                      className="w-full text-left text-xs text-slate-700 px-3 py-1.5 hover:bg-slate-100 cursor-pointer truncate"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onMove!(link.id, cat.id);
+                        setShowMoveMenu(false);
+                      }}
+                    >
+                      {cat.title}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {dragHandleListeners && dragHandleAttributes && (
             <div

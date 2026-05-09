@@ -352,6 +352,7 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
         onDeleteCategory={removeCategory}
         onReorderCategories={reorderCategories}
         onReorderLinks={reorderLinks}
+        onMoveLink={moveLink}
       />
 
       <RecentAccessRow items={recentAccess} />

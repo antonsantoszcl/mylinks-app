@@ -31,6 +31,7 @@ interface CategoryGridProps {
   onDeleteCategory: (categoryId: string) => void;
   onReorderCategories: (oldIndex: number, newIndex: number) => void;
   onReorderLinks: (categoryId: string, oldIndex: number, newIndex: number) => void;
+  onMoveLink: (linkId: string, targetCategoryId: string) => void;
 }
 
 const GAP = 12; // px – matches gap-3 (0.75rem)
@@ -58,6 +59,7 @@ export function CategoryGrid({
   onDeleteCategory,
   onReorderCategories,
   onReorderLinks,
+  onMoveLink,
 }: CategoryGridProps) {
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
@@ -204,6 +206,8 @@ export function CategoryGrid({
                       onUpdateLink={onUpdateLink}
                       onDeleteCategory={onDeleteCategory}
                       onReorderLinks={onReorderLinks}
+                      categories={categories}
+                      onMoveLink={onMoveLink}
                     />
                   </div>
                 );

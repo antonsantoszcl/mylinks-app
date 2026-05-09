@@ -15,6 +15,8 @@ interface SortableCategoryCardProps {
   onUpdateLink: (linkId: string, title: string, url: string) => void;
   onDeleteCategory: (categoryId: string) => void;
   onReorderLinks: (categoryId: string, oldIndex: number, newIndex: number) => void;
+  categories: Category[];
+  onMoveLink: (linkId: string, targetCategoryId: string) => void;
 }
 
 export function SortableCategoryCard({
@@ -27,6 +29,8 @@ export function SortableCategoryCard({
   onUpdateLink,
   onDeleteCategory,
   onReorderLinks,
+  categories,
+  onMoveLink,
 }: SortableCategoryCardProps) {
   const {
     attributes,
@@ -58,6 +62,8 @@ export function SortableCategoryCard({
         onReorderLinks={onReorderLinks}
         dragHandleListeners={listeners}
         dragHandleAttributes={attributes}
+        categories={categories}
+        onMoveLink={onMoveLink}
       />
     </div>
   );

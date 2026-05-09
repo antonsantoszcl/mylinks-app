@@ -2,16 +2,19 @@
 
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Link as LinkType } from '@/lib/types';
+import { Category, Link as LinkType } from '@/lib/types';
 import { LinkItem } from './LinkItem';
 
 interface SortableLinkItemProps {
   link: LinkType;
   onDelete: (linkId: string) => void;
   onUpdate: (linkId: string, title: string, url: string) => void;
+  categories: Category[];
+  currentCategoryId: string;
+  onMove: (linkId: string, targetCategoryId: string) => void;
 }
 
-export function SortableLinkItem({ link, onDelete, onUpdate }: SortableLinkItemProps) {
+export function SortableLinkItem({ link, onDelete, onUpdate, categories, currentCategoryId, onMove }: SortableLinkItemProps) {
   const {
     attributes,
     listeners,
@@ -36,6 +39,9 @@ export function SortableLinkItem({ link, onDelete, onUpdate }: SortableLinkItemP
         onUpdate={onUpdate}
         dragHandleListeners={listeners}
         dragHandleAttributes={attributes}
+        categories={categories}
+        currentCategoryId={currentCategoryId}
+        onMove={onMove}
       />
     </div>
   );
