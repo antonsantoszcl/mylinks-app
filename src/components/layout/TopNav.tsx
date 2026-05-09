@@ -88,11 +88,11 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-2xl relative"
+        className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-2xl relative flex flex-col max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header with branding */}
-        <div className="flex items-center justify-between px-6 pt-5 pb-4 bg-gradient-to-r from-slate-50 to-white rounded-t-2xl border-b border-slate-100">
+        {/* Header with branding — sticky so X is always visible */}
+        <div className="flex items-center justify-between px-6 pt-5 pb-4 bg-gradient-to-r from-slate-50 to-white rounded-t-2xl border-b border-slate-100 flex-shrink-0 sticky top-0 z-10">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-primary-800 flex items-center justify-center shadow-sm flex-shrink-0">
               <Globe className="text-white w-5 h-5" />
@@ -111,8 +111,8 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
           </button>
         </div>
 
-        {/* Body — 2-column layout */}
-        <div className="px-6 py-5 grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {/* Body — 2-column layout, scrollable on mobile */}
+        <div className="px-6 py-5 grid grid-cols-1 sm:grid-cols-2 gap-6 overflow-y-auto">
 
           {/* Left column: intro + icons legend */}
           <div className="space-y-5">
@@ -181,6 +181,16 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
             </div>
           </div>
 
+        </div>
+
+        {/* Footer close button — visible on mobile as extra affordance */}
+        <div className="sm:hidden flex justify-center px-6 pb-4 pt-2 flex-shrink-0">
+          <button
+            onClick={onClose}
+            className="w-full py-2.5 rounded-xl bg-slate-100 text-sm font-semibold text-slate-600 hover:bg-slate-200 transition-colors"
+          >
+            Fechar
+          </button>
         </div>
       </div>
 
