@@ -6,7 +6,7 @@ import { useDashboards } from '@/context/DashboardsContext';
 import { QuickAccessRow } from '@/components/dashboard/QuickAccessRow';
 import { CategoryGrid } from '@/components/dashboard/CategoryGrid';
 import { RecentAccessRow } from '@/components/dashboard/RecentAccessRow';
-import { Hand } from 'lucide-react';
+import { Hand, Search } from 'lucide-react';
 import { Category, Link, QuickAccessLink, RecentAccess } from '@/lib/types';
 import { arrayMove } from '@dnd-kit/sortable';
 import { getSupabaseClient } from '@/lib/supabase';
@@ -347,6 +347,21 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
             {dashboardTitle}
           </span>
         )}
+        <form
+          className="hidden md:flex items-center gap-1.5 ml-auto border border-slate-200 rounded-lg px-2.5 py-1 bg-white hover:border-slate-300 focus-within:border-primary-400 focus-within:ring-1 focus-within:ring-primary-200 transition-all"
+          action="https://www.google.com/search"
+          method="get"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Search className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+          <input
+            type="text"
+            name="q"
+            placeholder="Pesquisar no Google..."
+            className="text-sm text-slate-700 placeholder-slate-400 bg-transparent outline-none w-48"
+          />
+        </form>
       </header>
 
       <QuickAccessRow links={quickAccess} onAdd={addQuickAccess} onRemove={removeQuickAccess} />
