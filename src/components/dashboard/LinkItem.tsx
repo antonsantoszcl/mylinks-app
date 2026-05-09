@@ -237,7 +237,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
                 <div
                   ref={moveMenuRef}
                   style={{ position: 'fixed', top: dropdownPos.top, right: dropdownPos.right, zIndex: 9999 }}
-                  className="bg-white rounded-lg border border-slate-200 shadow-lg min-w-[140px] py-1"
+                  className="bg-white rounded-lg border border-slate-200 shadow-lg w-[160px] max-h-[200px] overflow-y-auto py-1"
                 >
                   {otherCategories.map((cat) => (
                     <button
