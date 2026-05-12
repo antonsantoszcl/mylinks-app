@@ -6,7 +6,7 @@ import { useDashboards } from '@/context/DashboardsContext';
 import { QuickAccessRow } from '@/components/dashboard/QuickAccessRow';
 import { CategoryGrid } from '@/components/dashboard/CategoryGrid';
 import { RecentAccessRow } from '@/components/dashboard/RecentAccessRow';
-import { Hand } from 'lucide-react';
+import { Hand, Search } from 'lucide-react';
 import { Category, Link, QuickAccessLink, RecentAccess } from '@/lib/types';
 import { arrayMove } from '@dnd-kit/sortable';
 import { getSupabaseClient } from '@/lib/supabase';
@@ -67,28 +67,31 @@ function GoogleSearchBar() {
   };
 
   return (
-    <div className="flex justify-center px-4">
+    <div className="flex justify-center items-center px-4">
+      {/* Google logo — desktop only, outside the bar */}
+      <span className="hidden md:flex mr-2 font-semibold text-base leading-none select-none">
+        <span style={{ color: '#4285F4' }}>G</span>
+        <span style={{ color: '#EA4335' }}>o</span>
+        <span style={{ color: '#FBBC05' }}>o</span>
+        <span style={{ color: '#4285F4' }}>g</span>
+        <span style={{ color: '#34A853' }}>l</span>
+        <span style={{ color: '#EA4335' }}>e</span>
+      </span>
       <form
         onSubmit={handleSubmit}
         className="relative w-full max-w-md"
       >
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 font-semibold text-sm leading-none pointer-events-none select-none">
-          <span style={{ color: '#4285F4' }}>G</span>
-          <span style={{ color: '#EA4335' }}>o</span>
-          <span style={{ color: '#FBBC05' }}>o</span>
-          <span style={{ color: '#4285F4' }}>g</span>
-          <span style={{ color: '#34A853' }}>l</span>
-          <span style={{ color: '#EA4335' }}>e</span>
-        </span>
+        {/* Search icon — mobile only, inside the bar */}
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none md:hidden" />
         <input
           ref={inputRef}
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Pesquisar..."
+          placeholder="Pesquisar no Google..."
           className="
-            w-full h-9 md:h-10
-            pl-14 pr-4
+            w-full h-9
+            pl-9 md:pl-4 pr-4
             bg-slate-50 border border-slate-200
             rounded-xl
             text-sm text-slate-700 placeholder-slate-400
