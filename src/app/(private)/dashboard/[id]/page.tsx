@@ -425,9 +425,9 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
       </div>
 
       {/* ── DESKTOP: unified single row ── */}
-      <header className="hidden md:flex items-center gap-3 pt-0">
-        {/* Left: greeting — first name only to save space */}
-        <div className="flex items-center gap-1.5 shrink-0">
+      <header className="hidden md:flex items-center pt-0">
+        {/* Left: greeting — flex-1 to balance with right side */}
+        <div className="flex-1 flex items-center gap-1.5">
           <Hand className="w-4 h-4 text-primary-500 shrink-0" />
           <span className="text-sm font-bold text-slate-700 whitespace-nowrap">
             {greeting}, {(profile.displayName || 'bem-vindo').split(' ')[0]}!
@@ -439,13 +439,13 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
           )}
         </div>
 
-        {/* Centre: search bar — centred in available space */}
-        <div className="flex-1 flex justify-center min-w-0">
+        {/* Centre: search bar — fixed in the middle */}
+        <div className="flex items-center justify-center shrink-0">
           <GoogleSearchBar />
         </div>
 
-        {/* Right: controls */}
-        <div className="shrink-0">
+        {/* Right: controls — flex-1 to balance with left side */}
+        <div className="flex-1 flex justify-end">
           <TopNavControls />
         </div>
       </header>
