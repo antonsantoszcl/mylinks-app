@@ -80,7 +80,7 @@ function GoogleSearchBar() {
       </span>
       <form
         onSubmit={handleSubmit}
-        className="relative w-full max-w-md"
+        className="relative w-full max-w-lg"
       >
         {/* Search icon — mobile only, inside the bar */}
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none md:hidden" />
@@ -425,7 +425,7 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
       </div>
 
       {/* ── DESKTOP: unified single row ── */}
-      <header className="hidden md:flex items-center gap-3 pt-2">
+      <header className="hidden md:flex items-center gap-3 pt-1">
         {/* Left: greeting */}
         <div className="flex items-center gap-1.5 shrink-0">
           <Hand className="w-4 h-4 text-primary-500" />
