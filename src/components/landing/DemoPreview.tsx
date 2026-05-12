@@ -4,6 +4,7 @@ import {
   ShoppingCart,
   Tv2,
   Wrench,
+  Search,
 } from 'lucide-react';
 
 interface DemoLink {
@@ -65,7 +66,39 @@ const demoCategories: DemoCategory[] = [
     iconText: '#065F46',
     insetColor: 'rgba(52, 168, 120, 0.25)',
   },
+  {
+    id: 'ferramentas',
+    title: 'Ferramentas',
+    Icon: Wrench,
+    links: [
+      { title: 'Figma', domain: 'figma.com', url: 'https://figma.com' },
+      { title: 'Notion', domain: 'notion.so', url: 'https://notion.so' },
+      { title: 'GitHub', domain: 'github.com', url: 'https://github.com' },
+      { title: 'Vercel', domain: 'vercel.com', url: 'https://vercel.com' },
+    ],
+    iconBg: '#EDE9FE',
+    iconText: '#4C1D95',
+    insetColor: 'rgba(139, 92, 246, 0.22)',
+  },
 ];
+
+const quickAccessLinks = [
+  { title: 'Gmail', domain: 'gmail.com' },
+  { title: 'GitHub', domain: 'github.com' },
+  { title: 'Notion', domain: 'notion.so' },
+  { title: 'Figma', domain: 'figma.com' },
+];
+
+function GoogleLogoMini() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
+      <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+      <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/>
+      <path d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z" fill="#FBBC05"/>
+      <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+    </svg>
+  );
+}
 
 function DemoCategoryCard({ category }: { category: DemoCategory }) {
   const { Icon, title, links, iconBg, iconText, insetColor } = category;
@@ -94,9 +127,9 @@ function DemoCategoryCard({ category }: { category: DemoCategory }) {
         </span>
       </header>
 
-      {/* Links area — gray background matching real card body */}
+      {/* Links area */}
       <div
-        className="mx-2 mb-2 rounded-lg p-2 space-y-0.5"
+        className="mx-2 mb-1.5 rounded-lg p-2 space-y-0.5"
         style={{ background: '#F1F5F9' }}
       >
         {links.map((link) => (
@@ -117,6 +150,11 @@ function DemoCategoryCard({ category }: { category: DemoCategory }) {
             </span>
           </div>
         ))}
+      </div>
+
+      {/* Add link footer */}
+      <div className="px-3 pb-2.5 pt-0.5">
+        <span className="text-[10px] text-slate-400 font-medium">+ Adicionar link</span>
       </div>
     </article>
   );
@@ -156,17 +194,51 @@ export function DemoPreview() {
           </div>
 
           {/* Dashboard content area */}
-          <div className="bg-[#F8FAFC] p-5 sm:p-7">
-            {/* Mini top bar inside preview */}
-            <div className="flex items-center justify-between mb-5">
-              <div className="h-3 w-24 rounded-full bg-slate-200" />
-              <div className="flex items-center gap-2">
-                <div className="h-3 w-16 rounded-full bg-slate-200" />
-                <div className="w-6 h-6 rounded-full bg-slate-200" />
+          <div className="bg-[#F8FAFC] p-4 sm:p-6">
+
+            {/* Greeting bar */}
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <p className="text-sm font-bold text-slate-700 leading-none">Bom dia!</p>
+                <p className="text-[10px] text-slate-400 mt-0.5">Segunda, 12 de maio</p>
+              </div>
+              <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center flex-shrink-0">
+                <span className="text-[10px] font-bold text-slate-500">JD</span>
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '1rem' }}>
+            {/* Google search bar mockup */}
+            <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2 mb-3 shadow-sm">
+              <GoogleLogoMini />
+              <span className="text-xs text-slate-400 flex-1">Pesquisar no Google...</span>
+              <Search className="w-3 h-3 text-slate-300" />
+            </div>
+
+            {/* Quick Access Row */}
+            <div className="mb-4">
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Acesso Rápido</p>
+              <div className="flex items-center gap-2 flex-wrap">
+                {quickAccessLinks.map((link) => (
+                  <div
+                    key={link.domain}
+                    className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-lg px-2 py-1.5 shadow-sm"
+                  >
+                    <Image
+                      src={`https://www.google.com/s2/favicons?domain=${link.domain}&sz=32`}
+                      alt=""
+                      width={12}
+                      height={12}
+                      className="w-3 h-3 rounded-sm flex-shrink-0 object-contain"
+                      unoptimized
+                    />
+                    <span className="text-[10px] font-semibold text-slate-600">{link.title}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Category cards — 2 cols on small, 4 cols on larger */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
               {demoCategories.map((cat) => (
                 <DemoCategoryCard key={cat.id} category={cat} />
               ))}

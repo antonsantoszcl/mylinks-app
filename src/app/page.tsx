@@ -124,14 +124,10 @@ export default function Home() {
             Organize. Compartilhe. Simplifique.
           </div>
           <h1 className="text-3xl sm:text-5xl font-bold text-slate-900 leading-tight mb-5 tracking-tight">
-            Seu dashboard pessoal{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-primary-700">
-              de links
-            </span>
+            A homepage que faltava.
           </h1>
           <p className="text-base sm:text-xl text-slate-500 mb-8 max-w-2xl mx-auto leading-relaxed">
-            Pare de perder tempo procurando links. Organize tudo por categorias, acesse de qualquer lugar
-            e compartilhe sua página pública com um link só.
+            Pare de perder tempo procurando links. Organize tudo por categorias e acesse de qualquer lugar.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
