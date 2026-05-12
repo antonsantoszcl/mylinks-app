@@ -10,7 +10,6 @@ function faviconUrl(domain: string) {
 }
 
 const DEFAULT_QUICK_ACCESS: Array<{ title: string; url: string; domain: string }> = [
-  { title: 'Google', url: 'https://google.com', domain: 'google.com' },
   { title: 'ChatGPT', url: 'https://chat.openai.com', domain: 'chat.openai.com' },
   { title: 'Gmail', url: 'https://gmail.com', domain: 'gmail.com' },
   { title: 'Tradutor', url: 'https://translate.google.com', domain: 'translate.google.com' },
