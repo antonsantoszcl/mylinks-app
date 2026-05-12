@@ -199,7 +199,8 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
   );
 }
 
-export function TopNav() {
+/** Standalone controls (INSTRUÇÕES, Sair, Avatar) — reusable in any layout slot */
+export function TopNavControls() {
   const router = useRouter();
   const { profile } = useProfile();
   const { logout } = useAuth();
@@ -214,8 +215,7 @@ export function TopNav() {
 
   return (
     <>
-      {/* Top-right controls — normal flow on mobile (inline in top bar), fixed on desktop */}
-      <div className="flex items-center gap-2 px-3 py-3 md:p-0 md:fixed md:top-2 md:right-3 md:z-20">
+      <div className="flex items-center gap-2">
         <button
           onClick={() => setInstrucoesOpen(true)}
           className="flex items-center px-2.5 sm:px-3 py-1 rounded-lg border border-slate-300 text-xs font-semibold text-slate-500 hover:text-primary-600 hover:border-primary-400 transition-colors tracking-wider bg-white/90 backdrop-blur-sm shadow-sm min-h-[36px]"
@@ -251,5 +251,14 @@ export function TopNav() {
 
       <InstrucoesModal open={instrucoesOpen} onClose={() => setInstrucoesOpen(false)} />
     </>
+  );
+}
+
+export function TopNav() {
+  return (
+    /* Mobile only — on desktop the controls live in the unified header row */
+    <div className="flex items-center gap-2 px-3 py-3 md:hidden">
+      <TopNavControls />
+    </div>
   );
 }

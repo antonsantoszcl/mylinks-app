@@ -7,6 +7,7 @@ import { QuickAccessRow } from '@/components/dashboard/QuickAccessRow';
 import { CategoryGrid } from '@/components/dashboard/CategoryGrid';
 import { RecentAccessRow } from '@/components/dashboard/RecentAccessRow';
 import { Hand, Search } from 'lucide-react';
+import { TopNavControls } from '@/components/layout/TopNav';
 import { Category, Link, QuickAccessLink, RecentAccess } from '@/lib/types';
 import { arrayMove } from '@dnd-kit/sortable';
 import { getSupabaseClient } from '@/lib/supabase';
@@ -405,9 +406,10 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="max-w-full space-y-7 pb-6">
-      <header className="flex items-center gap-2 pt-4">
+      {/* ── MOBILE: greeting row ── */}
+      <header className="flex items-center gap-2 pt-4 md:hidden">
         <Hand className="w-4 h-4 text-primary-500" />
-        <span className="text-base md:text-sm font-bold text-slate-700">
+        <span className="text-base font-bold text-slate-700">
           {greeting}, {profile.displayName || 'bem-vindo'}!
         </span>
         {dashboardTitle && (
@@ -417,7 +419,36 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
         )}
       </header>
 
-      <GoogleSearchBar />
+      {/* ── MOBILE: search bar ── */}
+      <div className="md:hidden">
+        <GoogleSearchBar />
+      </div>
+
+      {/* ── DESKTOP: unified single row ── */}
+      <header className="hidden md:flex items-center gap-3 pt-2">
+        {/* Left: greeting */}
+        <div className="flex items-center gap-1.5 shrink-0">
+          <Hand className="w-4 h-4 text-primary-500" />
+          <span className="text-sm font-bold text-slate-700 whitespace-nowrap">
+            {greeting}, {profile.displayName || 'bem-vindo'}!
+          </span>
+          {dashboardTitle && (
+            <span className="ml-1 text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
+              {dashboardTitle}
+            </span>
+          )}
+        </div>
+
+        {/* Centre: search bar */}
+        <div className="flex-1 flex justify-center">
+          <GoogleSearchBar />
+        </div>
+
+        {/* Right: controls */}
+        <div className="shrink-0">
+          <TopNavControls />
+        </div>
+      </header>
 
       <QuickAccessRow links={quickAccess} onAdd={addQuickAccess} onRemove={removeQuickAccess} />
 
