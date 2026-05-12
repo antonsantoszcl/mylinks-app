@@ -80,7 +80,7 @@ function GoogleSearchBar() {
       </span>
       <form
         onSubmit={handleSubmit}
-        className="relative w-full max-w-xl md:max-w-full"
+        className="relative w-full max-w-xl md:max-w-2xl"
       >
         {/* Search icon — mobile only, inside the bar */}
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none md:hidden" />
