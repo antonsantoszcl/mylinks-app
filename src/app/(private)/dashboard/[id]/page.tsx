@@ -93,7 +93,7 @@ function GoogleSearchBar() {
           className="
             w-full h-9 md:h-[35px]
             pl-9 md:pl-4 pr-4
-            bg-slate-50 border border-[#e0e5ec]
+            bg-slate-50 border border-slate-200
             rounded-xl
             text-sm text-slate-700 placeholder-slate-400
             shadow-sm
