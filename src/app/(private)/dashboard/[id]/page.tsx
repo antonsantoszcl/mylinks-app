@@ -68,7 +68,7 @@ function GoogleSearchBar() {
   };
 
   return (
-    <div className="flex justify-center items-center px-4 md:px-0 w-full">
+    <div className="flex items-center px-4 md:px-0 w-full">
       {/* Google logo — desktop only, outside the bar */}
       <span className="hidden md:flex mr-2 font-semibold text-lg leading-none select-none">
         <span style={{ color: '#4285F4' }}>G</span>
@@ -80,7 +80,7 @@ function GoogleSearchBar() {
       </span>
       <form
         onSubmit={handleSubmit}
-        className="relative w-full max-w-xl md:max-w-none"
+        className="relative w-full max-w-xl md:max-w-full"
       >
         {/* Search icon — mobile only, inside the bar */}
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none md:hidden" />
@@ -440,7 +440,7 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
         </div>
 
         {/* Centre: search bar — fills all available space */}
-        <div className="flex-1 flex justify-center">
+        <div className="flex-1 min-w-0">
           <GoogleSearchBar />
         </div>
 
