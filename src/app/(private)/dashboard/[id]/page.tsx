@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useProfile } from '@/context/ProfileContext';
 import { useDashboards } from '@/context/DashboardsContext';
 import { QuickAccessRow } from '@/components/dashboard/QuickAccessRow';
 import { CategoryGrid } from '@/components/dashboard/CategoryGrid';
 import { RecentAccessRow } from '@/components/dashboard/RecentAccessRow';
-import { Hand } from 'lucide-react';
+import { Hand, Search } from 'lucide-react';
 import { Category, Link, QuickAccessLink, RecentAccess } from '@/lib/types';
 import { arrayMove } from '@dnd-kit/sortable';
 import { getSupabaseClient } from '@/lib/supabase';
@@ -35,6 +35,64 @@ function Spinner() {
   return (
     <div className="flex items-center justify-center py-20">
       <div className="w-6 h-6 rounded-full border-2 border-primary-500 border-t-transparent animate-spin" />
+    </div>
+  );
+}
+
+function GoogleSearchBar() {
+  const [query, setQuery] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        e.key === '/' &&
+        document.activeElement?.tagName !== 'INPUT' &&
+        document.activeElement?.tagName !== 'TEXTAREA'
+      ) {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    window.open(`https://www.google.com/search?q=${encodeURIComponent(trimmed)}`, '_blank');
+    setQuery('');
+  };
+
+  return (
+    <div className="flex justify-center px-4">
+      <form
+        onSubmit={handleSubmit}
+        className="relative w-full max-w-xl"
+      >
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+        <input
+          ref={inputRef}
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Pesquisar no Google..."
+          className="
+            w-full h-11 md:h-[46px]
+            pl-9 pr-4
+            bg-slate-50 border border-slate-200
+            rounded-xl
+            text-sm text-slate-700 placeholder-slate-400
+            shadow-sm
+            outline-none
+            transition-all duration-150 ease-out
+            hover:border-slate-300
+            focus:border-slate-300 focus:ring-1 focus:ring-primary-500/20
+          "
+        />
+      </form>
     </div>
   );
 }
@@ -348,6 +406,8 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
           </span>
         )}
       </header>
+
+      <GoogleSearchBar />
 
       <QuickAccessRow links={quickAccess} onAdd={addQuickAccess} onRemove={removeQuickAccess} />
 
