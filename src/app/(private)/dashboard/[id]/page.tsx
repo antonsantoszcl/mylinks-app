@@ -6,7 +6,7 @@ import { useDashboards } from '@/context/DashboardsContext';
 import { QuickAccessRow } from '@/components/dashboard/QuickAccessRow';
 import { CategoryGrid } from '@/components/dashboard/CategoryGrid';
 import { RecentAccessRow } from '@/components/dashboard/RecentAccessRow';
-import { Hand, Search } from 'lucide-react';
+import { Hand } from 'lucide-react';
 import { Category, Link, QuickAccessLink, RecentAccess } from '@/lib/types';
 import { arrayMove } from '@dnd-kit/sortable';
 import { getSupabaseClient } from '@/lib/supabase';
@@ -70,18 +70,25 @@ function GoogleSearchBar() {
     <div className="flex justify-center px-4">
       <form
         onSubmit={handleSubmit}
-        className="relative w-full max-w-xl"
+        className="relative w-full max-w-md"
       >
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 font-semibold text-sm leading-none pointer-events-none select-none">
+          <span style={{ color: '#4285F4' }}>G</span>
+          <span style={{ color: '#EA4335' }}>o</span>
+          <span style={{ color: '#FBBC05' }}>o</span>
+          <span style={{ color: '#4285F4' }}>g</span>
+          <span style={{ color: '#34A853' }}>l</span>
+          <span style={{ color: '#EA4335' }}>e</span>
+        </span>
         <input
           ref={inputRef}
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Pesquisar no Google..."
+          placeholder="Pesquisar..."
           className="
-            w-full h-11 md:h-[46px]
-            pl-9 pr-4
+            w-full h-9 md:h-10
+            pl-14 pr-4
             bg-slate-50 border border-slate-200
             rounded-xl
             text-sm text-slate-700 placeholder-slate-400
