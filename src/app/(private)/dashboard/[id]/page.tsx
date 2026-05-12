@@ -6,7 +6,7 @@ import { useDashboards } from '@/context/DashboardsContext';
 import { QuickAccessRow } from '@/components/dashboard/QuickAccessRow';
 import { CategoryGrid } from '@/components/dashboard/CategoryGrid';
 import { RecentAccessRow } from '@/components/dashboard/RecentAccessRow';
-import { Hand, Search } from 'lucide-react';
+import { Hand } from 'lucide-react';
 import { TopNavControls } from '@/components/layout/TopNav';
 import { Category, Link, QuickAccessLink, RecentAccess } from '@/lib/types';
 import { arrayMove } from '@dnd-kit/sortable';
@@ -82,8 +82,8 @@ function GoogleSearchBar() {
         onSubmit={handleSubmit}
         className="relative w-full max-w-xl md:w-[440px]"
       >
-        {/* Search icon — mobile only, inside the bar */}
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none md:hidden" />
+        {/* G letter — mobile only, inside the bar */}
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 font-semibold text-sm pointer-events-none md:hidden" style={{ color: '#4285F4' }}>G</span>
         <input
           ref={inputRef}
           type="text"
