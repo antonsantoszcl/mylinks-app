@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
-import { Link2, Grid3x3, Globe, Zap, ChevronRight, GripVertical } from 'lucide-react';
+import { Link2, Grid3x3, Zap, ChevronRight, GripVertical } from 'lucide-react';
 import { DemoPreview } from '@/components/landing/DemoPreview';
 
 function GoogleIcon() {
@@ -24,11 +24,6 @@ const features = [
     icon: Grid3x3,
     title: 'Dashboard Privado',
     desc: 'Organize todos os seus links por categoria, do jeito que faz sentido pra você.',
-  },
-  {
-    icon: Globe,
-    title: 'Página Pública',
-    desc: 'Compartilhe um link único com seu cartão de visitas digital para o mundo.',
   },
   {
     icon: GripVertical,
@@ -55,8 +50,8 @@ const steps = [
   },
   {
     step: '03',
-    title: 'Compartilhe sua página',
-    desc: 'Divulgue seu link único e surpreenda quem acessar.',
+    title: 'Acesse de qualquer lugar',
+    desc: 'Use no celular, tablet ou computador. Seus links sempre à mão.',
   },
 ];
 
@@ -121,7 +116,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-4 pt-16 sm:pt-24 pb-14 sm:pb-20 text-center">
           <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-600 text-xs font-medium px-3 py-1.5 rounded-full mb-5 border border-primary-100">
             <span className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse" />
-            Organize. Compartilhe. Simplifique.
+            Organize. Simplifique. Acesse.
           </div>
           <h1 className="text-3xl sm:text-5xl font-bold text-slate-900 leading-tight mb-5 tracking-tight">
             A homepage que faltava.
