@@ -238,7 +238,7 @@ export function DemoPreview() {
             </div>
 
             {/* Category cards — 2 cols on small, 4 cols on larger */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3" style={{ alignItems: 'start' }}>
               {demoCategories.map((cat) => (
                 <DemoCategoryCard key={cat.id} category={cat} />
               ))}
