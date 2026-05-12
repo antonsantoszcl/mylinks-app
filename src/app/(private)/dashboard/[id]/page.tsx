@@ -410,7 +410,7 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
       <header className="flex items-center gap-2 pt-4 md:hidden">
         <Hand className="w-4 h-4 text-primary-500" />
         <span className="text-base font-bold text-slate-700">
-          {greeting}, {profile.displayName || 'bem-vindo'}!
+          {greeting}{profile.displayName ? `, ${profile.displayName}` : ''}!
         </span>
         {dashboardTitle && (
           <span className="ml-1 text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
@@ -430,7 +430,7 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
         <div className="flex-1 flex items-center gap-1.5">
           <Hand className="w-4 h-4 text-primary-500 shrink-0" />
           <span className="text-sm font-bold text-slate-700 whitespace-nowrap">
-            {greeting}, {(profile.displayName || 'bem-vindo').split(' ')[0]}!
+            {greeting}{profile.displayName ? `, ${profile.displayName.split(' ')[0]}` : ''}!
           </span>
           {dashboardTitle && (
             <span className="ml-1 text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full truncate max-w-[120px]">
