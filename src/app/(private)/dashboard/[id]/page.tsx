@@ -80,7 +80,7 @@ function GoogleSearchBar() {
       </span>
       <form
         onSubmit={handleSubmit}
-        className="relative w-full max-w-xl md:max-w-lg"
+        className="relative w-full max-w-xl md:max-w-md"
       >
         {/* Search icon — mobile only, inside the bar */}
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none md:hidden" />
@@ -439,8 +439,8 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
           )}
         </div>
 
-        {/* Centre: search bar — fills all available space */}
-        <div className="flex-1 min-w-0">
+        {/* Centre: search bar — centred in available space */}
+        <div className="flex-1 flex justify-center min-w-0">
           <GoogleSearchBar />
         </div>
 
