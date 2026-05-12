@@ -20,6 +20,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Script
+          src="https://accounts.google.com/gsi/client"
+          strategy="afterInteractive"
+        />
+        <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-CDQ92N01C3"
           strategy="afterInteractive"
         />

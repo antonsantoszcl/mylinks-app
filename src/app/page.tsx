@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
+import { signInWithGoogle } from '@/lib/googleSignIn';
 import { Link2, Grid3x3, Zap, ChevronRight, GripVertical } from 'lucide-react';
 import { DemoPreview } from '@/components/landing/DemoPreview';
 
@@ -68,14 +69,19 @@ export default function Home() {
 
   const handleOAuth = async (provider: 'google') => {
     setOauthLoading(provider);
-    const supabase = getSupabaseClient();
-    await supabase.auth.signInWithOAuth({
-      provider,
-      options: {
-        redirectTo: `${window.location.origin}/dashboard`,
-      },
-    });
-    setOauthLoading(null);
+    try {
+      const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
+      const credential = await signInWithGoogle(clientId);
+      const supabase = getSupabaseClient();
+      const { error: authError } = await supabase.auth.signInWithIdToken({
+        provider: 'google',
+        token: credential,
+      });
+      if (authError) throw authError;
+      router.push('/dashboard');
+    } catch {
+      setOauthLoading(null);
+    }
   };
 
   if (hydrated && isAuthenticated) return null;
@@ -147,7 +153,7 @@ export default function Home() {
               className="inline-flex items-center gap-2 border border-slate-200 bg-white text-slate-600 font-medium px-4 py-2.5 rounded-lg text-sm hover:bg-slate-50 transition-colors disabled:opacity-60 shadow-sm min-h-[44px]"
             >
               <GoogleIcon />
-              {oauthLoading === 'google' ? 'Redirecionando...' : 'Entrar com Google'}
+              {oauthLoading === 'google' ? 'Aguardando...' : 'Entrar com Google'}
             </button>
           </div>
         </div>

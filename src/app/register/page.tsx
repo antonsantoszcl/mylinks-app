@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
+import { signInWithGoogle } from '@/lib/googleSignIn';
 import { Link2, CheckCircle } from 'lucide-react';
 
 function GoogleIcon() {
@@ -62,14 +63,17 @@ export default function RegisterPage() {
   const handleOAuth = async (provider: 'google') => {
     setError('');
     setOauthLoading(provider);
-    const supabase = getSupabaseClient();
-    const { error: oauthError } = await supabase.auth.signInWithOAuth({
-      provider,
-      options: {
-        redirectTo: `${window.location.origin}/dashboard`,
-      },
-    });
-    if (oauthError) {
+    try {
+      const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
+      const credential = await signInWithGoogle(clientId);
+      const supabase = getSupabaseClient();
+      const { error: authError } = await supabase.auth.signInWithIdToken({
+        provider: 'google',
+        token: credential,
+      });
+      if (authError) throw authError;
+      router.push('/dashboard');
+    } catch {
       setError('Erro ao cadastrar com o Google. Tente novamente.');
       setOauthLoading(null);
     }
@@ -114,7 +118,7 @@ export default function RegisterPage() {
                   className="w-full flex items-center justify-center gap-2.5 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors disabled:opacity-60"
                 >
                   <GoogleIcon />
-                  {oauthLoading === 'google' ? 'Redirecionando...' : 'Cadastrar com Google'}
+                  {oauthLoading === 'google' ? 'Aguardando...' : 'Cadastrar com Google'}
                 </button>
               </div>
 
