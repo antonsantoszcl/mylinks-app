@@ -91,9 +91,9 @@ function GoogleSearchBar() {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Pesquisar no Google..."
           className="
-            w-full h-9
+            w-full h-9 md:h-[34px]
             pl-9 md:pl-4 pr-4
-            bg-slate-50 border border-slate-200
+            bg-slate-50 border border-slate-100
             rounded-xl
             text-sm text-slate-700 placeholder-slate-400
             shadow-sm
