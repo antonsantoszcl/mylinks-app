@@ -68,7 +68,7 @@ function GoogleSearchBar() {
   };
 
   return (
-    <div className="flex justify-center items-center px-4">
+    <div className="flex justify-center items-center px-4 md:px-0 w-full">
       {/* Google logo — desktop only, outside the bar */}
       <span className="hidden md:flex mr-2 font-semibold text-lg leading-none select-none">
         <span style={{ color: '#4285F4' }}>G</span>
