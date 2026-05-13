@@ -38,7 +38,7 @@ const DEFAULT_CATEGORIES: Array<{
   },
   {
     title: 'Noticias',
-    iconName: 'news',
+    iconName: 'globe',
     links: [
       { title: 'Globo.com', url: 'https://globo.com', domain: 'globo.com' },
       { title: 'UOL', url: 'https://uol.com.br', domain: 'uol.com.br' },
@@ -49,7 +49,7 @@ const DEFAULT_CATEGORIES: Array<{
   },
   {
     title: 'Compras',
-    iconName: 'cart',
+    iconName: 'money',
     links: [
       { title: 'Buscape', url: 'https://buscape.com.br', domain: 'buscape.com.br' },
       { title: 'Mercado Livre', url: 'https://mercadolivre.com.br', domain: 'mercadolivre.com.br' },
@@ -71,7 +71,7 @@ const DEFAULT_CATEGORIES: Array<{
   },
   {
     title: 'Entretenimento',
-    iconName: 'tv',
+    iconName: 'film',
     links: [
       { title: 'Youtube', url: 'https://youtube.com', domain: 'youtube.com' },
       { title: 'Netflix', url: 'https://netflix.com', domain: 'netflix.com' },
@@ -82,7 +82,7 @@ const DEFAULT_CATEGORIES: Array<{
   },
   {
     title: 'Uteis',
-    iconName: 'tools',
+    iconName: 'gear',
     links: [
       { title: 'Gov.br', url: 'https://gov.br', domain: 'gov.br' },
       { title: 'Wikipedia', url: 'https://pt.wikipedia.org', domain: 'pt.wikipedia.org' },

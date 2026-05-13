@@ -82,26 +82,30 @@ const CATEGORY_COLORS = [
 
 // Emoji icon list for the section picker
 const PICKER_ICONS: { name: string; emoji: string }[] = [
-  { name: 'folder',    emoji: '📁' },
-  { name: 'briefcase', emoji: '💼' },
-  { name: 'book',      emoji: '📚' },
-  { name: 'cart',      emoji: '🛒' },
-  { name: 'film',      emoji: '🎬' },
-  { name: 'money',     emoji: '💰' },
-  { name: 'user',      emoji: '👤' },
-  { name: 'heart',     emoji: '❤️' },
-  { name: 'star',      emoji: '⭐' },
-  { name: 'globe',     emoji: '🌍' },
-  { name: 'music',     emoji: '🎵' },
-  { name: 'code',      emoji: '💻' },
-  { name: 'news',      emoji: '📰' },
-  { name: 'people',    emoji: '👥' },
-  { name: 'bank',      emoji: '🏦' },
-  { name: 'tv',        emoji: '📺' },
-  { name: 'tools',     emoji: '🔧' },
-  { name: 'gaming',    emoji: '🎮' },
-  { name: 'camera',    emoji: '📷' },
-  { name: 'coffee',    emoji: '☕' },
+  { name: 'folder',     emoji: '📂' },
+  { name: 'pin',        emoji: '📌' },
+  { name: 'tasks',      emoji: '✅' },
+  { name: 'briefcase',  emoji: '💼' },
+  { name: 'gear',       emoji: '⚙️' },
+  { name: 'computer',   emoji: '💻' },
+  { name: 'robot',      emoji: '🤖' },
+  { name: 'bolt',       emoji: '⚡' },
+  { name: 'book',       emoji: '📕' },
+  { name: 'graduation', emoji: '🎓' },
+  { name: 'notes',      emoji: '📝' },
+  { name: 'money',      emoji: '💰' },
+  { name: 'chart',      emoji: '📊' },
+  { name: 'bank',       emoji: '🏦' },
+  { name: 'chat',       emoji: '💬' },
+  { name: 'email',      emoji: '📧' },
+  { name: 'globe',      emoji: '🌐' },
+  { name: 'people',     emoji: '👥' },
+  { name: 'music',      emoji: '🎵' },
+  { name: 'film',       emoji: '🎬' },
+  { name: 'gaming',     emoji: '🎮' },
+  { name: 'tv',         emoji: '📺' },
+  { name: 'heart',      emoji: '❤️' },
+  { name: 'star',       emoji: '⭐' },
 ];
 
 const EMOJI_MAP: Record<string, string> = Object.fromEntries(
@@ -109,7 +113,7 @@ const EMOJI_MAP: Record<string, string> = Object.fromEntries(
 );
 
 function getEmoji(iconName: string): string {
-  return EMOJI_MAP[iconName] ?? '📁';
+  return EMOJI_MAP[iconName] ?? '📂';
 }
 
 interface CategoryCardProps {
@@ -327,7 +331,7 @@ export function CategoryCard({
           onMouseDown={(e) => e.preventDefault()}
           onTouchStart={(e) => e.stopPropagation()}
         >
-          <div className="grid grid-cols-5 gap-0.5">
+          <div className="grid grid-cols-6 gap-0.5">
             {PICKER_ICONS.map(({ name, emoji }) => {
               const isSelected = name === category.iconName;
               return (
