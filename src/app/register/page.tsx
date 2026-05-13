@@ -64,23 +64,12 @@ export default function RegisterPage() {
     setError('');
     setOauthLoading(provider);
     try {
-      const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
-      const result = await signInWithGoogle(clientId);
       const supabase = getSupabaseClient();
-
-      if (result.type === 'credential') {
-        const { error: authError } = await supabase.auth.signInWithIdToken({
-          provider: 'google',
-          token: result.token,
-        });
-        if (authError) throw authError;
-        router.push('/dashboard');
-      } else {
-        await supabase.auth.signInWithOAuth({
-          provider: 'google',
-          options: { redirectTo: `${window.location.origin}/dashboard` },
-        });
-      }
+      const { error: authError } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: `${window.location.origin}/dashboard` },
+      });
+      if (authError) throw authError;
     } catch {
       setError('Erro ao cadastrar com o Google. Tente novamente.');
       setOauthLoading(null);
