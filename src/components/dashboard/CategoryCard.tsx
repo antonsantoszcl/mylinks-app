@@ -391,10 +391,10 @@ export function CategoryCard({
           <div className="flex items-center gap-2 min-w-0 flex-1">
             <div
               ref={iconRef}
-              className="flex-shrink-0 p-1"
+              className="flex-shrink-0 p-1 flex items-center justify-center"
               data-no-dnd="true"
             >
-              <span className="text-base md:text-sm leading-none select-none">
+              <span className="text-lg md:text-sm leading-none select-none -mt-px">
                 {getEmoji(category.iconName)}
               </span>
             </div>
