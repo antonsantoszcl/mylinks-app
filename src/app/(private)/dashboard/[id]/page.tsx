@@ -92,6 +92,10 @@ function GoogleSearchBar() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Pesquisar no Google..."
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck={false}
           className="
             w-full h-9 md:h-[35px]
             pl-9 md:pl-4 pr-4
