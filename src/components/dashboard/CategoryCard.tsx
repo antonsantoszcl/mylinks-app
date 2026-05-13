@@ -3,7 +3,6 @@ import { SortableLinkItem } from './SortableLinkItem';
 import * as Icons from 'lucide-react';
 import { GripVertical } from 'lucide-react';
 import { FormEvent, useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
 import { DraggableAttributes } from '@dnd-kit/core';
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import {
@@ -97,82 +96,6 @@ const PICKER_ICONS: { name: string; label: string }[] = [
   { name: 'Code',         label: 'Code' },
 ];
 
-interface IconPickerPopupProps {
-  anchorRect: DOMRect;
-  currentIconName: string;
-  iconBg: string;
-  iconText: string;
-  onSelect: (iconName: string) => void;
-  onClose: () => void;
-}
-
-function IconPickerPopup({ anchorRect, currentIconName, iconBg, iconText, onSelect, onClose }: IconPickerPopupProps) {
-  const popupRef = useRef<HTMLDivElement>(null);
-
-  // Close on outside click
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (popupRef.current && !popupRef.current.contains(e.target as Node)) {
-        onClose();
-      }
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [onClose]);
-
-  // Position: prefer below-right, but clamp to viewport
-  const POPUP_WIDTH = 176; // ~11rem
-  const POPUP_HEIGHT = 148;
-  const margin = 8;
-
-  let left = anchorRect.left;
-  let top = anchorRect.bottom + margin;
-
-  if (left + POPUP_WIDTH > window.innerWidth - margin) {
-    left = window.innerWidth - POPUP_WIDTH - margin;
-  }
-  if (left < margin) left = margin;
-
-  if (top + POPUP_HEIGHT > window.innerHeight - margin) {
-    top = anchorRect.top - POPUP_HEIGHT - margin;
-  }
-
-  return createPortal(
-    <div
-      ref={popupRef}
-      data-no-dnd="true"
-      style={{ position: 'fixed', top, left, zIndex: 9999, width: POPUP_WIDTH }}
-      className="bg-white rounded-xl border border-slate-200 shadow-xl p-2"
-    >
-      <div className="grid grid-cols-4 gap-1">
-        {PICKER_ICONS.map(({ name }) => {
-          const Ic = name in Icons
-            ? (Icons[name as keyof typeof Icons] as (props: { className?: string }) => JSX.Element)
-            : Icons.Folder;
-          const isSelected = name === currentIconName;
-          return (
-            <button
-              key={name}
-              data-no-dnd="true"
-              title={name}
-              onClick={() => { onSelect(name); onClose(); }}
-              className={`flex items-center justify-center w-9 h-9 rounded-lg transition-colors ${
-                isSelected
-                  ? 'bg-blue-100 ring-1 ring-blue-400'
-                  : 'hover:bg-gray-100'
-              }`}
-              style={isSelected ? { color: iconText } : { color: '#64748b' }}
-            >
-              <Ic className="w-4 h-4" />
-            </button>
-          );
-        })}
-      </div>
-    </div>,
-    document.body,
-  );
-}
-
 interface CategoryCardProps {
   category: Category;
   colorIndex: number;
@@ -223,7 +146,6 @@ export function CategoryCard({
   const [linkUrl, setLinkUrl] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showMovePanelMenu, setShowMovePanelMenu] = useState(false);
-  const [iconPickerAnchor, setIconPickerAnchor] = useState<DOMRect | null>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
   const movePanelMenuRef = useRef<HTMLDivElement>(null);
 
@@ -293,16 +215,6 @@ export function CategoryCard({
     setShowAddLink(false);
   };
 
-  const handleIconClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    setIconPickerAnchor(rect);
-  };
-
-  const handleIconSelect = (iconName: string) => {
-    onUpdateCategoryIcon(category.id, iconName);
-  };
-
   return (
     <>
       <article
@@ -320,37 +232,74 @@ export function CategoryCard({
           className="flex items-center justify-between px-3 py-3 md:py-2 rounded-t-lg"
           style={{ backgroundColor: '#FFFFFF' }}
         >
-          <div className="flex items-center gap-2 min-w-0">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
             <div
-              className="p-1.5 rounded-lg transition-all flex-shrink-0 cursor-pointer hover:opacity-70"
+              className="p-1.5 rounded-lg transition-all flex-shrink-0"
               style={{ backgroundColor: colors.iconBg, color: colors.iconText, opacity: 0.45 }}
               data-no-dnd="true"
-              title="Click to change icon"
-              onClick={handleIconClick}
             >
               <IconComponent className="w-3.5 h-3.5" />
             </div>
-            {isEditingTitle ? (
-              <input
-                ref={titleInputRef}
-                value={titleDraft}
-                onChange={(e) => setTitleDraft(e.target.value)}
-                onBlur={saveTitle}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') saveTitle();
-                  if (e.key === 'Escape') cancelTitleEdit();
-                }}
-                className="text-xs font-semibold text-slate-800 border border-primary-200 rounded px-1.5 py-0.5 outline-none focus:ring-1 focus:ring-primary-300 w-full bg-white"
-              />
-            ) : (
-              <h3
-                className="text-sm md:text-xs font-semibold cursor-text truncate text-slate-800"
-                onClick={() => setIsEditingTitle(true)}
-              >
-                {category.title}
-              </h3>
-            )}
-
+            <div className="flex flex-col min-w-0 flex-1" data-no-dnd="true">
+              {isEditingTitle ? (
+                <>
+                  <input
+                    ref={titleInputRef}
+                    value={titleDraft}
+                    onChange={(e) => setTitleDraft(e.target.value)}
+                    onBlur={saveTitle}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') saveTitle();
+                      if (e.key === 'Escape') cancelTitleEdit();
+                    }}
+                    className="text-xs font-semibold text-slate-800 border border-primary-200 rounded px-1.5 py-0.5 outline-none focus:ring-1 focus:ring-primary-300 w-full bg-white"
+                  />
+                  {/* Inline icon picker — visible only while editing title */}
+                  <div
+                    className="mt-1.5 bg-white rounded-lg border border-slate-200 shadow-sm p-1.5"
+                    data-no-dnd="true"
+                    onMouseDown={(e) => e.preventDefault()}
+                  >
+                    <div className="grid grid-cols-6 gap-0.5">
+                      {PICKER_ICONS.map(({ name }) => {
+                        const Ic = name in Icons
+                          ? (Icons[name as keyof typeof Icons] as (props: { className?: string }) => JSX.Element)
+                          : Icons.Folder;
+                        const isSelected = name === category.iconName;
+                        return (
+                          <button
+                            key={name}
+                            type="button"
+                            data-no-dnd="true"
+                            title={name}
+                            onMouseDown={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              onUpdateCategoryIcon(category.id, name);
+                            }}
+                            className={`flex items-center justify-center w-7 h-7 rounded transition-colors ${
+                              isSelected
+                                ? 'bg-blue-100 ring-1 ring-blue-400'
+                                : 'hover:bg-gray-100'
+                            }`}
+                            style={isSelected ? { color: colors.iconText } : { color: '#64748b' }}
+                          >
+                            <Ic className="w-3.5 h-3.5" />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <h3
+                  className="text-sm md:text-xs font-semibold cursor-text truncate text-slate-800"
+                  onClick={() => setIsEditingTitle(true)}
+                >
+                  {category.title}
+                </h3>
+              )}
+            </div>
           </div>
           <div className="flex items-center gap-0 md:gap-0.5 flex-shrink-0">
             <button
@@ -507,17 +456,6 @@ export function CategoryCard({
           onDeleteCategory(category.id);
         }}
       />
-
-      {iconPickerAnchor && (
-        <IconPickerPopup
-          anchorRect={iconPickerAnchor}
-          currentIconName={category.iconName}
-          iconBg={colors.iconBg}
-          iconText={colors.iconText}
-          onSelect={handleIconSelect}
-          onClose={() => setIconPickerAnchor(null)}
-        />
-      )}
     </>
   );
 }
