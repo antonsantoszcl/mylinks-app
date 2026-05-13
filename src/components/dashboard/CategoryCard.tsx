@@ -2,6 +2,7 @@ import { Category, Dashboard, Link as LinkType } from '@/lib/types';
 import { SortableLinkItem } from './SortableLinkItem';
 import * as Icons from 'lucide-react';
 import { GripVertical } from 'lucide-react';
+import { createPortal } from 'react-dom';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { DraggableAttributes } from '@dnd-kit/core';
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
@@ -80,7 +81,28 @@ const CATEGORY_COLORS = [
   { border: '#E5E7EB', insetColor: 'rgba(236, 100, 140, 0.22)', insetColorMobile: 'rgba(236, 100, 140, 0.38)', lightBg: '#FFFFFF', iconBg: '#FCE7F3', iconText: '#831843', accentText: '#78716C' }, // Muted pink
 ];
 
-// Icons available in the picker
+// Color for each icon in the picker (and on the section header when selected)
+const ICON_COLORS: Record<string, string> = {
+  Folder:       '#8B5CF6',
+  Briefcase:    '#3B82F6',
+  BookOpen:     '#10B981',
+  ShoppingCart: '#F59E0B',
+  Film:         '#EF4444',
+  DollarSign:   '#22C55E',
+  User:         '#6366F1',
+  Heart:        '#EC4899',
+  Star:         '#EAB308',
+  Globe:        '#06B6D4',
+  Music:        '#A855F7',
+  Code:         '#64748B',
+  Newspaper:    '#F97316',
+  Users:        '#8B5CF6',
+  Banknote:     '#22C55E',
+  Tv:           '#3B82F6',
+  Wrench:       '#64748B',
+};
+
+// Icons available in the picker (expanded to cover all seed icons)
 const PICKER_ICONS: { name: string; label: string }[] = [
   { name: 'Folder',       label: 'Folder' },
   { name: 'Briefcase',    label: 'Briefcase' },
@@ -94,6 +116,11 @@ const PICKER_ICONS: { name: string; label: string }[] = [
   { name: 'Globe',        label: 'Globe' },
   { name: 'Music',        label: 'Music' },
   { name: 'Code',         label: 'Code' },
+  { name: 'Newspaper',    label: 'Newspaper' },
+  { name: 'Users',        label: 'Users' },
+  { name: 'Banknote',     label: 'Banknote' },
+  { name: 'Tv',           label: 'Tv' },
+  { name: 'Wrench',       label: 'Wrench' },
 ];
 
 interface CategoryCardProps {
@@ -137,8 +164,10 @@ export function CategoryCard({
 }: CategoryCardProps) {
   const IconComponent =
     category.iconName in Icons
-      ? (Icons[category.iconName as keyof typeof Icons] as (props: { className?: string }) => JSX.Element)
+      ? (Icons[category.iconName as keyof typeof Icons] as (props: { className?: string; style?: React.CSSProperties }) => JSX.Element)
       : Icons.Folder;
+  const iconColor = ICON_COLORS[category.iconName] ?? null;
+
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleDraft, setTitleDraft] = useState(category.title);
   const [showAddLink, setShowAddLink] = useState(false);
@@ -146,8 +175,11 @@ export function CategoryCard({
   const [linkUrl, setLinkUrl] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showMovePanelMenu, setShowMovePanelMenu] = useState(false);
+  const [pickerPos, setPickerPos] = useState<{ top: number; left: number } | null>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
   const movePanelMenuRef = useRef<HTMLDivElement>(null);
+  const iconRef = useRef<HTMLDivElement>(null);
+  const pickerRef = useRef<HTMLDivElement>(null);
 
   const otherDashboards = dashboards.filter((d) => d.id !== currentDashboardId);
   const canMoveToPanel = otherDashboards.length > 0;
@@ -163,6 +195,44 @@ export function CategoryCard({
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, [showMovePanelMenu]);
+
+  // Calculate picker popup position when edit mode opens; close on scroll/resize
+  useEffect(() => {
+    if (!isEditingTitle) {
+      setPickerPos(null);
+      return;
+    }
+    if (iconRef.current) {
+      const rect = iconRef.current.getBoundingClientRect();
+      setPickerPos({
+        top: rect.bottom + 6,
+        left: rect.left - 4,
+      });
+    }
+    const closeOnScrollResize = () => setPickerPos(null);
+    window.addEventListener('scroll', closeOnScrollResize, true);
+    window.addEventListener('resize', closeOnScrollResize);
+    return () => {
+      window.removeEventListener('scroll', closeOnScrollResize, true);
+      window.removeEventListener('resize', closeOnScrollResize);
+    };
+  }, [isEditingTitle]);
+
+  // Close picker on click outside (both input and picker portal)
+  useEffect(() => {
+    if (!isEditingTitle) return;
+    const handler = (e: MouseEvent) => {
+      const target = e.target as Node;
+      const insidePicker = pickerRef.current?.contains(target);
+      const insideInput = titleInputRef.current?.contains(target);
+      const insideIcon = iconRef.current?.contains(target);
+      if (!insidePicker && !insideInput && !insideIcon) {
+        // saveTitle will be called by the input's onBlur
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [isEditingTitle]);
 
   const colors = CATEGORY_COLORS[colorIndex % CATEGORY_COLORS.length];
 
@@ -215,6 +285,56 @@ export function CategoryCard({
     setShowAddLink(false);
   };
 
+  // Icon picker portal popup
+  const pickerPortal = isEditingTitle && pickerPos
+    ? createPortal(
+        <div
+          ref={pickerRef}
+          data-no-dnd="true"
+          style={{
+            position: 'fixed',
+            top: pickerPos.top,
+            left: pickerPos.left,
+            zIndex: 9999,
+          }}
+          className="bg-white rounded-lg border border-slate-200 shadow-lg p-2"
+          onMouseDown={(e) => e.preventDefault()}
+        >
+          <div className="grid grid-cols-4 gap-0.5">
+            {PICKER_ICONS.map(({ name }) => {
+              const Ic = name in Icons
+                ? (Icons[name as keyof typeof Icons] as (props: { className?: string; style?: React.CSSProperties }) => JSX.Element)
+                : Icons.Folder;
+              const isSelected = name === category.iconName;
+              const color = ICON_COLORS[name] ?? '#64748b';
+              return (
+                <button
+                  key={name}
+                  type="button"
+                  data-no-dnd="true"
+                  title={name}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onUpdateCategoryIcon(category.id, name);
+                  }}
+                  className={`flex items-center justify-center w-8 h-8 rounded transition-colors ${
+                    isSelected
+                      ? 'ring-2 ring-offset-1'
+                      : 'hover:bg-gray-100'
+                  }`}
+                  style={isSelected ? { ringColor: color, backgroundColor: `${color}18` } : {}}
+                >
+                  <Ic className="w-4 h-4" style={{ color }} />
+                </button>
+              );
+            })}
+          </div>
+        </div>,
+        document.body
+      )
+    : null;
+
   return (
     <>
       <article
@@ -234,63 +354,33 @@ export function CategoryCard({
         >
           <div className="flex items-center gap-2 min-w-0 flex-1">
             <div
+              ref={iconRef}
               className="p-1.5 rounded-lg transition-all flex-shrink-0"
-              style={{ backgroundColor: colors.iconBg, color: colors.iconText, opacity: 0.45 }}
+              style={
+                iconColor
+                  ? { backgroundColor: `${iconColor}1A`, color: iconColor }
+                  : { backgroundColor: colors.iconBg, color: colors.iconText, opacity: 0.45 }
+              }
               data-no-dnd="true"
             >
-              <IconComponent className="w-3.5 h-3.5" />
+              <IconComponent
+                className="w-3.5 h-3.5"
+                style={iconColor ? { color: iconColor } : undefined}
+              />
             </div>
             <div className="flex flex-col min-w-0 flex-1" data-no-dnd="true">
               {isEditingTitle ? (
-                <>
-                  <input
-                    ref={titleInputRef}
-                    value={titleDraft}
-                    onChange={(e) => setTitleDraft(e.target.value)}
-                    onBlur={saveTitle}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') saveTitle();
-                      if (e.key === 'Escape') cancelTitleEdit();
-                    }}
-                    className="text-xs font-semibold text-slate-800 border border-primary-200 rounded px-1.5 py-0.5 outline-none focus:ring-1 focus:ring-primary-300 w-full bg-white"
-                  />
-                  {/* Inline icon picker — visible only while editing title */}
-                  <div
-                    className="mt-1.5 bg-white rounded-lg border border-slate-200 shadow-sm p-1.5"
-                    data-no-dnd="true"
-                    onMouseDown={(e) => e.preventDefault()}
-                  >
-                    <div className="grid grid-cols-6 gap-0.5">
-                      {PICKER_ICONS.map(({ name }) => {
-                        const Ic = name in Icons
-                          ? (Icons[name as keyof typeof Icons] as (props: { className?: string }) => JSX.Element)
-                          : Icons.Folder;
-                        const isSelected = name === category.iconName;
-                        return (
-                          <button
-                            key={name}
-                            type="button"
-                            data-no-dnd="true"
-                            title={name}
-                            onMouseDown={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              onUpdateCategoryIcon(category.id, name);
-                            }}
-                            className={`flex items-center justify-center w-7 h-7 rounded transition-colors ${
-                              isSelected
-                                ? 'bg-blue-100 ring-1 ring-blue-400'
-                                : 'hover:bg-gray-100'
-                            }`}
-                            style={isSelected ? { color: colors.iconText } : { color: '#64748b' }}
-                          >
-                            <Ic className="w-3.5 h-3.5" />
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </>
+                <input
+                  ref={titleInputRef}
+                  value={titleDraft}
+                  onChange={(e) => setTitleDraft(e.target.value)}
+                  onBlur={saveTitle}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') saveTitle();
+                    if (e.key === 'Escape') cancelTitleEdit();
+                  }}
+                  className="text-xs font-semibold text-slate-800 border border-primary-200 rounded px-1.5 py-0.5 outline-none focus:ring-1 focus:ring-primary-300 w-full bg-white"
+                />
               ) : (
                 <h3
                   className="text-sm md:text-xs font-semibold cursor-text truncate text-slate-800"
@@ -445,6 +535,8 @@ export function CategoryCard({
           </div>
         )}
       </article>
+
+      {pickerPortal}
 
       <ConfirmModal
         open={showDeleteModal}
