@@ -163,7 +163,7 @@ function DemoCategoryCard({ category }: { category: DemoCategory }) {
 export function DemoPreview() {
   return (
     <section className="py-14 sm:py-20">
-      <div className="max-w-5xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-10">
           <span className="inline-flex items-center gap-2 bg-primary-50 text-primary-600 text-xs font-medium px-3 py-1.5 rounded-full mb-4 border border-primary-100">
             <span className="w-1.5 h-1.5 rounded-full bg-primary-500" />
@@ -178,7 +178,7 @@ export function DemoPreview() {
         </div>
 
         {/* Browser chrome mockup */}
-        <div className="relative mx-auto max-w-3xl rounded-2xl shadow-2xl shadow-primary-100/60 border border-slate-200 overflow-hidden">
+        <div className="relative mx-auto max-w-6xl rounded-2xl shadow-2xl shadow-primary-100/60 border border-slate-200 overflow-hidden">
           {/* Browser top bar */}
           <div className="bg-slate-100 border-b border-slate-200 px-4 py-2.5 flex items-center gap-3">
             <div className="flex items-center gap-1.5">
