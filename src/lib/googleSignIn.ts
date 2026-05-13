@@ -1,5 +1,6 @@
 // Google Identity Services (GIS) helper
 // Requires the script https://accounts.google.com/gsi/client to be loaded.
+// Uses renderButton + programmatic click (popup) instead of prompt() (One Tap).
 
 declare global {
   interface Window {
@@ -62,25 +63,59 @@ export function signInWithGoogle(clientId: string): Promise<GoogleSignInResult> 
         return;
       }
 
+      // Create temporary hidden container for the rendered button
+      const container = document.createElement('div');
+      container.style.position = 'fixed';
+      container.style.top = '-9999px';
+      container.style.left = '-9999px';
+      document.body.appendChild(container);
+
+      let resolved = false;
+
+      const cleanup = () => {
+        try { document.body.removeChild(container); } catch { /* already removed */ }
+      };
+
+      const safeResolve = (result: GoogleSignInResult) => {
+        if (!resolved) {
+          resolved = true;
+          cleanup();
+          resolve(result);
+        }
+      };
+
       window.google.accounts.id.initialize({
         client_id: clientId,
         callback: (response: CredentialResponse) => {
           if (response.credential) {
-            resolve({ type: 'credential', token: response.credential });
+            safeResolve({ type: 'credential', token: response.credential });
           } else {
-            // Credential failed — fallback to OAuth redirect
-            resolve({ type: 'fallback' });
+            safeResolve({ type: 'fallback' });
           }
         },
-        cancel_on_tap_outside: true,
+        cancel_on_tap_outside: false,
       });
 
-      window.google.accounts.id.prompt((notification: PromptMomentNotification) => {
-        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-          // One Tap not available — fallback to OAuth redirect
-          resolve({ type: 'fallback' });
-        }
+      // Render the official Google button in the hidden container
+      window.google.accounts.id.renderButton(container, {
+        type: 'standard',
+        size: 'large',
       });
+
+      // Click the rendered button to trigger the Google popup
+      setTimeout(() => {
+        const btn = container.querySelector('div[role=button]') as HTMLElement | null;
+        if (btn) {
+          btn.click();
+        } else {
+          safeResolve({ type: 'fallback' });
+        }
+      }, 100);
+
+      // Timeout: if no response in 60s, fallback
+      setTimeout(() => {
+        safeResolve({ type: 'fallback' });
+      }, 60000);
     };
 
     // GIS script may still be loading — retry up to 3s
