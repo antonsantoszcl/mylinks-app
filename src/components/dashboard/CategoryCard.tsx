@@ -163,6 +163,9 @@ export function CategoryCard({
   const movePanelMenuRef = useRef<HTMLDivElement>(null);
   const iconRef = useRef<HTMLDivElement>(null);
   const pickerRef = useRef<HTMLDivElement>(null);
+  // Tracks whether the user is actively interacting with the picker (touch or mouse).
+  // Used to suppress onBlur→saveTitle so the picker tap completes before edit mode exits.
+  const pickerActiveRef = useRef(false);
 
   const otherDashboards = dashboards.filter((d) => d.id !== currentDashboardId);
   const canMoveToPanel = otherDashboards.length > 0;
@@ -180,10 +183,11 @@ export function CategoryCard({
   }, [showMovePanelMenu]);
 
   // Calculate picker popup position when edit mode opens.
-  // Uses two rAFs to ensure the masonry layout has settled before reading the rect.
-  // On window-level scroll or resize, update position instead of closing,
-  // so sub-element scroll events (card body overflow scroll, ResizeObserver
-  // reflows) do NOT accidentally clear the picker.
+  // Uses two nested rAFs so the masonry ResizeObserver + calculateLayout(setTimeout 0)
+  // have fully settled before getBoundingClientRect is read.
+  // Does NOT close on scroll — the virtual keyboard on mobile triggers window scroll
+  // when it pops up, which would immediately kill the picker. The picker is position:fixed
+  // so it stays correctly anchored while visible.
   useEffect(() => {
     if (!isEditingTitle) {
       setPickerPos(null);
@@ -193,7 +197,6 @@ export function CategoryCard({
     const updatePos = () => {
       if (iconRef.current) {
         const rect = iconRef.current.getBoundingClientRect();
-        // Only update if the icon is actually on screen (rect is non-zero)
         if (rect.width > 0 || rect.height > 0) {
           setPickerPos({
             top: rect.bottom + 6,
@@ -203,43 +206,42 @@ export function CategoryCard({
       }
     };
 
-    // Two nested rAFs: first ensures React has flushed the DOM (h3→input swap),
-    // second ensures the masonry ResizeObserver + calculateLayout setTimeout(0)
-    // have both completed their reflow before we read the rect.
+    // Double rAF: first flush React DOM (h3→input), second let masonry settle
     let raf1: number;
     let raf2: number;
     raf1 = requestAnimationFrame(() => {
       raf2 = requestAnimationFrame(updatePos);
     });
 
-    // Only close on actual page-level scroll (not sub-element scroll)
-    const closeOnPageScroll = () => setPickerPos(null);
-    // Update position on window resize
-    window.addEventListener('scroll', closeOnPageScroll);
+    // Only reposition on resize (not close) — avoids killing picker on mobile keyboard pop-up
     window.addEventListener('resize', updatePos);
 
     return () => {
       cancelAnimationFrame(raf1);
       cancelAnimationFrame(raf2);
-      window.removeEventListener('scroll', closeOnPageScroll);
       window.removeEventListener('resize', updatePos);
     };
   }, [isEditingTitle]);
 
-  // Close picker on click outside (both input and picker portal)
+  // Close edit mode when tapping outside both the input and the picker
   useEffect(() => {
     if (!isEditingTitle) return;
-    const handler = (e: MouseEvent) => {
+    const handler = (e: TouchEvent | MouseEvent) => {
       const target = e.target as Node;
       const insidePicker = pickerRef.current?.contains(target);
       const insideInput = titleInputRef.current?.contains(target);
       const insideIcon = iconRef.current?.contains(target);
       if (!insidePicker && !insideInput && !insideIcon) {
-        // saveTitle will be called by the input's onBlur
+        saveTitle();
       }
     };
     document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    document.addEventListener('touchstart', handler, { passive: true });
+    return () => {
+      document.removeEventListener('mousedown', handler);
+      document.removeEventListener('touchstart', handler);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEditingTitle]);
 
   const colors = CATEGORY_COLORS[colorIndex % CATEGORY_COLORS.length];
@@ -293,6 +295,12 @@ export function CategoryCard({
     setShowAddLink(false);
   };
 
+  // Shared handler for picking an emoji — works for both mouse and touch
+  const handlePickEmoji = (name: string) => {
+    pickerActiveRef.current = false;
+    onUpdateCategoryIcon(category.id, name);
+  };
+
   // Icon picker portal popup
   const pickerPortal = isEditingTitle && pickerPos
     ? createPortal(
@@ -307,6 +315,7 @@ export function CategoryCard({
           }}
           className="bg-white rounded-lg border border-slate-200 shadow-lg p-2"
           onMouseDown={(e) => e.preventDefault()}
+          onTouchStart={(e) => e.stopPropagation()}
         >
           <div className="grid grid-cols-5 gap-0.5">
             {PICKER_ICONS.map(({ name, emoji }) => {
@@ -320,7 +329,21 @@ export function CategoryCard({
                   onMouseDown={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    onUpdateCategoryIcon(category.id, name);
+                    pickerActiveRef.current = true;
+                  }}
+                  onMouseUp={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handlePickEmoji(name);
+                  }}
+                  onTouchStart={(e) => {
+                    e.stopPropagation();
+                    pickerActiveRef.current = true;
+                  }}
+                  onTouchEnd={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handlePickEmoji(name);
                   }}
                   className={`flex items-center justify-center w-9 h-9 rounded transition-colors text-xl ${
                     isSelected
@@ -371,7 +394,15 @@ export function CategoryCard({
                   ref={titleInputRef}
                   value={titleDraft}
                   onChange={(e) => setTitleDraft(e.target.value)}
-                  onBlur={saveTitle}
+                  onBlur={() => {
+                    // On mobile, tapping a picker emoji triggers blur before the
+                    // touchEnd fires. Defer saveTitle so the touchEnd handler runs first.
+                    setTimeout(() => {
+                      if (!pickerActiveRef.current) {
+                        saveTitle();
+                      }
+                    }, 150);
+                  }}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') saveTitle();
                     if (e.key === 'Escape') cancelTitleEdit();
