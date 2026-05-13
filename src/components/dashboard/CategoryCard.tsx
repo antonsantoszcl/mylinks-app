@@ -3,6 +3,7 @@ import { SortableLinkItem } from './SortableLinkItem';
 import * as Icons from 'lucide-react';
 import { GripVertical } from 'lucide-react';
 import { FormEvent, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { DraggableAttributes } from '@dnd-kit/core';
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import {
@@ -80,6 +81,98 @@ const CATEGORY_COLORS = [
   { border: '#E5E7EB', insetColor: 'rgba(236, 100, 140, 0.22)', insetColorMobile: 'rgba(236, 100, 140, 0.38)', lightBg: '#FFFFFF', iconBg: '#FCE7F3', iconText: '#831843', accentText: '#78716C' }, // Muted pink
 ];
 
+// Icons available in the picker
+const PICKER_ICONS: { name: string; label: string }[] = [
+  { name: 'Folder',       label: 'Folder' },
+  { name: 'Briefcase',    label: 'Briefcase' },
+  { name: 'BookOpen',     label: 'BookOpen' },
+  { name: 'ShoppingCart', label: 'ShoppingCart' },
+  { name: 'Film',         label: 'Film' },
+  { name: 'DollarSign',   label: 'DollarSign' },
+  { name: 'User',         label: 'User' },
+  { name: 'Heart',        label: 'Heart' },
+  { name: 'Star',         label: 'Star' },
+  { name: 'Globe',        label: 'Globe' },
+  { name: 'Music',        label: 'Music' },
+  { name: 'Code',         label: 'Code' },
+];
+
+interface IconPickerPopupProps {
+  anchorRect: DOMRect;
+  currentIconName: string;
+  iconBg: string;
+  iconText: string;
+  onSelect: (iconName: string) => void;
+  onClose: () => void;
+}
+
+function IconPickerPopup({ anchorRect, currentIconName, iconBg, iconText, onSelect, onClose }: IconPickerPopupProps) {
+  const popupRef = useRef<HTMLDivElement>(null);
+
+  // Close on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (popupRef.current && !popupRef.current.contains(e.target as Node)) {
+        onClose();
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [onClose]);
+
+  // Position: prefer below-right, but clamp to viewport
+  const POPUP_WIDTH = 176; // ~11rem
+  const POPUP_HEIGHT = 148;
+  const margin = 8;
+
+  let left = anchorRect.left;
+  let top = anchorRect.bottom + margin;
+
+  if (left + POPUP_WIDTH > window.innerWidth - margin) {
+    left = window.innerWidth - POPUP_WIDTH - margin;
+  }
+  if (left < margin) left = margin;
+
+  if (top + POPUP_HEIGHT > window.innerHeight - margin) {
+    top = anchorRect.top - POPUP_HEIGHT - margin;
+  }
+
+  return createPortal(
+    <div
+      ref={popupRef}
+      data-no-dnd="true"
+      style={{ position: 'fixed', top, left, zIndex: 9999, width: POPUP_WIDTH }}
+      className="bg-white rounded-xl border border-slate-200 shadow-xl p-2"
+    >
+      <div className="grid grid-cols-4 gap-1">
+        {PICKER_ICONS.map(({ name }) => {
+          const Ic = name in Icons
+            ? (Icons[name as keyof typeof Icons] as (props: { className?: string }) => JSX.Element)
+            : Icons.Folder;
+          const isSelected = name === currentIconName;
+          return (
+            <button
+              key={name}
+              data-no-dnd="true"
+              title={name}
+              onClick={() => { onSelect(name); onClose(); }}
+              className={`flex items-center justify-center w-9 h-9 rounded-lg transition-colors ${
+                isSelected
+                  ? 'bg-blue-100 ring-1 ring-blue-400'
+                  : 'hover:bg-gray-100'
+              }`}
+              style={isSelected ? { color: iconText } : { color: '#64748b' }}
+            >
+              <Ic className="w-4 h-4" />
+            </button>
+          );
+        })}
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
 interface CategoryCardProps {
   category: Category;
   colorIndex: number;
@@ -90,6 +183,7 @@ interface CategoryCardProps {
   onUpdateLink: (linkId: string, title: string, url: string) => void;
   onDeleteCategory: (categoryId: string) => void;
   onReorderLinks: (categoryId: string, oldIndex: number, newIndex: number) => void;
+  onUpdateCategoryIcon: (categoryId: string, iconName: string) => void;
   dragHandleListeners?: SyntheticListenerMap;
   dragHandleAttributes?: DraggableAttributes;
   categories: Category[];
@@ -109,6 +203,7 @@ export function CategoryCard({
   onUpdateLink,
   onDeleteCategory,
   onReorderLinks,
+  onUpdateCategoryIcon,
   dragHandleListeners,
   dragHandleAttributes,
   categories,
@@ -128,6 +223,7 @@ export function CategoryCard({
   const [linkUrl, setLinkUrl] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showMovePanelMenu, setShowMovePanelMenu] = useState(false);
+  const [iconPickerAnchor, setIconPickerAnchor] = useState<DOMRect | null>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
   const movePanelMenuRef = useRef<HTMLDivElement>(null);
 
@@ -197,6 +293,16 @@ export function CategoryCard({
     setShowAddLink(false);
   };
 
+  const handleIconDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    setIconPickerAnchor(rect);
+  };
+
+  const handleIconSelect = (iconName: string) => {
+    onUpdateCategoryIcon(category.id, iconName);
+  };
+
   return (
     <>
       <article
@@ -216,8 +322,11 @@ export function CategoryCard({
         >
           <div className="flex items-center gap-2 min-w-0">
             <div
-              className="p-1.5 rounded-lg transition-all flex-shrink-0"
+              className="p-1.5 rounded-lg transition-all flex-shrink-0 cursor-pointer hover:opacity-70"
               style={{ backgroundColor: colors.iconBg, color: colors.iconText, opacity: 0.45 }}
+              data-no-dnd="true"
+              title="Double-click to change icon"
+              onDoubleClick={handleIconDoubleClick}
             >
               <IconComponent className="w-3.5 h-3.5" />
             </div>
@@ -398,6 +507,17 @@ export function CategoryCard({
           onDeleteCategory(category.id);
         }}
       />
+
+      {iconPickerAnchor && (
+        <IconPickerPopup
+          anchorRect={iconPickerAnchor}
+          currentIconName={category.iconName}
+          iconBg={colors.iconBg}
+          iconText={colors.iconText}
+          onSelect={handleIconSelect}
+          onClose={() => setIconPickerAnchor(null)}
+        />
+      )}
     </>
   );
 }

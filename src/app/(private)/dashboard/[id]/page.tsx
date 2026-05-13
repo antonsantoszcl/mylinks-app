@@ -365,6 +365,16 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
     );
   };
 
+  const updateCategoryIcon = async (categoryId: string, iconName: string) => {
+    if (!userId) return;
+    // Optimistic update
+    setCategories((prev) =>
+      prev.map((c) => (c.id === categoryId ? { ...c, iconName } : c))
+    );
+    const supabase = getSupabaseClient();
+    await supabase.from('categories').update({ icon_name: iconName }).eq('id', categoryId);
+  };
+
   const moveCategoryToPanel = async (categoryId: string, targetDashboardId: string) => {
     if (!userId) return;
     const supabase = getSupabaseClient();
@@ -473,6 +483,7 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
         dashboards={dashboards}
         currentDashboardId={dashboardId}
         onMoveCategoryToPanel={moveCategoryToPanel}
+        onUpdateCategoryIcon={updateCategoryIcon}
       />
 
       <RecentAccessRow items={recentAccess} />

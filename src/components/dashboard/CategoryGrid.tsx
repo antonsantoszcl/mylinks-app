@@ -35,6 +35,7 @@ interface CategoryGridProps {
   dashboards: Dashboard[];
   currentDashboardId: string;
   onMoveCategoryToPanel: (categoryId: string, targetDashboardId: string) => void;
+  onUpdateCategoryIcon: (categoryId: string, iconName: string) => void;
 }
 
 const GAP = 12; // px – matches gap-3 (0.75rem)
@@ -66,6 +67,7 @@ export function CategoryGrid({
   dashboards,
   currentDashboardId,
   onMoveCategoryToPanel,
+  onUpdateCategoryIcon,
 }: CategoryGridProps) {
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
@@ -212,6 +214,7 @@ export function CategoryGrid({
                       onUpdateLink={onUpdateLink}
                       onDeleteCategory={onDeleteCategory}
                       onReorderLinks={onReorderLinks}
+                      onUpdateCategoryIcon={onUpdateCategoryIcon}
                       categories={categories}
                       onMoveLink={onMoveLink}
                       dashboards={dashboards}
