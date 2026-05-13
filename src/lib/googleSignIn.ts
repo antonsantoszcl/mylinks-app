@@ -9,6 +9,7 @@ declare global {
           initialize: (config: GoogleIdConfig) => void;
           prompt: (momentListener?: (notification: PromptMomentNotification) => void) => void;
           cancel: () => void;
+          renderButton: (parent: HTMLElement, options: ButtonOptions) => void;
         };
       };
     };
@@ -19,6 +20,8 @@ interface GoogleIdConfig {
   client_id: string;
   callback: (response: CredentialResponse) => void;
   cancel_on_tap_outside?: boolean;
+  ux_mode?: 'popup' | 'redirect';
+  auto_select?: boolean;
 }
 
 interface CredentialResponse {
@@ -33,16 +36,29 @@ interface PromptMomentNotification {
   getSkippedReason: () => string;
 }
 
-export function signInWithGoogle(clientId: string): Promise<string> {
-  return new Promise((resolve, reject) => {
+interface ButtonOptions {
+  type?: 'standard' | 'icon';
+  theme?: 'outline' | 'filled_blue' | 'filled_black';
+  size?: 'large' | 'medium' | 'small';
+  text?: 'signin_with' | 'signup_with' | 'continue_with' | 'signin';
+  width?: number;
+}
+
+// Result type: 'credential' means we got a token, 'fallback' means GIS failed and caller should use signInWithOAuth
+export type GoogleSignInResult =
+  | { type: 'credential'; token: string }
+  | { type: 'fallback' };
+
+export function signInWithGoogle(clientId: string): Promise<GoogleSignInResult> {
+  return new Promise((resolve) => {
     if (typeof window === 'undefined') {
-      reject(new Error('Ambiente não suportado.'));
+      resolve({ type: 'fallback' });
       return;
     }
 
     const tryInit = () => {
       if (!window.google?.accounts?.id) {
-        reject(new Error('Google Identity Services não carregado.'));
+        resolve({ type: 'fallback' });
         return;
       }
 
@@ -50,9 +66,10 @@ export function signInWithGoogle(clientId: string): Promise<string> {
         client_id: clientId,
         callback: (response: CredentialResponse) => {
           if (response.credential) {
-            resolve(response.credential);
+            resolve({ type: 'credential', token: response.credential });
           } else {
-            reject(new Error(response.error ?? 'Erro no Google Sign-In'));
+            // Credential failed — fallback to OAuth redirect
+            resolve({ type: 'fallback' });
           }
         },
         cancel_on_tap_outside: true,
@@ -60,15 +77,8 @@ export function signInWithGoogle(clientId: string): Promise<string> {
 
       window.google.accounts.id.prompt((notification: PromptMomentNotification) => {
         if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-          reject(
-            new Error(
-              `Google Sign-In não pôde ser exibido: ${
-                notification.isNotDisplayed()
-                  ? notification.getNotDisplayedReason()
-                  : notification.getSkippedReason()
-              }`
-            )
-          );
+          // One Tap not available — fallback to OAuth redirect
+          resolve({ type: 'fallback' });
         }
       });
     };
@@ -85,7 +95,8 @@ export function signInWithGoogle(clientId: string): Promise<string> {
           tryInit();
         } else if (attempts >= 30) {
           clearInterval(interval);
-          reject(new Error('Timeout aguardando Google Identity Services.'));
+          // Script didn't load — fallback to OAuth redirect
+          resolve({ type: 'fallback' });
         }
       }, 100);
     }
