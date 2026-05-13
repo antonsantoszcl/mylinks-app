@@ -179,29 +179,50 @@ export function CategoryCard({
     return () => document.removeEventListener('mousedown', handler);
   }, [showMovePanelMenu]);
 
-  // Calculate picker popup position when edit mode opens; close on scroll/resize
+  // Calculate picker popup position when edit mode opens.
+  // Uses two rAFs to ensure the masonry layout has settled before reading the rect.
+  // On window-level scroll or resize, update position instead of closing,
+  // so sub-element scroll events (card body overflow scroll, ResizeObserver
+  // reflows) do NOT accidentally clear the picker.
   useEffect(() => {
     if (!isEditingTitle) {
       setPickerPos(null);
       return;
     }
-    // Use rAF to ensure the DOM has painted and the ref is accessible
-    const raf = requestAnimationFrame(() => {
+
+    const updatePos = () => {
       if (iconRef.current) {
         const rect = iconRef.current.getBoundingClientRect();
-        setPickerPos({
-          top: rect.bottom + 6,
-          left: rect.left - 4,
-        });
+        // Only update if the icon is actually on screen (rect is non-zero)
+        if (rect.width > 0 || rect.height > 0) {
+          setPickerPos({
+            top: rect.bottom + 6,
+            left: rect.left - 4,
+          });
+        }
       }
+    };
+
+    // Two nested rAFs: first ensures React has flushed the DOM (h3→input swap),
+    // second ensures the masonry ResizeObserver + calculateLayout setTimeout(0)
+    // have both completed their reflow before we read the rect.
+    let raf1: number;
+    let raf2: number;
+    raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(updatePos);
     });
-    const closeOnScrollResize = () => setPickerPos(null);
-    window.addEventListener('scroll', closeOnScrollResize, true);
-    window.addEventListener('resize', closeOnScrollResize);
+
+    // Only close on actual page-level scroll (not sub-element scroll)
+    const closeOnPageScroll = () => setPickerPos(null);
+    // Update position on window resize
+    window.addEventListener('scroll', closeOnPageScroll);
+    window.addEventListener('resize', updatePos);
+
     return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener('scroll', closeOnScrollResize, true);
-      window.removeEventListener('resize', closeOnScrollResize);
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+      window.removeEventListener('scroll', closeOnPageScroll);
+      window.removeEventListener('resize', updatePos);
     };
   }, [isEditingTitle]);
 

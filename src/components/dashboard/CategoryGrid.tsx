@@ -149,7 +149,7 @@ export function CategoryGrid({
   const submitCategory = (event: FormEvent) => {
     event.preventDefault();
     if (!newCategoryName.trim()) return;
-    onAddCategory(newCategoryName, 'Folder');
+    onAddCategory(newCategoryName, 'folder');
     setNewCategoryName('');
     setShowAddCategory(false);
   };
