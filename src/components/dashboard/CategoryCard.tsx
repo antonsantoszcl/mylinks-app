@@ -223,7 +223,12 @@ export function CategoryCard({
     };
   }, [isEditingTitle]);
 
-  // Close edit mode when tapping outside both the input and the picker
+  // Close edit mode when tapping outside both the input and the picker.
+  // The listener is registered in a setTimeout so the *same* tap event that
+  // triggered isEditingTitle=true has fully propagated before we start
+  // listening — otherwise on mobile the tap on the title immediately fires the
+  // outside-click handler (the h3 is not inside input/picker/icon refs) and
+  // closes the picker in the same event loop tick it opened.
   useEffect(() => {
     if (!isEditingTitle) return;
     const handler = (e: TouchEvent | MouseEvent) => {
@@ -235,9 +240,14 @@ export function CategoryCard({
         saveTitle();
       }
     };
-    document.addEventListener('mousedown', handler);
-    document.addEventListener('touchstart', handler, { passive: true });
+    // Defer by one macro-task so the tap/click that opened edit mode finishes
+    // propagating before this listener becomes active.
+    const tid = setTimeout(() => {
+      document.addEventListener('mousedown', handler);
+      document.addEventListener('touchstart', handler, { passive: true });
+    }, 0);
     return () => {
+      clearTimeout(tid);
       document.removeEventListener('mousedown', handler);
       document.removeEventListener('touchstart', handler);
     };
