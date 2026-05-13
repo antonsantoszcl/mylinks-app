@@ -293,7 +293,7 @@ export function CategoryCard({
     setShowAddLink(false);
   };
 
-  const handleIconDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleIconClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     setIconPickerAnchor(rect);
@@ -325,8 +325,8 @@ export function CategoryCard({
               className="p-1.5 rounded-lg transition-all flex-shrink-0 cursor-pointer hover:opacity-70"
               style={{ backgroundColor: colors.iconBg, color: colors.iconText, opacity: 0.45 }}
               data-no-dnd="true"
-              title="Double-click to change icon"
-              onDoubleClick={handleIconDoubleClick}
+              title="Click to change icon"
+              onClick={handleIconClick}
             >
               <IconComponent className="w-3.5 h-3.5" />
             </div>
