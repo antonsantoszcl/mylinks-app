@@ -1,7 +1,6 @@
 import { Category, Dashboard, Link as LinkType } from '@/lib/types';
 import { SortableLinkItem } from './SortableLinkItem';
-import * as Icons from 'lucide-react';
-import { GripVertical } from 'lucide-react';
+import { Plus, GripVertical, FolderOutput, Trash2, Inbox } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { DraggableAttributes } from '@dnd-kit/core';
@@ -73,55 +72,45 @@ class NoDndTouchSensor extends TouchSensor {
 // All cards share white bg and subtle gray border; only the inset left accent color varies
 // insetColorMobile uses higher opacity (0.38-0.40) for better visual identity on mobile
 const CATEGORY_COLORS = [
-  { border: '#E5E7EB', insetColor: 'rgba(234, 179, 8, 0.25)',   insetColorMobile: 'rgba(234, 179, 8, 0.40)',   lightBg: '#FFFFFF', iconBg: '#FEF9C3', iconText: '#713F12', accentText: '#78716C' }, // Muted yellow
-  { border: '#E5E7EB', insetColor: 'rgba(52, 168, 120, 0.22)',  insetColorMobile: 'rgba(52, 168, 120, 0.38)',  lightBg: '#FFFFFF', iconBg: '#D1FAE5', iconText: '#065F46', accentText: '#78716C' }, // Muted mint
-  { border: '#E5E7EB', insetColor: 'rgba(234, 126, 60, 0.22)',  insetColorMobile: 'rgba(234, 126, 60, 0.38)',  lightBg: '#FFFFFF', iconBg: '#FFEDD5', iconText: '#7C2D12', accentText: '#78716C' }, // Muted orange
-  { border: '#E5E7EB', insetColor: 'rgba(24, 119, 242, 0.22)',  insetColorMobile: 'rgba(24, 119, 242, 0.38)',  lightBg: '#FFFFFF', iconBg: '#D6EAFF', iconText: '#0F4FA6', accentText: '#78716C' }, // Muted blue
-  { border: '#E5E7EB', insetColor: 'rgba(101, 183, 72, 0.22)',  insetColorMobile: 'rgba(101, 183, 72, 0.38)',  lightBg: '#FFFFFF', iconBg: '#DCFCE7', iconText: '#14532D', accentText: '#78716C' }, // Muted lime
-  { border: '#E5E7EB', insetColor: 'rgba(236, 100, 140, 0.22)', insetColorMobile: 'rgba(236, 100, 140, 0.38)', lightBg: '#FFFFFF', iconBg: '#FCE7F3', iconText: '#831843', accentText: '#78716C' }, // Muted pink
+  { border: '#E5E7EB', insetColor: 'rgba(234, 179, 8, 0.25)',   insetColorMobile: 'rgba(234, 179, 8, 0.40)',   lightBg: '#FFFFFF', accentText: '#78716C' },
+  { border: '#E5E7EB', insetColor: 'rgba(52, 168, 120, 0.22)',  insetColorMobile: 'rgba(52, 168, 120, 0.38)',  lightBg: '#FFFFFF', accentText: '#78716C' },
+  { border: '#E5E7EB', insetColor: 'rgba(234, 126, 60, 0.22)',  insetColorMobile: 'rgba(234, 126, 60, 0.38)',  lightBg: '#FFFFFF', accentText: '#78716C' },
+  { border: '#E5E7EB', insetColor: 'rgba(24, 119, 242, 0.22)',  insetColorMobile: 'rgba(24, 119, 242, 0.38)',  lightBg: '#FFFFFF', accentText: '#78716C' },
+  { border: '#E5E7EB', insetColor: 'rgba(101, 183, 72, 0.22)',  insetColorMobile: 'rgba(101, 183, 72, 0.38)',  lightBg: '#FFFFFF', accentText: '#78716C' },
+  { border: '#E5E7EB', insetColor: 'rgba(236, 100, 140, 0.22)', insetColorMobile: 'rgba(236, 100, 140, 0.38)', lightBg: '#FFFFFF', accentText: '#78716C' },
 ];
 
-// Color for each icon in the picker (and on the section header when selected)
-const ICON_COLORS: Record<string, string> = {
-  Folder:       '#8B5CF6',
-  Briefcase:    '#3B82F6',
-  BookOpen:     '#10B981',
-  ShoppingCart: '#F59E0B',
-  Film:         '#EF4444',
-  DollarSign:   '#22C55E',
-  User:         '#6366F1',
-  Heart:        '#EC4899',
-  Star:         '#EAB308',
-  Globe:        '#06B6D4',
-  Music:        '#A855F7',
-  Code:         '#64748B',
-  Newspaper:    '#F97316',
-  Users:        '#8B5CF6',
-  Banknote:     '#22C55E',
-  Tv:           '#3B82F6',
-  Wrench:       '#64748B',
-};
-
-// Icons available in the picker (expanded to cover all seed icons)
-const PICKER_ICONS: { name: string; label: string }[] = [
-  { name: 'Folder',       label: 'Folder' },
-  { name: 'Briefcase',    label: 'Briefcase' },
-  { name: 'BookOpen',     label: 'BookOpen' },
-  { name: 'ShoppingCart', label: 'ShoppingCart' },
-  { name: 'Film',         label: 'Film' },
-  { name: 'DollarSign',   label: 'DollarSign' },
-  { name: 'User',         label: 'User' },
-  { name: 'Heart',        label: 'Heart' },
-  { name: 'Star',         label: 'Star' },
-  { name: 'Globe',        label: 'Globe' },
-  { name: 'Music',        label: 'Music' },
-  { name: 'Code',         label: 'Code' },
-  { name: 'Newspaper',    label: 'Newspaper' },
-  { name: 'Users',        label: 'Users' },
-  { name: 'Banknote',     label: 'Banknote' },
-  { name: 'Tv',           label: 'Tv' },
-  { name: 'Wrench',       label: 'Wrench' },
+// Emoji icon list for the section picker
+const PICKER_ICONS: { name: string; emoji: string }[] = [
+  { name: 'folder',    emoji: '📁' },
+  { name: 'briefcase', emoji: '💼' },
+  { name: 'book',      emoji: '📚' },
+  { name: 'cart',      emoji: '🛒' },
+  { name: 'film',      emoji: '🎬' },
+  { name: 'money',     emoji: '💰' },
+  { name: 'user',      emoji: '👤' },
+  { name: 'heart',     emoji: '❤️' },
+  { name: 'star',      emoji: '⭐' },
+  { name: 'globe',     emoji: '🌍' },
+  { name: 'music',     emoji: '🎵' },
+  { name: 'code',      emoji: '💻' },
+  { name: 'news',      emoji: '📰' },
+  { name: 'people',    emoji: '👥' },
+  { name: 'bank',      emoji: '🏦' },
+  { name: 'tv',        emoji: '📺' },
+  { name: 'tools',     emoji: '🔧' },
+  { name: 'gaming',    emoji: '🎮' },
+  { name: 'camera',    emoji: '📷' },
+  { name: 'coffee',    emoji: '☕' },
 ];
+
+const EMOJI_MAP: Record<string, string> = Object.fromEntries(
+  PICKER_ICONS.map(({ name, emoji }) => [name, emoji])
+);
+
+function getEmoji(iconName: string): string {
+  return EMOJI_MAP[iconName] ?? '📁';
+}
 
 interface CategoryCardProps {
   category: Category;
@@ -162,12 +151,6 @@ export function CategoryCard({
   currentDashboardId,
   onMoveCategoryToPanel,
 }: CategoryCardProps) {
-  const IconComponent =
-    category.iconName in Icons
-      ? (Icons[category.iconName as keyof typeof Icons] as (props: { className?: string; style?: React.CSSProperties }) => JSX.Element)
-      : Icons.Folder;
-  const iconColor = ICON_COLORS[category.iconName] ?? null;
-
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleDraft, setTitleDraft] = useState(category.title);
   const [showAddLink, setShowAddLink] = useState(false);
@@ -202,17 +185,21 @@ export function CategoryCard({
       setPickerPos(null);
       return;
     }
-    if (iconRef.current) {
-      const rect = iconRef.current.getBoundingClientRect();
-      setPickerPos({
-        top: rect.bottom + 6,
-        left: rect.left - 4,
-      });
-    }
+    // Use rAF to ensure the DOM has painted and the ref is accessible
+    const raf = requestAnimationFrame(() => {
+      if (iconRef.current) {
+        const rect = iconRef.current.getBoundingClientRect();
+        setPickerPos({
+          top: rect.bottom + 6,
+          left: rect.left - 4,
+        });
+      }
+    });
     const closeOnScrollResize = () => setPickerPos(null);
     window.addEventListener('scroll', closeOnScrollResize, true);
     window.addEventListener('resize', closeOnScrollResize);
     return () => {
+      cancelAnimationFrame(raf);
       window.removeEventListener('scroll', closeOnScrollResize, true);
       window.removeEventListener('resize', closeOnScrollResize);
     };
@@ -300,13 +287,9 @@ export function CategoryCard({
           className="bg-white rounded-lg border border-slate-200 shadow-lg p-2"
           onMouseDown={(e) => e.preventDefault()}
         >
-          <div className="grid grid-cols-4 gap-0.5">
-            {PICKER_ICONS.map(({ name }) => {
-              const Ic = name in Icons
-                ? (Icons[name as keyof typeof Icons] as (props: { className?: string; style?: React.CSSProperties }) => JSX.Element)
-                : Icons.Folder;
+          <div className="grid grid-cols-5 gap-0.5">
+            {PICKER_ICONS.map(({ name, emoji }) => {
               const isSelected = name === category.iconName;
-              const color = ICON_COLORS[name] ?? '#64748b';
               return (
                 <button
                   key={name}
@@ -318,14 +301,13 @@ export function CategoryCard({
                     e.stopPropagation();
                     onUpdateCategoryIcon(category.id, name);
                   }}
-                  className={`flex items-center justify-center w-8 h-8 rounded transition-colors ${
+                  className={`flex items-center justify-center w-9 h-9 rounded transition-colors text-xl ${
                     isSelected
-                      ? 'ring-2 ring-offset-1'
+                      ? 'bg-blue-50 ring-2 ring-blue-300 ring-offset-1'
                       : 'hover:bg-gray-100'
                   }`}
-                  style={isSelected ? { ringColor: color, backgroundColor: `${color}18` } : {}}
                 >
-                  <Ic className="w-4 h-4" style={{ color }} />
+                  {emoji}
                 </button>
               );
             })}
@@ -355,18 +337,12 @@ export function CategoryCard({
           <div className="flex items-center gap-2 min-w-0 flex-1">
             <div
               ref={iconRef}
-              className="p-1.5 rounded-lg transition-all flex-shrink-0"
-              style={
-                iconColor
-                  ? { backgroundColor: `${iconColor}1A`, color: iconColor }
-                  : { backgroundColor: colors.iconBg, color: colors.iconText, opacity: 0.45 }
-              }
+              className="flex-shrink-0 p-1"
               data-no-dnd="true"
             >
-              <IconComponent
-                className="w-3.5 h-3.5"
-                style={iconColor ? { color: iconColor } : undefined}
-              />
+              <span className="text-base md:text-sm leading-none select-none">
+                {getEmoji(category.iconName)}
+              </span>
             </div>
             <div className="flex flex-col min-w-0 flex-1" data-no-dnd="true">
               {isEditingTitle ? (
@@ -398,7 +374,7 @@ export function CategoryCard({
               aria-label="Add new link to section"
               onClick={() => setShowAddLink(true)}
             >
-              <Icons.Plus className="w-5 h-5 md:w-3.5 md:h-3.5" />
+              <Plus className="w-5 h-5 md:w-3.5 md:h-3.5" />
             </button>
             {dragHandleListeners && dragHandleAttributes && (
               <div
@@ -421,7 +397,7 @@ export function CategoryCard({
                   data-no-dnd="true"
                   onClick={(e) => { e.stopPropagation(); setShowMovePanelMenu((v) => !v); }}
                 >
-                  <Icons.FolderOutput className="w-5 h-5 md:w-3.5 md:h-3.5" />
+                  <FolderOutput className="w-5 h-5 md:w-3.5 md:h-3.5" />
                 </button>
                 {showMovePanelMenu && (
                   <div className="absolute right-0 top-full mt-1 bg-white rounded-lg border border-slate-200 shadow-lg z-50 min-w-[160px] py-1" data-no-dnd="true">
@@ -447,7 +423,7 @@ export function CategoryCard({
               onClick={() => setShowDeleteModal(true)}
               aria-label="Delete section"
             >
-              <Icons.Trash2 className="w-5 h-5 md:w-3 md:h-3" />
+              <Trash2 className="w-5 h-5 md:w-3 md:h-3" />
             </button>
           </div>
         </header>
@@ -512,7 +488,7 @@ export function CategoryCard({
             </DndContext>
           ) : (
             <div className="flex flex-col items-center justify-center h-16 text-slate-400 gap-1">
-              <Icons.Inbox className="w-5 h-5 opacity-20" />
+              <Inbox className="w-5 h-5 opacity-20" />
               <p className="text-xs">Nenhum link</p>
             </div>
           )}
@@ -529,7 +505,7 @@ export function CategoryCard({
               style={{ color: colors.accentText }}
               onClick={() => setShowAddLink(true)}
             >
-              <Icons.Plus className="w-3 h-3" />
+              <Plus className="w-3 h-3" />
               Adicionar link
             </button>
           </div>

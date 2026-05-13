@@ -22,12 +22,12 @@ const DEFAULT_CATEGORIES: Array<{
 }> = [
   {
     title: 'Meus Favoritos',
-    iconName: 'Star',
+    iconName: 'star',
     links: [],
   },
   {
     title: 'Redes Sociais',
-    iconName: 'Users',
+    iconName: 'people',
     links: [
       { title: 'Facebook', url: 'https://facebook.com', domain: 'facebook.com' },
       { title: 'WhatsApp', url: 'https://web.whatsapp.com', domain: 'web.whatsapp.com' },
@@ -38,7 +38,7 @@ const DEFAULT_CATEGORIES: Array<{
   },
   {
     title: 'Noticias',
-    iconName: 'Newspaper',
+    iconName: 'news',
     links: [
       { title: 'Globo.com', url: 'https://globo.com', domain: 'globo.com' },
       { title: 'UOL', url: 'https://uol.com.br', domain: 'uol.com.br' },
@@ -49,7 +49,7 @@ const DEFAULT_CATEGORIES: Array<{
   },
   {
     title: 'Compras',
-    iconName: 'ShoppingCart',
+    iconName: 'cart',
     links: [
       { title: 'Buscape', url: 'https://buscape.com.br', domain: 'buscape.com.br' },
       { title: 'Mercado Livre', url: 'https://mercadolivre.com.br', domain: 'mercadolivre.com.br' },
@@ -60,7 +60,7 @@ const DEFAULT_CATEGORIES: Array<{
   },
   {
     title: 'Financas',
-    iconName: 'Banknote',
+    iconName: 'bank',
     links: [
       { title: 'Banco do Brasil', url: 'https://bb.com.br', domain: 'bb.com.br' },
       { title: 'Itau', url: 'https://itau.com.br', domain: 'itau.com.br' },
@@ -71,7 +71,7 @@ const DEFAULT_CATEGORIES: Array<{
   },
   {
     title: 'Entretenimento',
-    iconName: 'Tv',
+    iconName: 'tv',
     links: [
       { title: 'Youtube', url: 'https://youtube.com', domain: 'youtube.com' },
       { title: 'Netflix', url: 'https://netflix.com', domain: 'netflix.com' },
@@ -82,7 +82,7 @@ const DEFAULT_CATEGORIES: Array<{
   },
   {
     title: 'Uteis',
-    iconName: 'Wrench',
+    iconName: 'tools',
     links: [
       { title: 'Gov.br', url: 'https://gov.br', domain: 'gov.br' },
       { title: 'Wikipedia', url: 'https://pt.wikipedia.org', domain: 'pt.wikipedia.org' },
