@@ -1,11 +1,6 @@
 import Image from 'next/image';
-import {
-  Star,
-  ShoppingCart,
-  Tv2,
-  Wrench,
-  Search,
-} from 'lucide-react';
+import { Search } from 'lucide-react';
+import { getNotoEmojiUrl } from '@/lib/emojiUtils';
 
 interface DemoLink {
   title: string;
@@ -16,10 +11,8 @@ interface DemoLink {
 interface DemoCategory {
   id: string;
   title: string;
-  Icon: React.ElementType;
+  emoji: string;
   links: DemoLink[];
-  iconBg: string;
-  iconText: string;
   insetColor: string;
 }
 
@@ -27,21 +20,19 @@ const demoCategories: DemoCategory[] = [
   {
     id: 'meus-favoritos',
     title: 'Meus Favoritos',
-    Icon: Star,
+    emoji: '⭐',
     links: [
       { title: 'YouTube', domain: 'youtube.com', url: 'https://youtube.com' },
       { title: 'Gmail', domain: 'gmail.com', url: 'https://gmail.com' },
       { title: 'Google Drive', domain: 'drive.google.com', url: 'https://drive.google.com' },
       { title: 'ChatGPT', domain: 'chat.openai.com', url: 'https://chat.openai.com' },
     ],
-    iconBg: '#FEF9C3',
-    iconText: '#713F12',
     insetColor: 'rgba(234, 179, 8, 0.28)',
   },
   {
     id: 'entretenimento',
     title: 'Entretenimento',
-    Icon: Tv2,
+    emoji: '🎬',
     links: [
       { title: 'Netflix', domain: 'netflix.com', url: 'https://netflix.com' },
       { title: 'Spotify', domain: 'spotify.com', url: 'https://spotify.com' },
@@ -49,35 +40,29 @@ const demoCategories: DemoCategory[] = [
       { title: 'Disney+', domain: 'disneyplus.com', url: 'https://disneyplus.com' },
       { title: 'Prime Video', domain: 'primevideo.com', url: 'https://primevideo.com' },
     ],
-    iconBg: '#FFEDD5',
-    iconText: '#7C2D12',
     insetColor: 'rgba(234, 126, 60, 0.25)',
   },
   {
     id: 'compras',
     title: 'Compras',
-    Icon: ShoppingCart,
+    emoji: '🛒',
     links: [
       { title: 'Amazon', domain: 'amazon.com.br', url: 'https://amazon.com.br' },
       { title: 'Mercado Livre', domain: 'mercadolivre.com.br', url: 'https://mercadolivre.com.br' },
       { title: 'Shopee', domain: 'shopee.com.br', url: 'https://shopee.com.br' },
       { title: 'Shein', domain: 'shein.com', url: 'https://shein.com' },
     ],
-    iconBg: '#D1FAE5',
-    iconText: '#065F46',
     insetColor: 'rgba(52, 168, 120, 0.25)',
   },
   {
-    id: 'ferramentas',
-    title: 'Ferramentas',
-    Icon: Wrench,
+    id: 'uteis',
+    title: 'Úteis',
+    emoji: '⚙️',
     links: [
       { title: 'Figma', domain: 'figma.com', url: 'https://figma.com' },
       { title: 'Notion', domain: 'notion.so', url: 'https://notion.so' },
       { title: 'GitHub', domain: 'github.com', url: 'https://github.com' },
     ],
-    iconBg: '#EDE9FE',
-    iconText: '#4C1D95',
     insetColor: 'rgba(139, 92, 246, 0.22)',
   },
 ];
@@ -101,7 +86,7 @@ function GoogleLogoMini() {
 }
 
 function DemoCategoryCard({ category }: { category: DemoCategory }) {
-  const { Icon, title, links, iconBg, iconText, insetColor } = category;
+  const { emoji, title, links, insetColor } = category;
   return (
     <article
       style={{
@@ -115,12 +100,15 @@ function DemoCategoryCard({ category }: { category: DemoCategory }) {
     >
       {/* Card header */}
       <header className="flex items-center gap-2 px-3 py-2.5">
-        <div
-          className="p-1.5 rounded-lg flex-shrink-0"
-          style={{ backgroundColor: iconBg, color: iconText, opacity: 0.7 }}
-        >
-          <Icon className="w-3.5 h-3.5" />
-        </div>
+        <Image
+          src={getNotoEmojiUrl(emoji)}
+          alt=""
+          width={16}
+          height={16}
+          className="w-4 h-4 select-none flex-shrink-0"
+          draggable={false}
+          unoptimized
+        />
         <h3 className="text-xs font-semibold text-slate-800 truncate flex-1">{title}</h3>
         <span className="text-slate-400 text-xs font-medium px-1.5 rounded-full flex-shrink-0 leading-4">
           {links.length}
