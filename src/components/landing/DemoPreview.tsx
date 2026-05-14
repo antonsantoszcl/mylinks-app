@@ -13,7 +13,6 @@ interface DemoCategory {
   title: string;
   emoji: string;
   links: DemoLink[];
-  insetColor: string;
 }
 
 const demoCategories: DemoCategory[] = [
@@ -27,7 +26,6 @@ const demoCategories: DemoCategory[] = [
       { title: 'Google Drive', domain: 'drive.google.com', url: 'https://drive.google.com' },
       { title: 'ChatGPT', domain: 'chat.openai.com', url: 'https://chat.openai.com' },
     ],
-    insetColor: 'rgba(234, 179, 8, 0.28)',
   },
   {
     id: 'entretenimento',
@@ -40,7 +38,6 @@ const demoCategories: DemoCategory[] = [
       { title: 'Disney+', domain: 'disneyplus.com', url: 'https://disneyplus.com' },
       { title: 'Prime Video', domain: 'primevideo.com', url: 'https://primevideo.com' },
     ],
-    insetColor: 'rgba(234, 126, 60, 0.25)',
   },
   {
     id: 'compras',
@@ -52,7 +49,6 @@ const demoCategories: DemoCategory[] = [
       { title: 'Shopee', domain: 'shopee.com.br', url: 'https://shopee.com.br' },
       { title: 'Shein', domain: 'shein.com', url: 'https://shein.com' },
     ],
-    insetColor: 'rgba(52, 168, 120, 0.25)',
   },
   {
     id: 'uteis',
@@ -63,7 +59,6 @@ const demoCategories: DemoCategory[] = [
       { title: 'Notion', domain: 'notion.so', url: 'https://notion.so' },
       { title: 'GitHub', domain: 'github.com', url: 'https://github.com' },
     ],
-    insetColor: 'rgba(139, 92, 246, 0.22)',
   },
 ];
 
@@ -86,14 +81,14 @@ function GoogleLogoMini() {
 }
 
 function DemoCategoryCard({ category }: { category: DemoCategory }) {
-  const { emoji, title, links, insetColor } = category;
+  const { emoji, title, links } = category;
   return (
     <article
       style={{
         border: '1px solid #E5E7EB',
         backgroundColor: '#FFFFFF',
-        boxShadow: `inset 3px 0 0 ${insetColor}, 0 6px 16px rgba(0,0,0,0.05)`,
-        borderRadius: '0.75rem',
+        boxShadow: 'inset 2px 0 0 rgba(148, 163, 184, 0.22), 0 6px 16px rgba(0,0,0,0.05)',
+        borderRadius: '10px',
         display: 'flex',
         flexDirection: 'column',
       }}
