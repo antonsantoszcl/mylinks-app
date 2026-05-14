@@ -428,17 +428,17 @@ export function CategoryCard({
         style={{
           border: '1px solid rgba(226,232,240,0.5)',
           backgroundColor: 'rgba(255,255,255,0.85)',
-          boxShadow: `inset 3px 0 0 ${colors.insetColor}, 0 1px 2px rgba(0,0,0,0.03), 0 0px 1px rgba(0,0,0,0.02)`,
+          boxShadow: `inset 3px 0 0 ${colors.insetColorMobile}, 0 1px 2px rgba(0,0,0,0.03), 0 0px 1px rgba(0,0,0,0.02)`,
           transition: 'all 0.2s ease-out',
           ['--card-inset-color' as string]: colors.insetColorMobile,
         }}
         onMouseEnter={(e) => {
           const el = e.currentTarget;
-          el.style.boxShadow = `inset 3px 0 0 ${colors.insetColor}, 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04)`;
+          el.style.boxShadow = `inset 3px 0 0 ${colors.insetColorMobile}, 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04)`;
         }}
         onMouseLeave={(e) => {
           const el = e.currentTarget;
-          el.style.boxShadow = `inset 3px 0 0 ${colors.insetColor}, 0 1px 2px rgba(0,0,0,0.03), 0 0px 1px rgba(0,0,0,0.02)`;
+          el.style.boxShadow = `inset 3px 0 0 ${colors.insetColorMobile}, 0 1px 2px rgba(0,0,0,0.03), 0 0px 1px rgba(0,0,0,0.02)`;
         }}
       >
         {/* Colored header area */}
