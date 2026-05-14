@@ -49,7 +49,7 @@ const DEFAULT_CATEGORIES: Array<{
   },
   {
     title: 'Compras',
-    iconName: 'money',
+    iconName: 'cart',
     links: [
       { title: 'Buscape', url: 'https://buscape.com.br', domain: 'buscape.com.br' },
       { title: 'Mercado Livre', url: 'https://mercadolivre.com.br', domain: 'mercadolivre.com.br' },
@@ -60,7 +60,7 @@ const DEFAULT_CATEGORIES: Array<{
   },
   {
     title: 'Financas',
-    iconName: 'bank',
+    iconName: 'money',
     links: [
       { title: 'Banco do Brasil', url: 'https://bb.com.br', domain: 'bb.com.br' },
       { title: 'Itau', url: 'https://itau.com.br', domain: 'itau.com.br' },
