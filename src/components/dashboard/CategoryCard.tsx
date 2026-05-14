@@ -116,47 +116,6 @@ function getEmoji(iconName: string): string {
   return EMOJI_MAP[iconName] ?? '📂';
 }
 
-// Microsoft Fluent Emoji 3D paths for the 24 picker icons.
-// Base: https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@latest/assets
-const FLUENT_3D_PATHS: Record<string, string> = {
-  '📂': 'Open%20file%20folder/3D/open_file_folder_3d.png',
-  '📌': 'Pushpin/3D/pushpin_3d.png',
-  '✅': 'Check%20mark%20button/3D/check_mark_button_3d.png',
-  '💼': 'Briefcase/3D/briefcase_3d.png',
-  '⚙️': 'Gear/3D/gear_3d.png',
-  '💻': 'Laptop/3D/laptop_3d.png',
-  '🤖': 'Robot/3D/robot_3d.png',
-  '⚡': 'High%20voltage/3D/high_voltage_3d.png',
-  '📕': 'Closed%20book/3D/closed_book_3d.png',
-  '🎓': 'Graduation%20cap/3D/graduation_cap_3d.png',
-  '📝': 'Memo/3D/memo_3d.png',
-  '💰': 'Money%20bag/3D/money_bag_3d.png',
-  '📈': 'Chart%20increasing/3D/chart_increasing_3d.png',
-  '🏦': 'Bank/3D/bank_3d.png',
-  '💬': 'Speech%20balloon/3D/speech_balloon_3d.png',
-  '🛒': 'Shopping%20cart/3D/shopping_cart_3d.png',
-  '🌐': 'Globe%20with%20meridians/3D/globe_with_meridians_3d.png',
-  '👥': 'Busts%20in%20silhouette/3D/busts_in_silhouette_3d.png',
-  '🎵': 'Musical%20note/3D/musical_note_3d.png',
-  '🎬': 'Clapper%20board/3D/clapper_board_3d.png',
-  '🎮': 'Video%20game/3D/video_game_3d.png',
-  '📺': 'Television/3D/television_3d.png',
-  '❤️': 'Red%20heart/3D/red_heart_3d.png',
-  '⭐': 'Star/3D/star_3d.png',
-};
-
-const FLUENT_CDN_BASE = 'https://cdn.jsdelivr.net/gh/microsoft/fluentui-emoji@latest/assets';
-
-// Returns the Microsoft Fluent Emoji 3D CDN PNG URL for an emoji character.
-function getFluentEmojiUrl(emoji: string): string {
-  const path = FLUENT_3D_PATHS[emoji];
-  if (path) {
-    return `${FLUENT_CDN_BASE}/${path}`;
-  }
-  // Fallback: compute Noto URL for unknown emojis
-  return getNotoEmojiUrl(emoji);
-}
-
 // Pre-validated Noto emoji SVG filenames for the 24 picker icons.
 // Codepoints are lowercase hex, underscore-separated, without fe0f.
 const NOTO_CODEPOINTS: Record<string, string> = {
@@ -187,7 +146,6 @@ const NOTO_CODEPOINTS: Record<string, string> = {
 };
 
 // Returns the Noto Color Emoji CDN SVG URL for an emoji character.
-// Used as first-level fallback when Fluent 3D fails.
 function getNotoEmojiUrl(emoji: string): string {
   const known = NOTO_CODEPOINTS[emoji];
   if (known) {
@@ -213,9 +171,9 @@ function getTwemojiUrl(emoji: string): string {
   return `https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/${codePoint}.svg`;
 }
 
-// Kept for backward compatibility.
+// Primary emoji URL for desktop: Noto Color Emoji SVG.
 function getEmojiUrl(emoji: string): string {
-  return getFluentEmojiUrl(emoji);
+  return getNotoEmojiUrl(emoji);
 }
 
 // Detects mobile at render time (SSR-safe). Re-checked on resize via useEffect.
@@ -481,20 +439,17 @@ export function CategoryCard({
                   }`}
                 >
                   {isMobile ? (
-                    <span className="text-xl select-none">{emoji}</span>
+                    <span className="text-lg select-none">{emoji}</span>
                   ) : (
                     <img
-                      src={getFluentEmojiUrl(emoji)}
+                      src={getEmojiUrl(emoji)}
                       alt={name}
-                      className="w-6 h-6 select-none"
+                      className="w-5 h-5 select-none"
                       draggable={false}
                       onError={(e) => {
                         const img = e.currentTarget;
                         if (!img.dataset.fallback) {
                           img.dataset.fallback = '1';
-                          img.src = getNotoEmojiUrl(emoji);
-                        } else if (img.dataset.fallback === '1') {
-                          img.dataset.fallback = '2';
                           img.src = getTwemojiUrl(emoji);
                         }
                       }}
@@ -535,23 +490,20 @@ export function CategoryCard({
               {isMobile ? (
                 <span
                   className="select-none leading-none"
-                  style={{ fontSize: '1.25rem', lineHeight: 1 }}
+                  style={{ fontSize: '1rem', lineHeight: 1 }}
                 >
                   {getEmoji(category.iconName)}
                 </span>
               ) : (
                 <img
-                  src={getFluentEmojiUrl(getEmoji(category.iconName))}
+                  src={getEmojiUrl(getEmoji(category.iconName))}
                   alt=""
-                  className="w-5 h-5 select-none"
+                  className="w-4 h-4 select-none"
                   draggable={false}
                   onError={(e) => {
                     const img = e.currentTarget;
                     if (!img.dataset.fallback) {
                       img.dataset.fallback = '1';
-                      img.src = getNotoEmojiUrl(getEmoji(category.iconName));
-                    } else if (img.dataset.fallback === '1') {
-                      img.dataset.fallback = '2';
                       img.src = getTwemojiUrl(getEmoji(category.iconName));
                     }
                   }}
