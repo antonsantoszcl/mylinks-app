@@ -428,16 +428,16 @@ export function CategoryCard({
         style={{
           border: '1px solid #E5E7EB',
           backgroundColor: '#FFFFFF',
-          boxShadow: `inset 3px 0 0 ${isMobile ? colors.insetColorMobile : colors.insetColor}, 0 6px 16px rgba(0,0,0,0.05)`,
+          boxShadow: `inset ${isMobile ? '3px' : '2px'} 0 0 rgba(148, 163, 184, 0.35), 0 6px 16px rgba(0,0,0,0.05)`,
           transition: 'all 0.2s ease-out',
         }}
         onMouseEnter={(e) => {
           const el = e.currentTarget;
-          el.style.boxShadow = `inset 3px 0 0 ${isMobile ? colors.insetColorMobile : colors.insetColor}, 0 8px 24px rgba(0,0,0,0.10)`;
+          el.style.boxShadow = `inset ${isMobile ? '3px' : '2px'} 0 0 rgba(148, 163, 184, 0.35), 0 8px 24px rgba(0,0,0,0.10)`;
         }}
         onMouseLeave={(e) => {
           const el = e.currentTarget;
-          el.style.boxShadow = `inset 3px 0 0 ${isMobile ? colors.insetColorMobile : colors.insetColor}, 0 6px 16px rgba(0,0,0,0.05)`;
+          el.style.boxShadow = `inset ${isMobile ? '3px' : '2px'} 0 0 rgba(148, 163, 184, 0.35), 0 6px 16px rgba(0,0,0,0.05)`;
         }}
       >
         {/* Colored header area */}
