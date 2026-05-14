@@ -1,1 +1,0 @@
-fix: desktop refinements - lighter shadow, less rounding, bigger Google logo
