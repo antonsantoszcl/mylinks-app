@@ -424,25 +424,25 @@ export function CategoryCard({
   return (
     <>
       <article
-        className="rounded-xl flex flex-col group/card category-card hover:-translate-y-0.5"
+        className="rounded-xl md:rounded-[10px] flex flex-col group/card category-card hover:-translate-y-0.5"
         style={{
           border: '1px solid #E5E7EB',
           backgroundColor: '#FFFFFF',
-          boxShadow: `inset ${isMobile ? '3px' : '2px'} 0 0 rgba(148, 163, 184, 0.35), 0 6px 16px rgba(0,0,0,0.05)`,
+          boxShadow: `inset ${isMobile ? '3px' : '2px'} 0 0 ${isMobile ? 'rgba(148, 163, 184, 0.35)' : 'rgba(148, 163, 184, 0.22)'}, 0 6px 16px rgba(0,0,0,0.05)`,
           transition: 'all 0.2s ease-out',
         }}
         onMouseEnter={(e) => {
           const el = e.currentTarget;
-          el.style.boxShadow = `inset ${isMobile ? '3px' : '2px'} 0 0 rgba(148, 163, 184, 0.35), 0 8px 24px rgba(0,0,0,0.10)`;
+          el.style.boxShadow = `inset ${isMobile ? '3px' : '2px'} 0 0 ${isMobile ? 'rgba(148, 163, 184, 0.35)' : 'rgba(148, 163, 184, 0.22)'}, 0 8px 24px rgba(0,0,0,0.10)`;
         }}
         onMouseLeave={(e) => {
           const el = e.currentTarget;
-          el.style.boxShadow = `inset ${isMobile ? '3px' : '2px'} 0 0 rgba(148, 163, 184, 0.35), 0 6px 16px rgba(0,0,0,0.05)`;
+          el.style.boxShadow = `inset ${isMobile ? '3px' : '2px'} 0 0 ${isMobile ? 'rgba(148, 163, 184, 0.35)' : 'rgba(148, 163, 184, 0.22)'}, 0 6px 16px rgba(0,0,0,0.05)`;
         }}
       >
         {/* Colored header area */}
         <header
-          className="flex items-center justify-between px-3 py-2.5 md:py-2 rounded-t-xl"
+          className="flex items-center justify-between px-3 py-2.5 md:py-2 rounded-t-xl md:rounded-t-[10px]"
         >
           <div className="flex items-center gap-2 min-w-0 flex-1">
             <div
