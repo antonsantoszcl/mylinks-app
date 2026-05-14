@@ -9,6 +9,7 @@
 
 body {
   background-color: var(--background);
+  background-image: radial-gradient(ellipse at 60% 20%, rgba(255,255,255,0.55) 0%, transparent 70%);
   color: var(--foreground);
   /* Prevent horizontal overflow on mobile */
   overflow-x: hidden;
@@ -21,14 +22,17 @@ body {
   scrollbar-color: #e2e8f0 transparent;
 }
 .custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
+  width: 3px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #e2e8f0;
+  background-color: #cbd5e1;
   border-radius: 2px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8;
 }
 
 /* ── Quick Access scroll row ─────────────────────────────────────────────── */
@@ -54,6 +58,7 @@ body {
   /* Darken page background so cards stand out more */
   body {
     background-color: #EEF2F7;
+    background-image: none;
   }
 
   /* Darken inner card body background for better contrast */
@@ -72,4 +77,3 @@ body {
     --card-accent-opacity-boost: 0.15;
   }
 }
-

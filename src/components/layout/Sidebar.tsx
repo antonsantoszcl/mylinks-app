@@ -233,7 +233,7 @@ function SidebarContent({
       <aside className="flex flex-col h-full">
         {/* Logo + toggle */}
         <div
-          className={`flex items-center ${collapsed ? 'justify-center py-3' : 'justify-between px-3 py-3'} border-b border-slate-100`}
+          className={`flex items-center ${collapsed ? 'justify-center py-3' : 'justify-between px-3 py-3'} border-b border-slate-100/80`}
         >
           {!collapsed && (
             <h1 className="text-base font-bold text-slate-800 flex items-center gap-1.5">
@@ -285,7 +285,7 @@ function SidebarContent({
           {/* ── Paineis section ─────────────────────────── */}
           {!collapsed && !dashLoading && (
             <div className="mb-1">
-              <p className="px-2 pb-1 text-xs font-semibold text-slate-400 uppercase tracking-wide">
+              <p className="px-2 pb-1 text-[10px] font-semibold text-slate-400/80 uppercase tracking-widest">
                 Paineis
               </p>
               {dashboards.map((d) => (
@@ -342,7 +342,7 @@ function SidebarContent({
                 </button>
               )}
 
-              <div className="my-2 border-t border-slate-100" />
+              <div className="my-2 border-t border-slate-100/70" />
             </div>
           )}
 
@@ -375,7 +375,7 @@ function SidebarContent({
             </Link>
           ))}
 
-          <div className="my-2 border-t border-slate-100" />
+          <div className="my-2 border-t border-slate-100/70" />
 
           {secondaryItems.filter((item) => !item.hidden).map((item) => (
             <Link
@@ -394,7 +394,7 @@ function SidebarContent({
           ))}
         </nav>
 
-        <div className={`${collapsed ? 'px-1 py-2' : 'px-2 py-2'} border-t border-slate-100 space-y-2`}>
+        <div className={`${collapsed ? 'px-1 py-2' : 'px-2 py-2'} border-t border-slate-100/80 space-y-2`}>
           <Link
             href="/dashboard/settings"
             title={collapsed ? profile.displayName : undefined}
@@ -425,13 +425,13 @@ function SidebarContent({
           </Link>
 
           {!collapsed && (
-            <div className="bg-slate-50 rounded-lg p-2.5 border border-slate-200">
+            <div className="bg-slate-50/80 rounded-xl p-2.5 border border-slate-100">
               <div className="flex items-center gap-1.5 mb-1">
                 <Zap className="w-3.5 h-3.5 text-[#2F5FD0]" />
                 <h4 className="text-xs font-semibold text-slate-700">Assine o Pro</h4>
               </div>
-              <p className="text-xs text-slate-500 mb-2">Desbloqueie recursos avancados.</p>
-              <button className="w-full bg-[#2F5FD0] text-white rounded-md py-1.5 text-xs font-medium hover:bg-[#1E40AF] transition-colors">
+              <p className="text-xs text-slate-400 mb-2 font-normal">Desbloqueie recursos avancados.</p>
+              <button className="w-full bg-[#2F5FD0] text-white rounded-lg py-1.5 text-xs font-medium hover:bg-[#2450b8] transition-colors">
                 Fazer upgrade
               </button>
             </div>
@@ -509,7 +509,7 @@ export function Sidebar({
 
       {/* ── Desktop sidebar ── */}
       <div
-        className={`hidden md:flex ${collapsed ? 'w-14' : 'w-56'} bg-white border-r border-slate-200 flex-col h-full shadow-sm transition-all duration-200 flex-shrink-0`}
+        className={`hidden md:flex ${collapsed ? 'w-14' : 'w-56'} bg-white/95 border-r border-slate-100 flex-col h-full shadow-[1px_0_0_0_rgba(0,0,0,0.04)] transition-all duration-200 flex-shrink-0`}
       >
         <SidebarContent collapsed={collapsed} onToggle={toggle} />
       </div>

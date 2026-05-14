@@ -38,7 +38,7 @@ interface CategoryGridProps {
   onUpdateCategoryIcon: (categoryId: string, iconName: string) => void;
 }
 
-const GAP = 12; // px – matches gap-3 (0.75rem)
+const GAP = 16; // px – matches gap-4 (1rem)
 
 function getColumnCount(width: number): number {
   if (width >= 1024) return 4;
@@ -156,11 +156,11 @@ export function CategoryGrid({
 
   return (
     <section>
-      <div className="flex items-center gap-1.5 mb-4">
-        <div className="bg-primary-100 p-1 rounded-md">
+      <div className="flex items-center gap-1.5 mb-5">
+        <div className="bg-primary-100/80 p-1 rounded-md">
           <LayoutGrid className="w-3.5 h-3.5 text-primary-600" />
         </div>
-        <h2 className="text-[15px] md:text-sm font-bold text-slate-700">Seções</h2>
+        <h2 className="text-[15px] md:text-sm font-bold text-slate-700 tracking-tight">Seções</h2>
       </div>
 
       <DndContext
@@ -244,7 +244,7 @@ export function CategoryGrid({
                         : { width: '100%' }
                     }
                   >
-                    <article className="bg-white rounded-xl shadow-sm border border-dashed border-slate-300 p-2 flex flex-col hover:shadow-md transition-shadow">
+                    <article className="rounded-2xl border border-dashed border-slate-200/80 p-2 flex flex-col hover:border-slate-300 hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-200 ease-out" style={{ backgroundColor: 'rgba(255,255,255,0.6)' }}>
                       {!showAddCategory ? (
                         <button
                           onClick={() => setShowAddCategory(true)}

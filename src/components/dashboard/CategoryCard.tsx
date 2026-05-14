@@ -424,19 +424,26 @@ export function CategoryCard({
   return (
     <>
       <article
-        className="rounded-xl flex flex-col group/card category-card"
+        className="rounded-2xl flex flex-col group/card category-card hover:-translate-y-0.5"
         style={{
-          border: '1px solid #E5E7EB',
-          backgroundColor: '#FFFFFF',
-          boxShadow: `inset 3px 0 0 ${colors.insetColor}, 0 6px 16px rgba(0,0,0,0.05)`,
-          transition: 'all 0.2s ease',
+          border: '1px solid rgba(226,232,240,0.7)',
+          backgroundColor: 'rgba(255,255,255,0.85)',
+          boxShadow: `inset 3px 0 0 ${colors.insetColor}, 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03)`,
+          transition: 'all 0.2s ease-out',
           ['--card-inset-color' as string]: colors.insetColorMobile,
+        }}
+        onMouseEnter={(e) => {
+          const el = e.currentTarget;
+          el.style.boxShadow = `inset 3px 0 0 ${colors.insetColor}, 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04)`;
+        }}
+        onMouseLeave={(e) => {
+          const el = e.currentTarget;
+          el.style.boxShadow = `inset 3px 0 0 ${colors.insetColor}, 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03)`;
         }}
       >
         {/* Colored header area */}
         <header
-          className="flex items-center justify-between px-3 py-3 md:py-2 rounded-t-lg"
-          style={{ backgroundColor: '#FFFFFF' }}
+          className="flex items-center justify-between px-3 py-3 md:py-2 rounded-t-2xl"
         >
           <div className="flex items-center gap-2 min-w-0 flex-1">
             <div
@@ -490,7 +497,7 @@ export function CategoryCard({
                 />
               ) : (
                 <h3
-                  className="text-sm md:text-xs font-semibold cursor-text truncate text-slate-800"
+                  className="text-sm md:text-xs font-semibold cursor-text truncate text-slate-700 tracking-tight"
                   onClick={() => setIsEditingTitle(true)}
                 >
                   {category.title}
@@ -561,8 +568,8 @@ export function CategoryCard({
 
         {/* White body area */}
         <div
-          className="mx-2 rounded-lg flex-1 overflow-y-auto custom-scrollbar p-3 card-body-inner"
-          style={{ background: '#F1F5F9' }}
+          className="mx-2 rounded-xl flex-1 overflow-y-auto custom-scrollbar p-2.5 card-body-inner"
+          style={{ background: 'rgba(241,245,249,0.7)' }}
         >
           {showAddLink && (
             <form onSubmit={submitNewLink} className="mb-2 p-2 rounded-lg border border-slate-200 bg-white/80 space-y-1.5">
@@ -628,8 +635,7 @@ export function CategoryCard({
         {/* Colored footer */}
         {!showAddLink && (
           <div
-            className="mx-2 mb-2 mt-1 px-2 py-1.5 rounded-b-lg"
-            style={{ backgroundColor: '#FFFFFF' }}
+            className="mx-2 mb-2 mt-1 px-2 py-1.5 rounded-b-xl"
           >
             <button
               className="text-sm md:text-xs font-medium hover:opacity-75 transition-opacity flex items-center gap-1 min-h-[24px] md:min-h-0 py-0.5 md:py-0"

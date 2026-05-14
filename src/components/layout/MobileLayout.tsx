@@ -11,7 +11,7 @@ export function MobileLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col min-h-screen md:flex-row md:h-screen bg-white md:overflow-hidden">
       {/* Mobile top bar — scrolls with content (NOT fixed) */}
-      <div className="flex items-center border-b border-slate-100 md:hidden">
+      <div className="flex items-center border-b border-slate-100/80 md:hidden">
         {/* Menu button: same size/alignment as sidebar open-state header */}
         <button
           onClick={() => setMobileOpen(true)}

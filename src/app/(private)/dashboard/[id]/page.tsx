@@ -421,15 +421,15 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
   if (isLoading) return <Spinner />;
 
   return (
-    <div className="max-w-full space-y-7 pb-6">
+    <div className="max-w-full space-y-6 pb-8">
       {/* ── MOBILE: greeting row ── */}
       <header className="flex items-center gap-2 pt-4 md:hidden">
         <Hand className="w-4 h-4 text-primary-500" />
-        <span className="text-base font-bold text-slate-700">
+        <span className="text-base font-bold text-slate-700 tracking-tight">
           {greeting}{profile.displayName ? `, ${profile.displayName}` : ''}!
         </span>
         {dashboardTitle && (
-          <span className="ml-1 text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
+          <span className="ml-1 text-xs text-slate-400 bg-slate-100/80 px-2 py-0.5 rounded-full font-normal">
             {dashboardTitle}
           </span>
         )}
@@ -441,15 +441,15 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
       </div>
 
       {/* ── DESKTOP: unified single row ── */}
-      <header className="hidden md:flex items-center pt-0">
+      <header className="hidden md:flex items-center pt-1">
         {/* Left: greeting — flex-1 to balance with right side */}
         <div className="flex-1 flex items-center gap-1.5">
           <Hand className="w-4 h-4 text-primary-500 shrink-0" />
-          <span className="text-sm font-bold text-slate-700 whitespace-nowrap">
+          <span className="text-sm font-semibold text-slate-600 whitespace-nowrap tracking-tight">
             {greeting}{profile.displayName ? `, ${profile.displayName.split(' ')[0]}` : ''}!
           </span>
           {dashboardTitle && (
-            <span className="ml-1 text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full truncate max-w-[120px]">
+            <span className="ml-1 text-xs text-slate-400/80 bg-slate-100/70 px-2 py-0.5 rounded-full truncate max-w-[120px] font-normal">
               {dashboardTitle}
             </span>
           )}
