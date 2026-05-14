@@ -73,12 +73,12 @@ class NoDndTouchSensor extends TouchSensor {
 // All cards share white bg and subtle gray border; only the inset left accent color varies
 // insetColorMobile uses higher opacity (0.38-0.40) for better visual identity on mobile
 const CATEGORY_COLORS = [
-  { border: '#E5E7EB', insetColor: 'rgba(234, 179, 8, 0.18)',   insetColorMobile: 'rgba(234, 179, 8, 0.20)',   lightBg: '#FFFFFF', accentText: '#78716C' },
-  { border: '#E5E7EB', insetColor: 'rgba(52, 168, 120, 0.15)',  insetColorMobile: 'rgba(52, 168, 120, 0.20)',  lightBg: '#FFFFFF', accentText: '#78716C' },
-  { border: '#E5E7EB', insetColor: 'rgba(234, 126, 60, 0.15)',  insetColorMobile: 'rgba(234, 126, 60, 0.20)',  lightBg: '#FFFFFF', accentText: '#78716C' },
-  { border: '#E5E7EB', insetColor: 'rgba(24, 119, 242, 0.15)',  insetColorMobile: 'rgba(24, 119, 242, 0.20)',  lightBg: '#FFFFFF', accentText: '#78716C' },
-  { border: '#E5E7EB', insetColor: 'rgba(101, 183, 72, 0.15)',  insetColorMobile: 'rgba(101, 183, 72, 0.20)',  lightBg: '#FFFFFF', accentText: '#78716C' },
-  { border: '#E5E7EB', insetColor: 'rgba(236, 100, 140, 0.15)', insetColorMobile: 'rgba(236, 100, 140, 0.20)', lightBg: '#FFFFFF', accentText: '#78716C' },
+  { border: '#E5E7EB', insetColor: 'rgba(234, 179, 8, 0.25)',   insetColorMobile: 'rgba(234, 179, 8, 0.40)',   lightBg: '#FFFFFF', accentText: '#78716C' },
+  { border: '#E5E7EB', insetColor: 'rgba(52, 168, 120, 0.22)',  insetColorMobile: 'rgba(52, 168, 120, 0.38)',  lightBg: '#FFFFFF', accentText: '#78716C' },
+  { border: '#E5E7EB', insetColor: 'rgba(234, 126, 60, 0.22)',  insetColorMobile: 'rgba(234, 126, 60, 0.38)',  lightBg: '#FFFFFF', accentText: '#78716C' },
+  { border: '#E5E7EB', insetColor: 'rgba(24, 119, 242, 0.22)',  insetColorMobile: 'rgba(24, 119, 242, 0.38)',  lightBg: '#FFFFFF', accentText: '#78716C' },
+  { border: '#E5E7EB', insetColor: 'rgba(101, 183, 72, 0.22)',  insetColorMobile: 'rgba(101, 183, 72, 0.38)',  lightBg: '#FFFFFF', accentText: '#78716C' },
+  { border: '#E5E7EB', insetColor: 'rgba(236, 100, 140, 0.22)', insetColorMobile: 'rgba(236, 100, 140, 0.38)', lightBg: '#FFFFFF', accentText: '#78716C' },
 ];
 
 // Emoji icon list for the section picker
@@ -426,19 +426,18 @@ export function CategoryCard({
       <article
         className="rounded-xl flex flex-col group/card category-card hover:-translate-y-0.5"
         style={{
-          border: '1px solid rgba(226,232,240,0.5)',
-          backgroundColor: 'rgba(255,255,255,0.85)',
-          boxShadow: `inset ${isMobile ? '3px' : '2px'} 0 0 ${colors.insetColorMobile}, 0 1px 2px rgba(0,0,0,0.03), 0 0px 1px rgba(0,0,0,0.02)`,
+          border: '1px solid #E5E7EB',
+          backgroundColor: '#FFFFFF',
+          boxShadow: `inset 3px 0 0 ${isMobile ? colors.insetColorMobile : colors.insetColor}, 0 6px 16px rgba(0,0,0,0.05)`,
           transition: 'all 0.2s ease-out',
-          ['--card-inset-color' as string]: colors.insetColorMobile,
         }}
         onMouseEnter={(e) => {
           const el = e.currentTarget;
-          el.style.boxShadow = `inset ${isMobile ? '3px' : '2px'} 0 0 ${colors.insetColorMobile}, 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04)`;
+          el.style.boxShadow = `inset 3px 0 0 ${isMobile ? colors.insetColorMobile : colors.insetColor}, 0 8px 24px rgba(0,0,0,0.10)`;
         }}
         onMouseLeave={(e) => {
           const el = e.currentTarget;
-          el.style.boxShadow = `inset ${isMobile ? '3px' : '2px'} 0 0 ${colors.insetColorMobile}, 0 1px 2px rgba(0,0,0,0.03), 0 0px 1px rgba(0,0,0,0.02)`;
+          el.style.boxShadow = `inset 3px 0 0 ${isMobile ? colors.insetColorMobile : colors.insetColor}, 0 6px 16px rgba(0,0,0,0.05)`;
         }}
       >
         {/* Colored header area */}
