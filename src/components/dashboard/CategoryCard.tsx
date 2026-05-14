@@ -567,7 +567,7 @@ export function CategoryCard({
 
         {/* White body area */}
         <div
-          className="mx-2 rounded-xl md:rounded-lg flex-1 overflow-y-auto custom-scrollbar p-2.5 card-body-inner"
+          className="mx-2 rounded-xl md:rounded-[10px] flex-1 overflow-y-auto custom-scrollbar p-2.5 card-body-inner"
           style={{ background: '#EDF1F7' }}
         >
           {showAddLink && (
