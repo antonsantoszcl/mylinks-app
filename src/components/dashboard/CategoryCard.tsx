@@ -116,6 +116,19 @@ function getEmoji(iconName: string): string {
   return EMOJI_MAP[iconName] ?? '📂';
 }
 
+// Converts an emoji character to a Twemoji CDN SVG URL.
+// Some emojis have a variation selector (U+FE0F) appended; Twemoji files
+// don't include it in their filename, so we strip it after building the
+// code-point string. The ⚙️ and ❤️ emojis are the most common cases.
+function getEmojiUrl(emoji: string): string {
+  const codePoint = [...emoji]
+    .map((char) => char.codePointAt(0)?.toString(16))
+    .filter(Boolean)
+    .join('-')
+    .replace(/-fe0f$/, '');
+  return `https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/${codePoint}.svg`;
+}
+
 interface CategoryCardProps {
   category: Category;
   colorIndex: number;
@@ -359,13 +372,18 @@ export function CategoryCard({
                     e.stopPropagation();
                     handlePickEmoji(name);
                   }}
-                  className={`flex items-center justify-center w-9 h-9 rounded transition-colors text-xl ${
+                  className={`flex items-center justify-center w-9 h-9 rounded transition-colors ${
                     isSelected
                       ? 'bg-blue-50 ring-2 ring-blue-300 ring-offset-1'
                       : 'hover:bg-gray-100'
                   }`}
                 >
-                  {emoji}
+                  <img
+                    src={getEmojiUrl(emoji)}
+                    alt={name}
+                    className="w-6 h-6 select-none"
+                    draggable={false}
+                  />
                 </button>
               );
             })}
@@ -398,9 +416,12 @@ export function CategoryCard({
               className="flex-shrink-0 p-1 flex items-center justify-center"
               data-no-dnd="true"
             >
-              <span className="text-lg md:text-sm leading-none select-none -mt-px">
-                {getEmoji(category.iconName)}
-              </span>
+              <img
+                src={getEmojiUrl(getEmoji(category.iconName))}
+                alt=""
+                className="w-5 h-5 md:w-4 md:h-4 select-none"
+                draggable={false}
+              />
             </div>
             <div className="flex flex-col min-w-0 flex-1" data-no-dnd="true">
               {isEditingTitle ? (
