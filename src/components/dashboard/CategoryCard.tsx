@@ -116,17 +116,73 @@ function getEmoji(iconName: string): string {
   return EMOJI_MAP[iconName] ?? '📂';
 }
 
-// Converts an emoji character to a Twemoji CDN SVG URL.
-// Some emojis have a variation selector (U+FE0F) appended; Twemoji files
-// don't include it in their filename, so we strip it after building the
-// code-point string. The ⚙️ and ❤️ emojis are the most common cases.
-function getEmojiUrl(emoji: string): string {
+// Pre-validated Noto emoji SVG filenames for the 24 picker icons.
+// Codepoints are lowercase hex, underscore-separated, without fe0f.
+const NOTO_CODEPOINTS: Record<string, string> = {
+  '📂': '1f4c2',
+  '📌': '1f4cc',
+  '✅': '2705',
+  '💼': '1f4bc',
+  '⚙️': '2699',
+  '💻': '1f4bb',
+  '🤖': '1f916',
+  '⚡': '26a1',
+  '📕': '1f4d5',
+  '🎓': '1f393',
+  '📝': '1f4dd',
+  '💰': '1f4b0',
+  '📈': '1f4c8',
+  '🏦': '1f3e6',
+  '💬': '1f4ac',
+  '🛒': '1f6d2',
+  '🌐': '1f310',
+  '👥': '1f465',
+  '🎵': '1f3b5',
+  '🎬': '1f3ac',
+  '🎮': '1f3ae',
+  '📺': '1f4fa',
+  '❤️': '2764',
+  '⭐': '2b50',
+};
+
+// Returns the Noto Color Emoji CDN SVG URL for an emoji character.
+// Uses the pre-validated codepoint map for the 24 picker icons.
+// Falls back to computing from codepoints (with fe0f stripped), then to Twemoji.
+function getNotoEmojiUrl(emoji: string): string {
+  const known = NOTO_CODEPOINTS[emoji];
+  if (known) {
+    return `https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@main/svg/emoji_u${known}.svg`;
+  }
+  // Compute codepoints dynamically, stripping variation selector fe0f
+  const codePoint = [...emoji]
+    .map((char) => char.codePointAt(0)?.toString(16))
+    .filter(Boolean)
+    .join('_')
+    .replace(/_fe0f$/, '')
+    .replace(/_fe0f_/, '_');
+  return `https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@main/svg/emoji_u${codePoint}.svg`;
+}
+
+// Twemoji fallback URL (dash-separated codepoints, without fe0f)
+function getTwemojiUrl(emoji: string): string {
   const codePoint = [...emoji]
     .map((char) => char.codePointAt(0)?.toString(16))
     .filter(Boolean)
     .join('-')
-    .replace(/-fe0f$/, '');
+    .replace(/-fe0f$/, '')
+    .replace(/-fe0f-/, '-');
   return `https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/${codePoint}.svg`;
+}
+
+// Converts an emoji character to a Google Noto Color Emoji CDN SVG URL.
+// Kept for backward compatibility; delegates to getNotoEmojiUrl.
+function getEmojiUrl(emoji: string): string {
+  return getNotoEmojiUrl(emoji);
+}
+
+// Detects mobile at render time (SSR-safe). Re-checked on resize via useEffect.
+function getIsMobile(): boolean {
+  return typeof window !== 'undefined' && window.innerWidth < 768;
 }
 
 interface CategoryCardProps {
@@ -175,6 +231,7 @@ export function CategoryCard({
   const [linkUrl, setLinkUrl] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showMovePanelMenu, setShowMovePanelMenu] = useState(false);
+  const [isMobile, setIsMobile] = useState(getIsMobile);
   const [pickerPos, setPickerPos] = useState<{ top: number; left: number } | null>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
   const movePanelMenuRef = useRef<HTMLDivElement>(null);
@@ -186,6 +243,13 @@ export function CategoryCard({
 
   const otherDashboards = dashboards.filter((d) => d.id !== currentDashboardId);
   const canMoveToPanel = otherDashboards.length > 0;
+
+  // Keep isMobile in sync when the user resizes the browser window.
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
 
   // Close move-panel menu on outside click
   useEffect(() => {
@@ -378,12 +442,23 @@ export function CategoryCard({
                       : 'hover:bg-gray-100'
                   }`}
                 >
-                  <img
-                    src={getEmojiUrl(emoji)}
-                    alt={name}
-                    className="w-6 h-6 select-none"
-                    draggable={false}
-                  />
+                  {isMobile ? (
+                    <span className="text-xl select-none">{emoji}</span>
+                  ) : (
+                    <img
+                      src={getNotoEmojiUrl(emoji)}
+                      alt={name}
+                      className="w-6 h-6 select-none"
+                      draggable={false}
+                      onError={(e) => {
+                        const img = e.currentTarget;
+                        if (!img.dataset.fallback) {
+                          img.dataset.fallback = '1';
+                          img.src = getTwemojiUrl(emoji);
+                        }
+                      }}
+                    />
+                  )}
                 </button>
               );
             })}
@@ -416,12 +491,28 @@ export function CategoryCard({
               className="flex-shrink-0 p-1 flex items-center justify-center"
               data-no-dnd="true"
             >
-              <img
-                src={getEmojiUrl(getEmoji(category.iconName))}
-                alt=""
-                className="w-5 h-5 md:w-4 md:h-4 select-none"
-                draggable={false}
-              />
+              {isMobile ? (
+                <span
+                  className="select-none leading-none"
+                  style={{ fontSize: '1.25rem', lineHeight: 1 }}
+                >
+                  {getEmoji(category.iconName)}
+                </span>
+              ) : (
+                <img
+                  src={getNotoEmojiUrl(getEmoji(category.iconName))}
+                  alt=""
+                  className="w-5 h-5 select-none"
+                  draggable={false}
+                  onError={(e) => {
+                    const img = e.currentTarget;
+                    if (!img.dataset.fallback) {
+                      img.dataset.fallback = '1';
+                      img.src = getTwemojiUrl(getEmoji(category.iconName));
+                    }
+                  }}
+                />
+              )}
             </div>
             <div className="flex flex-col min-w-0 flex-1" data-no-dnd="true">
               {isEditingTitle ? (
