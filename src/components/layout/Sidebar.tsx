@@ -4,12 +4,6 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   Globe,
-  Star,
-  Clock,
-  Tags,
-  FileText,
-  Settings,
-  CreditCard,
   Zap,
   ChevronRight,
   ChevronLeft,
@@ -26,11 +20,6 @@ import { useDashboards } from '@/context/DashboardsContext';
 import { useEffect, useRef, useState } from 'react';
 import { Dashboard } from '@/lib/types';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
-
-const secondaryItems = [
-  // { icon: Settings, label: 'Configuracoes', href: '/dashboard/settings', inactive: false, hidden: true },
-  { icon: CreditCard, label: 'Assinatura', href: '/assinatura', inactive: true, hidden: false },
-];
 
 const SIDEBAR_KEY = 'mylinks.sidebar.collapsed';
 
@@ -179,15 +168,6 @@ function SidebarContent({
   const pathname = usePathname();
   const router = useRouter();
   const [pendingDeleteDash, setPendingDeleteDash] = useState<string | null>(null);
-
-  const publicHref = profile.username ? `/${profile.username}` : '/me';
-
-  const otherNavItems = [
-    { icon: Star, label: 'Favoritos', href: '/favoritos', inactive: true, hidden: false },
-    { icon: Clock, label: 'Recentes', href: '/recentes', inactive: true, hidden: false },
-    { icon: Tags, label: 'Tags', href: '/tags', inactive: true, hidden: false },
-    { icon: FileText, label: 'Templates', href: '/templates', inactive: true, hidden: false },
-  ];
 
   useEffect(() => {
     if (showNewDash) {
@@ -356,41 +336,6 @@ function SidebarContent({
               onRename={renameDashboard}
               onDelete={handleDeleteDashboard}
             />
-          ))}
-
-          {/* ── Other nav items ─────────────────────────────── */}
-          {otherNavItems.filter((item) => !item.hidden).map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              title={collapsed ? item.label : undefined}
-              className={`flex items-center ${collapsed ? 'justify-center px-0' : 'gap-2.5 px-2'} py-2 rounded-lg transition-colors ${
-                item.inactive
-                  ? 'text-gray-300 cursor-default pointer-events-none'
-                  : 'text-[#6B7280] hover:bg-slate-50 hover:text-[#2F5FD0]'
-              }`}
-            >
-              <item.icon className="w-4 h-4 flex-shrink-0" />
-              {!collapsed && <span className="text-sm font-medium truncate">{item.label}</span>}
-            </Link>
-          ))}
-
-          <div className="my-2 border-t border-slate-100/70" />
-
-          {secondaryItems.filter((item) => !item.hidden).map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              title={collapsed ? item.label : undefined}
-              className={`flex items-center ${collapsed ? 'justify-center px-0' : 'gap-2.5 px-2'} py-2 rounded-lg transition-colors ${
-                item.inactive
-                  ? 'text-gray-300 cursor-default pointer-events-none'
-                  : 'text-[#6B7280] hover:bg-slate-50 hover:text-[#2F5FD0]'
-              }`}
-            >
-              <item.icon className="w-4 h-4 flex-shrink-0" />
-              {!collapsed && <span className="text-sm font-medium truncate">{item.label}</span>}
-            </Link>
           ))}
         </nav>
 
