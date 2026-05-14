@@ -443,7 +443,7 @@ export function CategoryCard({
       >
         {/* Colored header area */}
         <header
-          className="flex items-center justify-between px-3 py-3 md:py-2 rounded-t-2xl"
+          className="flex items-center justify-between px-3 py-1.5 md:py-2 rounded-t-2xl"
         >
           <div className="flex items-center gap-2 min-w-0 flex-1">
             <div
