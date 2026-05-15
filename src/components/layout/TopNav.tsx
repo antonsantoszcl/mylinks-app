@@ -88,7 +88,7 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-3xl relative flex flex-col max-h-[90vh]"
+        className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-5xl relative flex flex-col max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header with branding — sticky so X is always visible */}
@@ -111,52 +111,49 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
           </button>
         </div>
 
-        {/* Body — 2-column layout, scrollable on mobile */}
-        <div className="px-6 py-5 grid grid-cols-1 sm:grid-cols-2 gap-6 overflow-y-auto">
+        {/* Body — 3-column layout on desktop, stacked on mobile */}
+        <div className="px-6 py-5 grid grid-cols-1 md:grid-cols-3 gap-6 overflow-y-auto">
 
-          {/* Left column: intro + icons legend */}
-          <div className="space-y-5">
-            {/* Intro */}
-            <div className="space-y-2">
-              <p className="text-sm text-slate-600 leading-relaxed">
-                Essa página destina-se a facilitar sua navegação reunindo todos os links que você utiliza no seu dia a dia.
-              </p>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                É constituída de Seções contendo links.
-              </p>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                Todos os elementos são removíveis e/ou personalizáveis.
-              </p>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                Ou seja, você organiza seções e links com o objetivo de acessá-los com facilidade.
-              </p>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                O Painel Principal inicialmente apresentado como exemplo é uma compilação dos sites mais populares do Brasil.
-              </p>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                Pode ser mantido, alterado ou excluído conforme sua preferência.
-              </p>
-            </div>
+          {/* Column 1: intro text */}
+          <div className="space-y-2">
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Essa página destina-se a facilitar sua navegação reunindo todos os links que você utiliza no seu dia a dia.
+            </p>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              É constituída de Seções contendo links.
+            </p>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Todos os elementos são removíveis e/ou personalizáveis.
+            </p>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Ou seja, você organiza seções e links com o objetivo de acessá-los com facilidade.
+            </p>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              O Painel Principal inicialmente apresentado como exemplo é uma compilação dos sites mais populares do Brasil.
+            </p>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Pode ser mantido, alterado ou excluído conforme sua preferência.
+            </p>
+          </div>
 
-            {/* Icons legend */}
-            <div className="space-y-2">
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                Ícones — Links &amp; Seções
-              </p>
-              <div className="space-y-1.5">
-                {ICONS_LEGEND.map(({ icon: Icon, label }) => (
-                  <div key={label} className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-600 flex-shrink-0">
-                      <Icon className="w-3.5 h-3.5" />
-                    </span>
-                    <span className="text-sm font-semibold text-slate-700">{label}</span>
-                  </div>
-                ))}
-              </div>
+          {/* Column 2: icons legend */}
+          <div className="space-y-2">
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+              Ícones — Links &amp; Seções
+            </p>
+            <div className="space-y-1.5">
+              {ICONS_LEGEND.map(({ icon: Icon, label }) => (
+                <div key={label} className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                  <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-600 flex-shrink-0">
+                    <Icon className="w-3.5 h-3.5" />
+                  </span>
+                  <span className="text-sm font-semibold text-slate-700">{label}</span>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Right column: video CTA */}
+          {/* Column 3: video CTA + E pronto */}
           <div className="flex flex-col gap-4">
             <div className="flex-1 flex flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed border-primary-200 bg-primary-50/40 p-6 text-center">
               <div className="w-12 h-12 rounded-2xl bg-primary-100 flex items-center justify-center">
