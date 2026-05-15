@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.alllinks.app"),
-  title: "alllinks.app",
+  title: "Alllinks.app - Seu Painel de Links Pessoal",
   description:
     "AllLinks is the personal link-management dashboard every digital citizen needs. Organize every bookmark, tool, login, and resource into visual categories with drag-and-drop, quick-access shortcuts, emoji-coded sections, and instant panel switching - all in one beautiful, private, mobile-first interface. Stop losing links in browser tabs, notes, and chat threads. Start living organized.",
   keywords: [
