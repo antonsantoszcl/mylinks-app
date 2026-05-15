@@ -218,14 +218,14 @@ export function TopNavControls() {
       <div className="flex items-center gap-2">
         <button
           onClick={() => setInstrucoesOpen(true)}
-          className="flex items-center px-2.5 sm:px-3 py-1 rounded-lg border border-slate-200 text-xs font-semibold text-slate-500 hover:text-primary-600 hover:border-primary-400 transition-colors tracking-wider bg-white/90 backdrop-blur-sm shadow-sm min-h-[36px]"
+          className="flex items-center px-2.5 sm:px-3 py-1 rounded-lg border border-slate-200 md:border-[#E9EDF2] text-xs font-semibold text-slate-500 hover:text-primary-600 hover:border-primary-400 transition-colors tracking-wider bg-white/90 backdrop-blur-sm shadow-sm min-h-[36px]"
         >
           INSTRUÇÕES
         </button>
 
         <button
           onClick={handleSignOut}
-          className="flex items-center gap-1 text-xs font-medium text-slate-600 hover:text-slate-800 transition-colors px-2.5 py-1 rounded-lg border border-slate-200 hover:bg-slate-100 bg-white/90 backdrop-blur-sm shadow-sm min-h-[36px]"
+          className="flex items-center gap-1 text-xs font-medium text-slate-600 hover:text-slate-800 transition-colors px-2.5 py-1 rounded-lg border border-slate-200 md:border-[#E9EDF2] hover:bg-slate-100 bg-white/90 backdrop-blur-sm shadow-sm min-h-[36px]"
         >
           <LogOut className="w-3.5 h-3.5" />
           <span className="hidden sm:inline">Sair</span>
