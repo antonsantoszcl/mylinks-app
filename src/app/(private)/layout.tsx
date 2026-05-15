@@ -3,6 +3,7 @@ import { TopNav } from "@/components/layout/TopNav";
 import { ProfileProvider } from "@/context/ProfileContext";
 import { PublicDataProvider } from "@/context/PublicDataContext";
 import { DashboardsProvider } from "@/context/DashboardsContext";
+import { ActiveDashboardProvider } from "@/context/ActiveDashboardContext";
 import { AuthGuard } from "@/components/auth/AuthGuard";
 import { MobileLayout } from "@/components/layout/MobileLayout";
 
@@ -16,7 +17,9 @@ export default function PrivateLayout({
       <ProfileProvider>
         <PublicDataProvider>
           <DashboardsProvider>
-            <MobileLayout>{children}</MobileLayout>
+            <ActiveDashboardProvider>
+              <MobileLayout>{children}</MobileLayout>
+            </ActiveDashboardProvider>
           </DashboardsProvider>
         </PublicDataProvider>
       </ProfileProvider>

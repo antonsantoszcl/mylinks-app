@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
 import {
   Globe,
   Zap,
@@ -17,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useProfile, getInitials } from '@/context/ProfileContext';
 import { useDashboards } from '@/context/DashboardsContext';
+import { useActiveDashboard } from '@/context/ActiveDashboardContext';
 import { useEffect, useRef, useState } from 'react';
 import { Dashboard } from '@/lib/types';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
@@ -31,12 +31,14 @@ function DashboardNavItem({
   collapsed,
   onRename,
   onDelete,
+  onSelect,
 }: {
   dashboard: Dashboard;
   isActive: boolean;
   collapsed: boolean;
   onRename: (id: string, title: string) => void;
   onDelete: (id: string) => void;
+  onSelect: (id: string) => void;
 }) {
   const [editing, setEditing] = useState(false);
   const [editValue, setEditValue] = useState(dashboard.title);
@@ -66,17 +68,17 @@ function DashboardNavItem({
 
   if (collapsed) {
     return (
-      <Link
-        href={`/dashboard/${dashboard.id}`}
+      <button
+        onClick={() => onSelect(dashboard.id)}
         title={dashboard.title}
-        className={`flex items-center justify-center py-2 rounded-lg transition-colors ${
+        className={`flex items-center justify-center py-2 rounded-lg transition-colors w-full ${
           isActive
             ? 'text-[#2F5FD0] bg-[rgba(47,95,208,0.10)]'
             : 'text-[#6B7280] hover:bg-slate-50 hover:text-[#2F5FD0]'
         }`}
       >
         <DashIcon className="w-4 h-4 flex-shrink-0" />
-      </Link>
+      </button>
     );
   }
 
@@ -114,8 +116,8 @@ function DashboardNavItem({
 
   return (
     <div className="group flex items-center rounded-lg transition-colors">
-      <Link
-        href={`/dashboard/${dashboard.id}`}
+      <button
+        onClick={() => onSelect(dashboard.id)}
         className={`flex-1 flex items-center gap-2.5 px-2 py-2 rounded-lg transition-colors ${
           isActive
             ? 'text-[#2F5FD0] bg-[rgba(47,95,208,0.10)]'
@@ -124,7 +126,7 @@ function DashboardNavItem({
       >
         <DashIcon className="w-4 h-4 flex-shrink-0" />
         <span className="text-sm font-medium truncate">{dashboard.title}</span>
-      </Link>
+      </button>
       {!dashboard.isDefault && (
         <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity pr-1">
           <button
@@ -161,12 +163,11 @@ function SidebarContent({
   const { profile } = useProfile();
   const { dashboards, isLoading: dashLoading, createDashboard, renameDashboard, deleteDashboard } =
     useDashboards();
+  const { activeDashboardId, setActiveDashboard } = useActiveDashboard();
   const initials = getInitials(profile.displayName);
   const [showNewDash, setShowNewDash] = useState(false);
   const [newDashName, setNewDashName] = useState('');
   const newDashInputRef = useRef<HTMLInputElement>(null);
-  const pathname = usePathname();
-  const router = useRouter();
   const [pendingDeleteDash, setPendingDeleteDash] = useState<string | null>(null);
 
   useEffect(() => {
@@ -175,6 +176,11 @@ function SidebarContent({
     }
   }, [showNewDash]);
 
+  const handleSelectDashboard = (id: string) => {
+    setActiveDashboard(id);
+    onClose?.();
+  };
+
   const handleCreateDashboard = async () => {
     const title = newDashName.trim();
     if (!title) return;
@@ -182,7 +188,7 @@ function SidebarContent({
     setNewDashName('');
     setShowNewDash(false);
     if (created) {
-      router.push(`/dashboard/${created.id}`);
+      setActiveDashboard(created.id);
       onClose?.();
     }
   };
@@ -196,13 +202,12 @@ function SidebarContent({
     const id = pendingDeleteDash;
     setPendingDeleteDash(null);
     await deleteDashboard(id);
-    if (pathname === `/dashboard/${id}`) {
-      const defaultDash =
+    // If deleted dashboard was active, switch to another
+    if (activeDashboardId === id) {
+      const fallback =
         dashboards.find((d) => d.isDefault && d.id !== id) ??
         dashboards.find((d) => d.id !== id);
-      if (defaultDash) {
-        router.push(`/dashboard/${defaultDash.id}`);
-      }
+      if (fallback) setActiveDashboard(fallback.id);
     }
   };
 
@@ -272,10 +277,11 @@ function SidebarContent({
                 <DashboardNavItem
                   key={d.id}
                   dashboard={d}
-                  isActive={pathname === `/dashboard/${d.id}`}
+                  isActive={activeDashboardId === d.id}
                   collapsed={false}
                   onRename={renameDashboard}
                   onDelete={handleDeleteDashboard}
+                  onSelect={handleSelectDashboard}
                 />
               ))}
 
@@ -331,10 +337,11 @@ function SidebarContent({
             <DashboardNavItem
               key={d.id}
               dashboard={d}
-              isActive={pathname === `/dashboard/${d.id}`}
+              isActive={activeDashboardId === d.id}
               collapsed={true}
               onRename={renameDashboard}
               onDelete={handleDeleteDashboard}
+              onSelect={handleSelectDashboard}
             />
           ))}
         </nav>
@@ -405,12 +412,6 @@ export function Sidebar({
   onMobileOpenChange: (open: boolean) => void;
 }) {
   const [collapsed, setCollapsed] = useState(true);
-  const pathname = usePathname();
-
-  // Close mobile drawer on route change
-  useEffect(() => {
-    onMobileOpenChange(false);
-  }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     try {
