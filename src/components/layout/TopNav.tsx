@@ -88,7 +88,7 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-2xl relative flex flex-col max-h-[90vh]"
+        className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-3xl relative flex flex-col max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header with branding — sticky so X is always visible */}
@@ -117,11 +117,23 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
           {/* Left column: intro + icons legend */}
           <div className="space-y-5">
             {/* Intro */}
-            <div className="space-y-1.5">
-              <p className="text-sm text-slate-700 leading-relaxed">
-                O conteúdo inicial do Painel é uma compilação dos sites mais acessados no Brasil.
+            <div className="space-y-2">
+              <p className="text-sm text-slate-600 leading-relaxed">
+                Essa página destina-se a facilitar sua navegação reunindo todos os links que você utiliza no seu dia a dia.
               </p>
-              <p className="text-sm text-slate-500 leading-relaxed">
+              <p className="text-sm text-slate-600 leading-relaxed">
+                É constituída de Seções contendo links.
+              </p>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                Todos os elementos são removíveis e/ou personalizáveis.
+              </p>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                Ou seja, você organiza seções e links com o objetivo de acessá-los com facilidade.
+              </p>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                O Painel Principal inicialmente apresentado como exemplo é uma compilação dos sites mais populares do Brasil.
+              </p>
+              <p className="text-sm text-slate-600 leading-relaxed">
                 Pode ser mantido, alterado ou excluído conforme sua preferência.
               </p>
             </div>
