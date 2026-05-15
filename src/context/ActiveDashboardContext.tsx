@@ -168,12 +168,24 @@ export function ActiveDashboardProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  // ── Retry fetch when userId resolves after activeDashboardId was already set ──
+  useEffect(() => {
+    if (!userId || !activeDashboardId || data !== null) return;
+    // userId just resolved but the fetch never happened (race condition on reload)
+    setIsLoading(true);
+    fetchDashboard(activeDashboardId, userId).then((result) => {
+      setData(result);
+      setIsLoading(false);
+    }).catch(console.error);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId, activeDashboardId, data]);
+
   // ── Initialize active dashboard from URL or default ──────────────────────────
   useEffect(() => {
     if (!userId || dashboards.length === 0) return;
 
-    // Already initialized
-    if (activeDashboardId) return;
+    // Already initialized with data
+    if (activeDashboardId && data !== null) return;
 
     // Read from URL
     let idFromUrl: string | null = null;
