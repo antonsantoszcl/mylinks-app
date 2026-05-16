@@ -100,6 +100,8 @@ function DashboardNavItem({
   const [editing, setEditing] = useState(false);
   const [editValue, setEditValue] = useState(dashboard.title);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [showActions, setShowActions] = useState(false);
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [isMobile, setIsMobile] = useState(getIsMobile);
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -174,13 +176,48 @@ function DashboardNavItem({
     }
     setEditing(false);
     setPickerOpen(false);
+    setShowActions(false);
   };
 
   const cancelRename = () => {
     setEditValue(dashboard.title);
     setEditing(false);
     setPickerOpen(false);
+    setShowActions(false);
   };
+
+  // Long press for mobile: show action buttons
+  const handleTouchStart = () => {
+    if (dashboard.isDefault || editing) return;
+    longPressTimer.current = setTimeout(() => {
+      setShowActions(true);
+    }, 500);
+  };
+  const handleTouchEnd = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  };
+  const handleTouchMove = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  };
+
+  // Hide mobile actions on outside tap
+  useEffect(() => {
+    if (!showActions) return;
+    const handler = () => setShowActions(false);
+    const tid = setTimeout(() => {
+      document.addEventListener('touchstart', handler, { passive: true, once: true });
+    }, 0);
+    return () => {
+      clearTimeout(tid);
+      document.removeEventListener('touchstart', handler);
+    };
+  }, [showActions]);
 
   // Picker portal — only for non-default panels
   const pickerPortal = !dashboard.isDefault && pickerOpen && pickerPos
@@ -247,6 +284,9 @@ function DashboardNavItem({
       <div className="group flex items-center rounded-lg transition-colors">
         <button
           onClick={() => onSelect(dashboard.id)}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          onTouchMove={handleTouchMove}
           className={`flex-1 flex items-center gap-2.5 px-2 py-2 rounded-lg text-left transition-colors ${
             isActive
               ? 'bg-[#EDF1F7] text-slate-700 md:bg-[#f3f7fd] md:text-slate-700'
@@ -309,18 +349,20 @@ function DashboardNavItem({
           )}
         </button>
 
-        {/* Pencil + Trash buttons on hover (non-default, not editing) */}
+        {/* Pencil + Trash buttons: hover on desktop, long-press on mobile */}
         {!dashboard.isDefault && !editing && (
-          <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity pr-1">
+          <div className={`flex items-center gap-0.5 transition-opacity pr-1 ${
+            showActions ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+          }`}>
             <button
-              onClick={(e) => { e.stopPropagation(); setEditing(true); setPickerOpen(true); }}
+              onClick={(e) => { e.stopPropagation(); setShowActions(false); setEditing(true); setPickerOpen(true); }}
               className="p-1 rounded text-slate-400 hover:text-primary-500 hover:bg-primary-50 transition-colors"
               title="Editar"
             >
               <Pencil className="w-3 h-3" />
             </button>
             <button
-              onClick={(e) => { e.stopPropagation(); onDelete(dashboard.id); }}
+              onClick={(e) => { e.stopPropagation(); setShowActions(false); onDelete(dashboard.id); }}
               className="p-1 rounded text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
               title="Excluir"
             >
