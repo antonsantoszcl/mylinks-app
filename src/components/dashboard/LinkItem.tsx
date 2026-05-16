@@ -179,7 +179,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
   return (
     <>
       <div
-        className="group/link flex items-center justify-between py-1 md:py-1.5 pl-1.5 pr-0 rounded-lg hover:bg-white/70 transition-all cursor-pointer"
+        className="group/link flex items-center justify-between py-1 pl-1.5 pr-0 rounded-lg hover:bg-white/70 transition-all cursor-pointer"
         onDoubleClick={handleDoubleClick}
       >
         <a
@@ -192,9 +192,9 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
           <img
             src={link.iconUrl}
             alt={link.title}
-            className="w-5 h-5 md:w-4 md:h-4 object-contain flex-shrink-0 rounded-sm"
+            className="w-5 h-5 object-contain flex-shrink-0 rounded-sm"
           />
-          <span className="text-sm md:text-xs font-semibold md:font-medium leading-snug text-slate-700 truncate flex-1">
+          <span className="text-sm md:text-xs font-semibold text-slate-700 truncate flex-1">
             {link.title}
           </span>
         </a>

@@ -459,7 +459,7 @@ function SidebarContent({
           {/* ── Paineis section ─────────────────────────── */}
           {!collapsed && !dashLoading && (
             <div className="mb-1">
-              <p className="px-2 pb-1 text-[10px] font-semibold text-slate-400 uppercase tracking-widest">
+              <p className="px-2 pb-1 text-[10px] font-semibold text-slate-400/80 uppercase tracking-widest">
                 Paineis
               </p>
               {dashboards.map((d) => (

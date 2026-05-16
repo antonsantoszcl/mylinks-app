@@ -21,12 +21,12 @@ export function QuickAccessCard({ link, onRemove }: QuickAccessCardProps) {
         href={link.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="bg-white border border-slate-200/70 rounded-lg px-3 py-2 flex items-center gap-2 hover:shadow-sm hover:bg-slate-50/80 transition-all cursor-pointer"
+        className="bg-white border border-slate-200 rounded-lg px-3 py-2 flex items-center gap-2 hover:shadow-sm hover:bg-slate-50 transition-all cursor-pointer"
       >
         <div className="w-6 h-6 md:w-5 md:h-5 bg-slate-100 rounded flex items-center justify-center overflow-hidden flex-shrink-0">
           <img src={link.iconUrl} alt={link.title} className="w-5 h-5 md:w-4 md:h-4 object-contain" />
         </div>
-        <span className="text-sm md:text-xs font-semibold md:font-medium text-slate-700 whitespace-nowrap">
+        <span className="text-sm md:text-xs font-semibold text-slate-700 whitespace-nowrap">
           {link.title}
         </span>
       </Link>
