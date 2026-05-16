@@ -18,7 +18,7 @@ interface DemoCategory {
 const demoCategories: DemoCategory[] = [
   {
     id: 'meus-favoritos',
-    title: 'Meus Favoritos',
+    title: 'MEUS FAVORITOS',
     emoji: '⭐',
     links: [
       { title: 'YouTube', domain: 'youtube.com', url: 'https://youtube.com' },
@@ -29,7 +29,7 @@ const demoCategories: DemoCategory[] = [
   },
   {
     id: 'entretenimento',
-    title: 'Entretenimento',
+    title: 'ENTRETENIMENTO',
     emoji: '🎬',
     links: [
       { title: 'Netflix', domain: 'netflix.com', url: 'https://netflix.com' },
@@ -41,7 +41,7 @@ const demoCategories: DemoCategory[] = [
   },
   {
     id: 'compras',
-    title: 'Compras',
+    title: 'COMPRAS',
     emoji: '🛒',
     links: [
       { title: 'Amazon', domain: 'amazon.com.br', url: 'https://amazon.com.br' },
@@ -52,7 +52,7 @@ const demoCategories: DemoCategory[] = [
   },
   {
     id: 'uteis',
-    title: 'Úteis',
+    title: 'ÚTEIS',
     emoji: '⚙️',
     links: [
       { title: 'Figma', domain: 'figma.com', url: 'https://figma.com' },

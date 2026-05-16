@@ -21,12 +21,12 @@ const DEFAULT_CATEGORIES: Array<{
   links: Array<{ title: string; url: string; domain: string }>;
 }> = [
   {
-    title: 'Meus Favoritos',
+    title: 'MEUS FAVORITOS',
     iconName: 'star',
     links: [],
   },
   {
-    title: 'Redes Sociais',
+    title: 'REDES SOCIAIS',
     iconName: 'people',
     links: [
       { title: 'Facebook', url: 'https://facebook.com', domain: 'facebook.com' },
@@ -37,7 +37,7 @@ const DEFAULT_CATEGORIES: Array<{
     ],
   },
   {
-    title: 'Noticias',
+    title: 'NOTÍCIAS',
     iconName: 'globe',
     links: [
       { title: 'Globo.com', url: 'https://globo.com', domain: 'globo.com' },
@@ -48,7 +48,7 @@ const DEFAULT_CATEGORIES: Array<{
     ],
   },
   {
-    title: 'Compras',
+    title: 'COMPRAS',
     iconName: 'cart',
     links: [
       { title: 'Buscape', url: 'https://buscape.com.br', domain: 'buscape.com.br' },
@@ -59,7 +59,7 @@ const DEFAULT_CATEGORIES: Array<{
     ],
   },
   {
-    title: 'Financas',
+    title: 'FINANÇAS',
     iconName: 'money',
     links: [
       { title: 'Banco do Brasil', url: 'https://bb.com.br', domain: 'bb.com.br' },
@@ -70,7 +70,7 @@ const DEFAULT_CATEGORIES: Array<{
     ],
   },
   {
-    title: 'Entretenimento',
+    title: 'ENTRETENIMENTO',
     iconName: 'film',
     links: [
       { title: 'Youtube', url: 'https://youtube.com', domain: 'youtube.com' },
