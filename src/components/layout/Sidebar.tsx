@@ -5,6 +5,7 @@ import {
   ChevronRight,
   ChevronLeft,
   Plus,
+  Pencil,
   Trash2,
   Check,
   X,
@@ -279,12 +280,7 @@ function DashboardNavItem({
             />
           ) : (
             <span
-              className={`flex-1 text-[13px] font-medium truncate ${!dashboard.isDefault ? 'cursor-text' : ''}`}
-              onClick={!dashboard.isDefault ? (e) => {
-                e.stopPropagation();
-                setEditing(true);
-                setPickerOpen(true);
-              } : undefined}
+              className="flex-1 text-[13px] font-medium truncate"
             >
               {dashboard.title}
             </span>
@@ -313,9 +309,16 @@ function DashboardNavItem({
           )}
         </button>
 
-        {/* Trash button on hover (non-default, not editing) */}
+        {/* Pencil + Trash buttons on hover (non-default, not editing) */}
         {!dashboard.isDefault && !editing && (
-          <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity pr-1">
+          <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity pr-1">
+            <button
+              onClick={(e) => { e.stopPropagation(); setEditing(true); setPickerOpen(true); }}
+              className="p-1 rounded text-slate-400 hover:text-primary-500 hover:bg-primary-50 transition-colors"
+              title="Editar"
+            >
+              <Pencil className="w-3 h-3" />
+            </button>
             <button
               onClick={(e) => { e.stopPropagation(); onDelete(dashboard.id); }}
               className="p-1 rounded text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
