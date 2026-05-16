@@ -247,7 +247,7 @@ function DashboardNavItem({
                   onTouchStart={(e) => { e.stopPropagation(); pickerActiveRef.current = true; }}
                   onTouchEnd={(e) => { e.preventDefault(); e.stopPropagation(); pickerActiveRef.current = false; onChangeIcon(dashboard.id, name); setPickerOpen(false); }}
                   className={`w-8 h-8 flex items-center justify-center rounded transition-colors text-base ${
-                    isSelected ? 'bg-primary-100 ring-1 ring-primary-400' : 'hover:bg-slate-100'
+                    isSelected ? 'bg-primary-100 ring-1 ring-primary-400' : ''
                   }`}
                 >
                   {emoji}
@@ -269,7 +269,7 @@ function DashboardNavItem({
         className={`flex items-center justify-center py-2 rounded-lg transition-colors w-full ${
           isActive
             ? 'bg-[#EDF1F7] text-slate-700 md:bg-[#f3f7fd] md:text-slate-700'
-            : 'text-slate-700 hover:bg-[#EDF1F7] hover:text-slate-700 md:hover:bg-[#f3f7fd] md:hover:text-slate-700'
+            : 'text-slate-700'
         }`}
       >
         <div className="flex-shrink-0">
@@ -290,7 +290,7 @@ function DashboardNavItem({
           className={`flex-1 flex items-center gap-2.5 px-2 py-2 rounded-lg text-left transition-colors ${
             isActive
               ? 'bg-[#EDF1F7] text-slate-700 md:bg-[#f3f7fd] md:text-slate-700'
-              : 'text-slate-700 hover:bg-[#EDF1F7] hover:text-slate-700 md:hover:bg-[#f3f7fd] md:hover:text-slate-700'
+              : 'text-slate-700'
           }`}
         >
           {/* Icon ref — used by picker position logic */}
