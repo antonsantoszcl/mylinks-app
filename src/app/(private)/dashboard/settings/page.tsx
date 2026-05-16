@@ -3,10 +3,12 @@
 import { useRef, useState, useEffect, FormEvent } from 'react';
 import { useProfile, getInitials, SocialLink, ToolItem } from '@/context/ProfileContext';
 import { usePublicData, PublicLink } from '@/context/PublicDataContext';
+import { useActiveDashboard } from '@/context/ActiveDashboardContext';
+import { useRouter } from 'next/navigation';
 import {
   User, Camera, Save, CheckCircle, Plus, Trash2,
   Mail, Phone, Tag, Globe, Wrench, AlignLeft, Sparkles,
-  Link2, Pencil, X,
+  Link2, Pencil, X, ArrowLeft,
 } from 'lucide-react';
 
 function SectionCard({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) {
@@ -124,6 +126,8 @@ function PublicLinkItem({ link }: { link: PublicLink }) {
 export default function SettingsPage() {
   const { profile, loading: profileLoading, updateProfile } = useProfile();
   const { publicData, addLink } = usePublicData();
+  const { activeDashboardId, setActiveDashboard } = useActiveDashboard();
+  const router = useRouter();
 
   const [displayName, setDisplayName] = useState(profile.displayName);
   const [avatarUrl, setAvatarUrl] = useState(profile.avatarUrl);
@@ -284,6 +288,21 @@ export default function SettingsPage() {
   return (
     <div className="max-w-2xl mx-auto space-y-6 pb-12">
       <header className="pt-6">
+        <button
+          type="button"
+          onClick={() => {
+            if (activeDashboardId) {
+              setActiveDashboard(activeDashboardId);
+              router.push('/dashboard/' + activeDashboardId);
+            } else {
+              router.push('/dashboard');
+            }
+          }}
+          className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 transition-colors mb-4"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Voltar aos Painéis
+        </button>
         <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Configuracoes de Perfil</h1>
         <p className="text-slate-500 mt-1">Personalize seu perfil publico em mylinks.com/me</p>
       </header>
