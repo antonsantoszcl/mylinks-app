@@ -194,7 +194,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
             alt={link.title}
             className="w-5 h-5 object-contain flex-shrink-0 rounded-sm"
           />
-          <span className="text-sm md:text-[13px] font-semibold text-slate-700 truncate flex-1">
+          <span className="text-sm md:text-[12.5px] font-semibold text-slate-700 truncate flex-1">
             {link.title}
           </span>
         </a>
