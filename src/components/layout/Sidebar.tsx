@@ -346,53 +346,7 @@ function SidebarContent({
           ))}
         </nav>
 
-        <div className={`${collapsed ? 'px-1 py-2' : 'px-2 py-2'} border-t border-slate-100/80 space-y-2`}>
-          {/* Profile link — hidden until further notice
-          <Link
-            href="/dashboard/settings"
-            title={collapsed ? profile.displayName : undefined}
-            className={`flex items-center ${collapsed ? 'justify-center' : 'gap-2 px-2'} py-2 rounded-lg hover:bg-slate-50 transition-colors group`}
-          >
-            <div className="w-7 h-7 rounded-full overflow-hidden ring-2 ring-slate-100 group-hover:ring-slate-200 transition-all flex items-center justify-center bg-slate-100 flex-shrink-0">
-              {profile.avatarUrl ? (
-                <img
-                  src={profile.avatarUrl}
-                  alt={profile.displayName}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).style.display = 'none';
-                  }}
-                />
-              ) : (
-                <span className="text-xs font-bold text-[#2F5FD0]">{initials}</span>
-              )}
-            </div>
-            {!collapsed && (
-              <div className="min-w-0">
-                <p className="text-xs font-semibold text-slate-800 truncate">
-                  {profile.displayName || '...'}
-                </p>
-                {/* <p className="text-xs text-slate-400">Ver perfil</p> */}
-              </div>
-            )}
-          </Link>
-          */}
 
-          {/* Pro upgrade card — hidden until Phase 2
-          {!collapsed && (
-            <div className="bg-[#EDF1F7] md:bg-[#f3f7fd] rounded-xl p-2.5 border border-slate-200/50">
-              <div className="flex items-center gap-1.5 mb-1">
-                <Zap className="w-3.5 h-3.5 text-slate-500" />
-                <h4 className="text-xs font-semibold text-slate-700">Assine o Pro</h4>
-              </div>
-              <p className="text-xs text-slate-400 mb-2 font-normal">Desbloqueie recursos avancados.</p>
-              <button className="w-full bg-white border border-slate-200 text-slate-700 rounded-lg py-1.5 text-xs font-medium hover:bg-slate-50 hover:shadow-sm transition-colors">
-                Fazer upgrade
-              </button>
-            </div>
-          )}
-          */}
-        </div>
       </aside>
 
       <ConfirmModal
