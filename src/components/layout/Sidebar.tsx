@@ -1,13 +1,10 @@
 'use client';
 
-import Link from 'next/link';
 import {
   Globe,
-  Zap,
   ChevronRight,
   ChevronLeft,
   Plus,
-  Pencil,
   Trash2,
   Check,
   X,
@@ -175,11 +172,13 @@ function DashboardNavItem({
       onRename(dashboard.id, trimmed);
     }
     setEditing(false);
+    setPickerOpen(false);
   };
 
   const cancelRename = () => {
     setEditValue(dashboard.title);
     setEditing(false);
+    setPickerOpen(false);
   };
 
   // Picker portal — only for non-default panels
@@ -206,9 +205,9 @@ function DashboardNavItem({
                   type="button"
                   title={name}
                   onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); pickerActiveRef.current = true; }}
-                  onMouseUp={(e) => { e.preventDefault(); e.stopPropagation(); onChangeIcon(dashboard.id, name); setPickerOpen(false); }}
+                  onMouseUp={(e) => { e.preventDefault(); e.stopPropagation(); pickerActiveRef.current = false; onChangeIcon(dashboard.id, name); setPickerOpen(false); }}
                   onTouchStart={(e) => { e.stopPropagation(); pickerActiveRef.current = true; }}
-                  onTouchEnd={(e) => { e.preventDefault(); e.stopPropagation(); onChangeIcon(dashboard.id, name); setPickerOpen(false); }}
+                  onTouchEnd={(e) => { e.preventDefault(); e.stopPropagation(); pickerActiveRef.current = false; onChangeIcon(dashboard.id, name); setPickerOpen(false); }}
                   className={`w-8 h-8 flex items-center justify-center rounded transition-colors text-base ${
                     isSelected ? 'bg-primary-100 ring-1 ring-primary-400' : 'hover:bg-slate-100'
                   }`}
@@ -224,67 +223,21 @@ function DashboardNavItem({
     : null;
 
   if (collapsed) {
+    // Collapsed: clicking the icon navigates — no picker ever
     return (
-      <>
-        <button
-          onClick={() => onSelect(dashboard.id)}
-          title={dashboard.title}
-          className={`flex items-center justify-center py-2 rounded-lg transition-colors w-full ${
-            isActive
-              ? 'bg-[#EDF1F7] text-slate-700 md:bg-[#f3f7fd] md:text-slate-700'
-              : 'text-slate-700 hover:bg-[#EDF1F7] hover:text-slate-700 md:hover:bg-[#f3f7fd] md:hover:text-slate-700'
-          }`}
-        >
-          {dashboard.isDefault ? (
-            <div className="flex-shrink-0">
-              {renderPanelEmoji('house', isMobile)}
-            </div>
-          ) : (
-            <div
-              ref={iconRef}
-              onClick={(e) => { e.stopPropagation(); setPickerOpen((v) => !v); }}
-              className="flex-shrink-0 cursor-pointer rounded p-0.5 hover:bg-slate-200 transition-colors"
-            >
-              {renderPanelEmoji(dashboard.iconName, isMobile)}
-            </div>
-          )}
-        </button>
-        {pickerPortal}
-      </>
-    );
-  }
-
-  if (editing) {
-    return (
-      <div className="flex items-center gap-1 px-2 py-1">
+      <button
+        onClick={() => onSelect(dashboard.id)}
+        title={dashboard.title}
+        className={`flex items-center justify-center py-2 rounded-lg transition-colors w-full ${
+          isActive
+            ? 'bg-[#EDF1F7] text-slate-700 md:bg-[#f3f7fd] md:text-slate-700'
+            : 'text-slate-700 hover:bg-[#EDF1F7] hover:text-slate-700 md:hover:bg-[#f3f7fd] md:hover:text-slate-700'
+        }`}
+      >
         <div className="flex-shrink-0">
           {renderPanelEmoji(dashboard.isDefault ? 'house' : dashboard.iconName, isMobile)}
         </div>
-        <input
-          ref={inputRef}
-          value={editValue}
-          onChange={(e) => setEditValue(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') commitRename();
-            if (e.key === 'Escape') cancelRename();
-          }}
-          className="flex-1 min-w-0 text-xs rounded border border-primary-300 px-1 py-0.5 outline-none focus:ring-1 focus:ring-primary-400"
-        />
-        <button
-          onClick={commitRename}
-          className="p-0.5 text-primary-600 hover:text-primary-700"
-          title="Salvar"
-        >
-          <Check className="w-3 h-3" />
-        </button>
-        <button
-          onClick={cancelRename}
-          className="p-0.5 text-slate-400 hover:text-slate-600"
-          title="Cancelar"
-        >
-          <X className="w-3 h-3" />
-        </button>
-      </div>
+      </button>
     );
   }
 
@@ -299,32 +252,72 @@ function DashboardNavItem({
               : 'text-slate-700 hover:bg-[#EDF1F7] hover:text-slate-700 md:hover:bg-[#f3f7fd] md:hover:text-slate-700'
           }`}
         >
-          {dashboard.isDefault ? (
-            <div className="flex-shrink-0">
-              {renderPanelEmoji('house', isMobile)}
-            </div>
+          {/* Icon ref — used by picker position logic */}
+          <div ref={iconRef} className="flex-shrink-0">
+            {renderPanelEmoji(dashboard.isDefault ? 'house' : dashboard.iconName, isMobile)}
+          </div>
+
+          {/* Title: click opens edit + picker (non-default only) */}
+          {editing ? (
+            <input
+              ref={inputRef}
+              value={editValue}
+              onChange={(e) => setEditValue(e.target.value)}
+              onBlur={() => {
+                setTimeout(() => {
+                  if (!pickerActiveRef.current) {
+                    commitRename();
+                  }
+                }, 150);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') { e.preventDefault(); commitRename(); }
+                if (e.key === 'Escape') { e.preventDefault(); cancelRename(); }
+              }}
+              onClick={(e) => e.stopPropagation()}
+              className="flex-1 min-w-0 text-xs rounded border border-primary-300 px-1 py-0.5 outline-none focus:ring-1 focus:ring-primary-400"
+            />
           ) : (
-            <div
-              ref={iconRef}
-              onClick={(e) => { e.stopPropagation(); setPickerOpen((v) => !v); }}
-              className="flex-shrink-0 cursor-pointer rounded p-0.5 hover:bg-slate-200 transition-colors"
+            <span
+              className={`flex-1 text-sm font-medium truncate ${!dashboard.isDefault ? 'cursor-text' : ''}`}
+              onClick={!dashboard.isDefault ? (e) => {
+                e.stopPropagation();
+                setEditing(true);
+                setPickerOpen(true);
+              } : undefined}
             >
-              {renderPanelEmoji(dashboard.iconName, isMobile)}
-            </div>
+              {dashboard.title}
+            </span>
           )}
-          <span className="text-sm font-medium truncate">{dashboard.title}</span>
+
+          {/* Confirm/cancel buttons visible while editing */}
+          {editing && (
+            <>
+              <button
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={(e) => { e.stopPropagation(); commitRename(); }}
+                className="p-0.5 text-primary-600 hover:text-primary-700"
+                title="Salvar"
+              >
+                <Check className="w-3 h-3" />
+              </button>
+              <button
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={(e) => { e.stopPropagation(); cancelRename(); }}
+                className="p-0.5 text-slate-400 hover:text-slate-600"
+                title="Cancelar"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </>
+          )}
         </button>
-        {!dashboard.isDefault && (
-          <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity pr-1">
+
+        {/* Trash button on hover (non-default, not editing) */}
+        {!dashboard.isDefault && !editing && (
+          <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity pr-1">
             <button
-              onClick={() => setEditing(true)}
-              className="p-1 rounded text-slate-400 hover:text-[#2F5FD0] hover:bg-[rgba(47,95,208,0.08)] transition-colors"
-              title="Renomear"
-            >
-              <Pencil className="w-3 h-3" />
-            </button>
-            <button
-              onClick={() => onDelete(dashboard.id)}
+              onClick={(e) => { e.stopPropagation(); onDelete(dashboard.id); }}
               className="p-1 rounded text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
               title="Excluir"
             >
