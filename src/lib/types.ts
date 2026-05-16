@@ -3,6 +3,7 @@ export interface Dashboard {
   title: string;
   isDefault: boolean;
   sortOrder: number;
+  iconName: string;
 }
 
 export interface UserProfile {

@@ -19,6 +19,7 @@ type DashboardRow = {
   title: string;
   is_default: boolean;
   sort_order: number;
+  icon_name: string | null;
   created_at: string;
 };
 type CategoryRow = {

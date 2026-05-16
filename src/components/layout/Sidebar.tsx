@@ -6,14 +6,14 @@ import {
   Zap,
   ChevronRight,
   ChevronLeft,
-  Home,
-  LayoutDashboard,
   Plus,
   Pencil,
   Trash2,
   Check,
   X,
 } from 'lucide-react';
+import { getNotoEmojiUrl } from '@/lib/emojiUtils';
+import { createPortal } from 'react-dom';
 import { useProfile, getInitials } from '@/context/ProfileContext';
 import { useDashboards } from '@/context/DashboardsContext';
 import { useActiveDashboard } from '@/context/ActiveDashboardContext';
@@ -22,6 +22,63 @@ import { Dashboard } from '@/lib/types';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 
 const SIDEBAR_KEY = 'mylinks.sidebar.collapsed';
+
+// ── Emoji picker data ─────────────────────────────────────────────────────────
+
+const PANEL_ICONS: { name: string; emoji: string }[] = [
+  { name: 'folder',     emoji: '📂' },
+  { name: 'pin',        emoji: '📌' },
+  { name: 'tasks',      emoji: '✅' },
+  { name: 'briefcase',  emoji: '💼' },
+  { name: 'gear',       emoji: '⚙️' },
+  { name: 'computer',   emoji: '💻' },
+  { name: 'robot',      emoji: '🤖' },
+  { name: 'bolt',       emoji: '⚡' },
+  { name: 'book',       emoji: '📕' },
+  { name: 'graduation', emoji: '🎓' },
+  { name: 'notes',      emoji: '📝' },
+  { name: 'money',      emoji: '💰' },
+  { name: 'chart',      emoji: '📈' },
+  { name: 'bank',       emoji: '🏦' },
+  { name: 'chat',       emoji: '💬' },
+  { name: 'cart',       emoji: '🛒' },
+  { name: 'globe',      emoji: '🌐' },
+  { name: 'people',     emoji: '👥' },
+  { name: 'music',      emoji: '🎵' },
+  { name: 'film',       emoji: '🎬' },
+  { name: 'gaming',     emoji: '🎮' },
+  { name: 'tv',         emoji: '📺' },
+  { name: 'heart',      emoji: '❤️' },
+  { name: 'star',       emoji: '⭐' },
+];
+
+const PANEL_EMOJI_MAP: Record<string, string> = Object.fromEntries(
+  PANEL_ICONS.map(({ name, emoji }) => [name, emoji])
+);
+
+function getPanelEmoji(iconName: string): string {
+  if (iconName === 'house') return '🏠';
+  return PANEL_EMOJI_MAP[iconName] ?? '⭐';
+}
+
+function getIsMobile(): boolean {
+  return typeof window !== 'undefined' && window.innerWidth < 768;
+}
+
+function renderPanelEmoji(iconName: string, isMobile: boolean) {
+  const emoji = getPanelEmoji(iconName);
+  if (isMobile) {
+    return <span className="text-base leading-none select-none">{emoji}</span>;
+  }
+  return (
+    <img
+      src={getNotoEmojiUrl(emoji)}
+      alt={emoji}
+      className="w-4 h-4 flex-shrink-0"
+      draggable={false}
+    />
+  );
+}
 
 // ── Dashboard nav item ────────────────────────────────────────────────────────
 
@@ -32,6 +89,7 @@ function DashboardNavItem({
   onRename,
   onDelete,
   onSelect,
+  onChangeIcon,
 }: {
   dashboard: Dashboard;
   isActive: boolean;
@@ -39,10 +97,70 @@ function DashboardNavItem({
   onRename: (id: string, title: string) => void;
   onDelete: (id: string) => void;
   onSelect: (id: string) => void;
+  onChangeIcon: (id: string, iconName: string) => void;
 }) {
   const [editing, setEditing] = useState(false);
   const [editValue, setEditValue] = useState(dashboard.title);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const [isMobile, setIsMobile] = useState(getIsMobile);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickerPos, setPickerPos] = useState<{ top: number; left: number } | null>(null);
+  const iconRef = useRef<HTMLDivElement>(null);
+  const pickerRef = useRef<HTMLDivElement>(null);
+  const pickerActiveRef = useRef(false);
+
+  // Mobile sync
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+
+  // Picker position — double rAF, same pattern as CategoryCard
+  useEffect(() => {
+    if (!pickerOpen || dashboard.isDefault) {
+      setPickerPos(null);
+      return;
+    }
+    const updatePos = () => {
+      if (iconRef.current) {
+        const rect = iconRef.current.getBoundingClientRect();
+        if (rect.width > 0 || rect.height > 0) {
+          setPickerPos({ top: rect.bottom + 6, left: rect.left - 4 });
+        }
+      }
+    };
+    let raf1: number;
+    let raf2: number;
+    raf1 = requestAnimationFrame(() => { raf2 = requestAnimationFrame(updatePos); });
+    window.addEventListener('resize', updatePos);
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+      window.removeEventListener('resize', updatePos);
+    };
+  }, [pickerOpen, dashboard.isDefault]);
+
+  // Outside-click close — same setTimeout pattern as CategoryCard
+  useEffect(() => {
+    if (!pickerOpen || dashboard.isDefault) return;
+    const handler = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as Node;
+      if (!pickerRef.current?.contains(target) && !iconRef.current?.contains(target)) {
+        setPickerOpen(false);
+      }
+    };
+    const tid = setTimeout(() => {
+      document.addEventListener('mousedown', handler);
+      document.addEventListener('touchstart', handler, { passive: true });
+    }, 0);
+    return () => {
+      clearTimeout(tid);
+      document.removeEventListener('mousedown', handler);
+      document.removeEventListener('touchstart', handler);
+    };
+  }, [pickerOpen, dashboard.isDefault]);
 
   useEffect(() => {
     if (editing) {
@@ -64,28 +182,84 @@ function DashboardNavItem({
     setEditing(false);
   };
 
-  const DashIcon = dashboard.isDefault ? Home : LayoutDashboard;
+  // Picker portal — only for non-default panels
+  const pickerPortal = !dashboard.isDefault && pickerOpen && pickerPos
+    ? createPortal(
+        <div
+          ref={pickerRef}
+          style={{
+            position: 'fixed',
+            top: pickerPos.top,
+            left: pickerPos.left,
+            zIndex: 9999,
+          }}
+          className="bg-white rounded-lg border border-slate-200 shadow-lg p-2"
+          onMouseDown={(e) => e.preventDefault()}
+          onTouchStart={(e) => e.stopPropagation()}
+        >
+          <div className="grid grid-cols-6 gap-0.5">
+            {PANEL_ICONS.map(({ name, emoji }) => {
+              const isSelected = name === dashboard.iconName;
+              return (
+                <button
+                  key={name}
+                  type="button"
+                  title={name}
+                  onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); pickerActiveRef.current = true; }}
+                  onMouseUp={(e) => { e.preventDefault(); e.stopPropagation(); onChangeIcon(dashboard.id, name); setPickerOpen(false); }}
+                  onTouchStart={(e) => { e.stopPropagation(); pickerActiveRef.current = true; }}
+                  onTouchEnd={(e) => { e.preventDefault(); e.stopPropagation(); onChangeIcon(dashboard.id, name); setPickerOpen(false); }}
+                  className={`w-8 h-8 flex items-center justify-center rounded transition-colors text-base ${
+                    isSelected ? 'bg-primary-100 ring-1 ring-primary-400' : 'hover:bg-slate-100'
+                  }`}
+                >
+                  {emoji}
+                </button>
+              );
+            })}
+          </div>
+        </div>,
+        document.body
+      )
+    : null;
 
   if (collapsed) {
     return (
-      <button
-        onClick={() => onSelect(dashboard.id)}
-        title={dashboard.title}
-        className={`flex items-center justify-center py-2 rounded-lg transition-colors w-full ${
-          isActive
-            ? 'bg-[#EDF1F7] text-slate-700 md:bg-[#f3f7fd] md:text-slate-700'
-            : 'text-slate-700 hover:bg-[#EDF1F7] hover:text-slate-700 md:hover:bg-[#f3f7fd] md:hover:text-slate-700'
-        }`}
-      >
-        <DashIcon className="w-4 h-4 flex-shrink-0" />
-      </button>
+      <>
+        <button
+          onClick={() => onSelect(dashboard.id)}
+          title={dashboard.title}
+          className={`flex items-center justify-center py-2 rounded-lg transition-colors w-full ${
+            isActive
+              ? 'bg-[#EDF1F7] text-slate-700 md:bg-[#f3f7fd] md:text-slate-700'
+              : 'text-slate-700 hover:bg-[#EDF1F7] hover:text-slate-700 md:hover:bg-[#f3f7fd] md:hover:text-slate-700'
+          }`}
+        >
+          {dashboard.isDefault ? (
+            <div className="flex-shrink-0">
+              {renderPanelEmoji('house', isMobile)}
+            </div>
+          ) : (
+            <div
+              ref={iconRef}
+              onClick={(e) => { e.stopPropagation(); setPickerOpen((v) => !v); }}
+              className="flex-shrink-0 cursor-pointer rounded p-0.5 hover:bg-slate-200 transition-colors"
+            >
+              {renderPanelEmoji(dashboard.iconName, isMobile)}
+            </div>
+          )}
+        </button>
+        {pickerPortal}
+      </>
     );
   }
 
   if (editing) {
     return (
       <div className="flex items-center gap-1 px-2 py-1">
-        <DashIcon className="w-4 h-4 flex-shrink-0 text-slate-400" />
+        <div className="flex-shrink-0">
+          {renderPanelEmoji(dashboard.isDefault ? 'house' : dashboard.iconName, isMobile)}
+        </div>
         <input
           ref={inputRef}
           value={editValue}
@@ -115,37 +289,52 @@ function DashboardNavItem({
   }
 
   return (
-    <div className="group flex items-center rounded-lg transition-colors">
-      <button
-        onClick={() => onSelect(dashboard.id)}
-        className={`flex-1 flex items-center gap-2.5 px-2 py-2 rounded-lg transition-colors ${
-          isActive
-            ? 'bg-[#EDF1F7] text-slate-700 md:bg-[#f3f7fd] md:text-slate-700'
-            : 'text-slate-700 hover:bg-[#EDF1F7] hover:text-slate-700 md:hover:bg-[#f3f7fd] md:hover:text-slate-700'
-        }`}
-      >
-        <DashIcon className="w-4 h-4 flex-shrink-0" />
-        <span className="text-sm font-medium truncate">{dashboard.title}</span>
-      </button>
-      {!dashboard.isDefault && (
-        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity pr-1">
-          <button
-            onClick={() => setEditing(true)}
-            className="p-1 rounded text-slate-400 hover:text-[#2F5FD0] hover:bg-[rgba(47,95,208,0.08)] transition-colors"
-            title="Renomear"
-          >
-            <Pencil className="w-3 h-3" />
-          </button>
-          <button
-            onClick={() => onDelete(dashboard.id)}
-            className="p-1 rounded text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
-            title="Excluir"
-          >
-            <Trash2 className="w-3 h-3" />
-          </button>
-        </div>
-      )}
-    </div>
+    <>
+      <div className="group flex items-center rounded-lg transition-colors">
+        <button
+          onClick={() => onSelect(dashboard.id)}
+          className={`flex-1 flex items-center gap-2.5 px-2 py-2 rounded-lg transition-colors ${
+            isActive
+              ? 'bg-[#EDF1F7] text-slate-700 md:bg-[#f3f7fd] md:text-slate-700'
+              : 'text-slate-700 hover:bg-[#EDF1F7] hover:text-slate-700 md:hover:bg-[#f3f7fd] md:hover:text-slate-700'
+          }`}
+        >
+          {dashboard.isDefault ? (
+            <div className="flex-shrink-0">
+              {renderPanelEmoji('house', isMobile)}
+            </div>
+          ) : (
+            <div
+              ref={iconRef}
+              onClick={(e) => { e.stopPropagation(); setPickerOpen((v) => !v); }}
+              className="flex-shrink-0 cursor-pointer rounded p-0.5 hover:bg-slate-200 transition-colors"
+            >
+              {renderPanelEmoji(dashboard.iconName, isMobile)}
+            </div>
+          )}
+          <span className="text-sm font-medium truncate">{dashboard.title}</span>
+        </button>
+        {!dashboard.isDefault && (
+          <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity pr-1">
+            <button
+              onClick={() => setEditing(true)}
+              className="p-1 rounded text-slate-400 hover:text-[#2F5FD0] hover:bg-[rgba(47,95,208,0.08)] transition-colors"
+              title="Renomear"
+            >
+              <Pencil className="w-3 h-3" />
+            </button>
+            <button
+              onClick={() => onDelete(dashboard.id)}
+              className="p-1 rounded text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+              title="Excluir"
+            >
+              <Trash2 className="w-3 h-3" />
+            </button>
+          </div>
+        )}
+      </div>
+      {pickerPortal}
+    </>
   );
 }
 
@@ -161,7 +350,7 @@ function SidebarContent({
   onClose?: () => void;
 }) {
   const { profile } = useProfile();
-  const { dashboards, isLoading: dashLoading, createDashboard, renameDashboard, deleteDashboard } =
+  const { dashboards, isLoading: dashLoading, createDashboard, renameDashboard, deleteDashboard, updateDashboardIcon } =
     useDashboards();
   const { activeDashboardId, setActiveDashboard } = useActiveDashboard();
   const initials = getInitials(profile.displayName);
@@ -282,13 +471,14 @@ function SidebarContent({
                   onRename={renameDashboard}
                   onDelete={handleDeleteDashboard}
                   onSelect={handleSelectDashboard}
+                  onChangeIcon={updateDashboardIcon}
                 />
               ))}
 
               {/* New painel form / button */}
               {showNewDash ? (
                 <div className="flex items-center gap-1 px-2 py-1 mt-0.5">
-                  <LayoutDashboard className="w-4 h-4 flex-shrink-0 text-slate-400" />
+                  <span className="text-base leading-none select-none flex-shrink-0">⭐</span>
                   <input
                     ref={newDashInputRef}
                     value={newDashName}
@@ -342,6 +532,7 @@ function SidebarContent({
               onRename={renameDashboard}
               onDelete={handleDeleteDashboard}
               onSelect={handleSelectDashboard}
+              onChangeIcon={updateDashboardIcon}
             />
           ))}
         </nav>

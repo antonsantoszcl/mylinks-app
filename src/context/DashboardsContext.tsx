@@ -99,6 +99,7 @@ type DashboardsContextType = {
   createDashboard: (title: string) => Promise<Dashboard | null>;
   renameDashboard: (id: string, title: string) => Promise<void>;
   deleteDashboard: (id: string) => Promise<void>;
+  updateDashboardIcon: (id: string, iconName: string) => Promise<void>;
 };
 
 const DashboardsContext = createContext<DashboardsContextType>({
@@ -107,6 +108,7 @@ const DashboardsContext = createContext<DashboardsContextType>({
   createDashboard: async () => null,
   renameDashboard: async () => {},
   deleteDashboard: async () => {},
+  updateDashboardIcon: async () => {},
 });
 
 export function DashboardsProvider({ children }: { children: ReactNode }) {
@@ -150,6 +152,9 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
       title: d.title as string,
       isDefault: d.is_default as boolean,
       sortOrder: d.sort_order as number,
+      iconName: (d.is_default as boolean)
+        ? 'house'
+        : ((d.icon_name as string | null) ?? 'star'),
     }));
 
     // If no dashboards, create the default one
@@ -188,7 +193,7 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
     const supabase = getSupabaseClient();
     const { data } = await supabase
       .from('dashboards')
-      .insert({ user_id: uid, title: 'Principal', is_default: true, sort_order: 0 })
+      .insert({ user_id: uid, title: 'Principal', is_default: true, sort_order: 0, icon_name: 'house' })
       .select()
       .single();
     if (!data) return null;
@@ -205,6 +210,7 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
       title: data.title as string,
       isDefault: data.is_default as boolean,
       sortOrder: data.sort_order as number,
+      iconName: 'house',
     };
   };
 
@@ -261,7 +267,7 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
     const order = dashboards.length;
     const { data } = await supabase
       .from('dashboards')
-      .insert({ user_id: userId, title: title.trim(), is_default: false, sort_order: order })
+      .insert({ user_id: userId, title: title.trim(), is_default: false, sort_order: order, icon_name: 'star' })
       .select()
       .single();
     if (!data) return null;
@@ -270,6 +276,7 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
       title: data.title as string,
       isDefault: data.is_default as boolean,
       sortOrder: data.sort_order as number,
+      iconName: 'star',
     };
     setDashboards((prev) => [...prev, newDash]);
     return newDash;
@@ -291,9 +298,20 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
     setDashboards((prev) => prev.filter((d) => d.id !== id));
   };
 
+  const updateDashboardIcon = async (id: string, iconName: string): Promise<void> => {
+    if (!userId) return;
+    const target = dashboards.find((d) => d.id === id);
+    if (!target || target.isDefault) return;
+    const supabase = getSupabaseClient();
+    await supabase.from('dashboards').update({ icon_name: iconName }).eq('id', id);
+    setDashboards((prev) =>
+      prev.map((d) => (d.id === id ? { ...d, iconName } : d))
+    );
+  };
+
   return (
     <DashboardsContext.Provider
-      value={{ dashboards, isLoading, createDashboard, renameDashboard, deleteDashboard }}
+      value={{ dashboards, isLoading, createDashboard, renameDashboard, deleteDashboard, updateDashboardIcon }}
     >
       {children}
     </DashboardsContext.Provider>
