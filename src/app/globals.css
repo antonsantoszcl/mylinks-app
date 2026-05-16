@@ -53,6 +53,11 @@ body {
   }
 }
 
+/* Desktop default for card body inner */
+.card-body-inner {
+  background: #f3f7fd;
+}
+
 /* ── Mobile-only contrast refinements (< 768px) ─────────────────────────── */
 @media (max-width: 767px) {
   /* Darken page background so cards stand out more */
