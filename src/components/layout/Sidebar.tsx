@@ -321,7 +321,7 @@ function SidebarContent({
               ) : (
                 <button
                   onClick={() => setShowNewDash(true)}
-                  className="flex items-center gap-2 px-2 py-1.5 w-full text-xs text-[#6B7280] hover:text-[#2F5FD0] hover:bg-slate-50 rounded-lg transition-colors"
+                  className="flex items-center gap-2 px-2 py-1.5 w-full text-sm text-[#6B7280] hover:text-[#2F5FD0] hover:bg-slate-50 rounded-lg transition-colors"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   Novo Painel
@@ -371,7 +371,7 @@ function SidebarContent({
                 <p className="text-xs font-semibold text-slate-800 truncate">
                   {profile.displayName || '...'}
                 </p>
-                <p className="text-xs text-slate-400">Ver perfil</p>
+                {/* <p className="text-xs text-slate-400">Ver perfil</p> */}
               </div>
             )}
           </Link>
