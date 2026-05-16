@@ -279,7 +279,7 @@ function DashboardNavItem({
             />
           ) : (
             <span
-              className={`flex-1 text-sm font-medium truncate ${!dashboard.isDefault ? 'cursor-text' : ''}`}
+              className={`flex-1 text-[13px] font-medium truncate ${!dashboard.isDefault ? 'cursor-text' : ''}`}
               onClick={!dashboard.isDefault ? (e) => {
                 e.stopPropagation();
                 setEditing(true);
