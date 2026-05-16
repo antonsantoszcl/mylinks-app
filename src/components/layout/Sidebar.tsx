@@ -74,7 +74,7 @@ function DashboardNavItem({
         className={`flex items-center justify-center py-2 rounded-lg transition-colors w-full ${
           isActive
             ? 'bg-[#EDF1F7] text-slate-700 md:bg-[#f3f7fd] md:text-slate-700'
-            : 'text-[#6B7280] hover:bg-[#EDF1F7] hover:text-slate-700 md:hover:bg-[#f3f7fd] md:hover:text-slate-700'
+            : 'text-slate-700 hover:bg-[#EDF1F7] hover:text-slate-700 md:hover:bg-[#f3f7fd] md:hover:text-slate-700'
         }`}
       >
         <DashIcon className="w-4 h-4 flex-shrink-0" />
@@ -121,7 +121,7 @@ function DashboardNavItem({
         className={`flex-1 flex items-center gap-2.5 px-2 py-2 rounded-lg transition-colors ${
           isActive
             ? 'bg-[#EDF1F7] text-slate-700 md:bg-[#f3f7fd] md:text-slate-700'
-            : 'text-[#6B7280] hover:bg-[#EDF1F7] hover:text-slate-700 md:hover:bg-[#f3f7fd] md:hover:text-slate-700'
+            : 'text-slate-700 hover:bg-[#EDF1F7] hover:text-slate-700 md:hover:bg-[#f3f7fd] md:hover:text-slate-700'
         }`}
       >
         <DashIcon className="w-4 h-4 flex-shrink-0" />
@@ -321,7 +321,7 @@ function SidebarContent({
               ) : (
                 <button
                   onClick={() => setShowNewDash(true)}
-                  className="flex items-center gap-2 px-2 py-1.5 w-full text-sm text-[#6B7280] hover:text-[#2F5FD0] hover:bg-slate-50 rounded-lg transition-colors"
+                  className="flex items-center gap-2 px-2 py-1.5 w-full text-sm text-slate-700 hover:text-[#2F5FD0] hover:bg-slate-50 rounded-lg transition-colors"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   Novo Painel
