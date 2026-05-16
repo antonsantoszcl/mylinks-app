@@ -246,7 +246,7 @@ function DashboardNavItem({
       <div className="group flex items-center rounded-lg transition-colors">
         <button
           onClick={() => onSelect(dashboard.id)}
-          className={`flex-1 flex items-center gap-2.5 px-2 py-2 rounded-lg transition-colors ${
+          className={`flex-1 flex items-center gap-2.5 px-2 py-2 rounded-lg text-left transition-colors ${
             isActive
               ? 'bg-[#EDF1F7] text-slate-700 md:bg-[#f3f7fd] md:text-slate-700'
               : 'text-slate-700 hover:bg-[#EDF1F7] hover:text-slate-700 md:hover:bg-[#f3f7fd] md:hover:text-slate-700'

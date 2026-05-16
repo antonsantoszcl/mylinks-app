@@ -1,0 +1,14 @@
+src/components/dashboard/CategoryCard.tsx(122,25): error TS2802: Type 'string' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+src/context/ActiveDashboardContext.tsx(119,7): error TS2322: Type '{ id: string; title: string; iconName: string; order: number; dashboardId: string | null; }[]' is not assignable to type 'Category[]'.
+  Type '{ id: string; title: string; iconName: string; order: number; dashboardId: string | null; }' is not assignable to type 'Category'.
+    Types of property 'dashboardId' are incompatible.
+      Type 'string | null' is not assignable to type 'string | undefined'.
+        Type 'null' is not assignable to type 'string | undefined'.
+src/context/ActiveDashboardContext.tsx(262,22): error TS2322: Type 'Category | { id: string; title: string; iconName: string; order: number; dashboardId: string | null; }' is not assignable to type 'Category'.
+  Type '{ id: string; title: string; iconName: string; order: number; dashboardId: string | null; }' is not assignable to type 'Category'.
+    Types of property 'dashboardId' are incompatible.
+      Type 'string | null' is not assignable to type 'string | undefined'.
+        Type 'null' is not assignable to type 'string | undefined'.
+src/context/ActiveDashboardContext.tsx(262,114): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/lib/emojiUtils.ts(34,25): error TS2802: Type 'string' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
