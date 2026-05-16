@@ -376,6 +376,7 @@ function SidebarContent({
             )}
           </Link>
 
+          {/* Pro upgrade card — hidden until Phase 2
           {!collapsed && (
             <div className="bg-[#EDF1F7] md:bg-[#f3f7fd] rounded-xl p-2.5 border border-slate-200/50">
               <div className="flex items-center gap-1.5 mb-1">
@@ -388,6 +389,7 @@ function SidebarContent({
               </button>
             </div>
           )}
+          */}
         </div>
       </aside>
 
