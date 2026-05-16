@@ -347,6 +347,7 @@ function SidebarContent({
         </nav>
 
         <div className={`${collapsed ? 'px-1 py-2' : 'px-2 py-2'} border-t border-slate-100/80 space-y-2`}>
+          {/* Profile link — hidden until further notice
           <Link
             href="/dashboard/settings"
             title={collapsed ? profile.displayName : undefined}
@@ -375,6 +376,7 @@ function SidebarContent({
               </div>
             )}
           </Link>
+          */}
 
           {/* Pro upgrade card — hidden until Phase 2
           {!collapsed && (
