@@ -504,7 +504,7 @@ function SidebarContent({
               ) : (
                 <button
                   onClick={() => setShowNewDash(true)}
-                  className="flex items-center gap-2 px-2 py-1.5 w-full text-sm text-slate-700 hover:text-[#2F5FD0] hover:bg-slate-50 rounded-lg transition-colors"
+                  className="flex items-center gap-2 px-2 py-1.5 w-full text-[13px] text-slate-700 hover:text-[#2F5FD0] hover:bg-slate-50 rounded-lg transition-colors"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   Novo Painel
