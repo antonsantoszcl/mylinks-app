@@ -96,7 +96,7 @@ const DEFAULT_CATEGORIES: Array<{
 type DashboardsContextType = {
   dashboards: Dashboard[];
   isLoading: boolean;
-  createDashboard: (title: string) => Promise<Dashboard | null>;
+  createDashboard: (title: string, iconName?: string) => Promise<Dashboard | null>;
   renameDashboard: (id: string, title: string) => Promise<void>;
   deleteDashboard: (id: string) => Promise<void>;
   updateDashboardIcon: (id: string, iconName: string) => Promise<void>;
@@ -261,13 +261,13 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const createDashboard = async (title: string): Promise<Dashboard | null> => {
+  const createDashboard = async (title: string, iconName: string = 'star'): Promise<Dashboard | null> => {
     if (!userId) return null;
     const supabase = getSupabaseClient();
     const order = dashboards.length;
     const { data } = await supabase
       .from('dashboards')
-      .insert({ user_id: userId, title: title.trim(), is_default: false, sort_order: order, icon_name: 'star' })
+      .insert({ user_id: userId, title: title.trim(), is_default: false, sort_order: order, icon_name: iconName })
       .select()
       .single();
     if (!data) return null;
@@ -276,7 +276,7 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
       title: data.title as string,
       isDefault: data.is_default as boolean,
       sortOrder: data.sort_order as number,
-      iconName: 'star',
+      iconName: iconName,
     };
     setDashboards((prev) => [...prev, newDash]);
     return newDash;

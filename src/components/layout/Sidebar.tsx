@@ -392,14 +392,63 @@ function SidebarContent({
   const initials = getInitials(profile.displayName);
   const [showNewDash, setShowNewDash] = useState(false);
   const [newDashName, setNewDashName] = useState('');
+  const [newDashIcon, setNewDashIcon] = useState('star');
   const newDashInputRef = useRef<HTMLInputElement>(null);
+  const [newDashPickerOpen, setNewDashPickerOpen] = useState(false);
+  const newDashIconRef = useRef<HTMLDivElement>(null);
+  const newDashPickerRef = useRef<HTMLDivElement>(null);
+  const [newDashPickerPos, setNewDashPickerPos] = useState<{ top: number; left: number } | null>(null);
+  const [isMobileContent, setIsMobileContent] = useState(getIsMobile);
   const [pendingDeleteDash, setPendingDeleteDash] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handler = () => setIsMobileContent(window.innerWidth < 768);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
 
   useEffect(() => {
     if (showNewDash) {
       setTimeout(() => newDashInputRef.current?.focus(), 0);
+      setNewDashPickerOpen(true);
+    } else {
+      setNewDashPickerOpen(false);
+      setNewDashIcon('star');
     }
   }, [showNewDash]);
+
+  // New dash picker position
+  useEffect(() => {
+    if (!newDashPickerOpen) { setNewDashPickerPos(null); return; }
+    const updatePos = () => {
+      if (newDashIconRef.current) {
+        const rect = newDashIconRef.current.getBoundingClientRect();
+        if (rect.width > 0 || rect.height > 0) {
+          setNewDashPickerPos({ top: rect.bottom + 6, left: rect.left - 4 });
+        }
+      }
+    };
+    let r1: number, r2: number;
+    r1 = requestAnimationFrame(() => { r2 = requestAnimationFrame(updatePos); });
+    window.addEventListener('resize', updatePos);
+    return () => { cancelAnimationFrame(r1); cancelAnimationFrame(r2); window.removeEventListener('resize', updatePos); };
+  }, [newDashPickerOpen]);
+
+  // New dash picker outside-click
+  useEffect(() => {
+    if (!newDashPickerOpen) return;
+    const handler = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as Node;
+      if (!newDashPickerRef.current?.contains(target) && !newDashIconRef.current?.contains(target)) {
+        setNewDashPickerOpen(false);
+      }
+    };
+    const tid = setTimeout(() => {
+      document.addEventListener('mousedown', handler);
+      document.addEventListener('touchstart', handler, { passive: true });
+    }, 0);
+    return () => { clearTimeout(tid); document.removeEventListener('mousedown', handler); document.removeEventListener('touchstart', handler); };
+  }, [newDashPickerOpen]);
 
   const handleSelectDashboard = (id: string) => {
     setActiveDashboard(id);
@@ -409,8 +458,9 @@ function SidebarContent({
   const handleCreateDashboard = async () => {
     const title = newDashName.trim();
     if (!title) return;
-    const created = await createDashboard(title);
+    const created = await createDashboard(title, newDashIcon);
     setNewDashName('');
+    setNewDashIcon('star');
     setShowNewDash(false);
     if (created) {
       setActiveDashboard(created.id);
@@ -514,7 +564,13 @@ function SidebarContent({
               {/* New painel form / button */}
               {showNewDash ? (
                 <div className="flex items-center gap-1 px-2 py-1 mt-0.5">
-                  <span className="text-base leading-none select-none flex-shrink-0">⭐</span>
+                  <div
+                    ref={newDashIconRef}
+                    className="flex-shrink-0 cursor-pointer"
+                    onClick={() => setNewDashPickerOpen(v => !v)}
+                  >
+                    {renderPanelEmoji(newDashIcon, isMobileContent)}
+                  </div>
                   <input
                     ref={newDashInputRef}
                     value={newDashName}
@@ -575,6 +631,41 @@ function SidebarContent({
 
 
       </aside>
+
+      {/* New dashboard icon picker portal */}
+      {newDashPickerOpen && newDashPickerPos && createPortal(
+        <div
+          ref={newDashPickerRef}
+          style={{ position: 'fixed', top: newDashPickerPos.top, left: newDashPickerPos.left, zIndex: 9999 }}
+          className="bg-white rounded-lg border border-slate-200 shadow-lg p-2"
+          onMouseDown={(e) => e.preventDefault()}
+          onTouchStart={(e) => e.stopPropagation()}
+        >
+          <div className="grid grid-cols-6 gap-0.5">
+            {PANEL_ICONS.map(({ name, emoji }) => {
+              const isSelected = name === newDashIcon;
+              return (
+                <button
+                  key={name}
+                  type="button"
+                  title={name}
+                  onClick={() => { setNewDashIcon(name); setNewDashPickerOpen(false); }}
+                  className={`flex items-center justify-center w-9 h-9 rounded transition-colors ${
+                    isSelected ? 'bg-blue-50 ring-2 ring-blue-300 ring-offset-1' : 'hover:bg-gray-100'
+                  }`}
+                >
+                  {isMobileContent ? (
+                    <span className="text-lg select-none">{emoji}</span>
+                  ) : (
+                    <img src={getNotoEmojiUrl(emoji)} alt={name} className="w-5 h-5 select-none" draggable={false} />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>,
+        document.body
+      )}
 
       <ConfirmModal
         open={pendingDeleteDash !== null}
