@@ -377,13 +377,13 @@ function SidebarContent({
           </Link>
 
           {!collapsed && (
-            <div className="bg-slate-50/80 rounded-xl p-2.5 border border-slate-100">
+            <div className="bg-[#EDF1F7] md:bg-[#f3f7fd] rounded-xl p-2.5 border border-slate-200/50">
               <div className="flex items-center gap-1.5 mb-1">
-                <Zap className="w-3.5 h-3.5 text-[#2F5FD0]" />
+                <Zap className="w-3.5 h-3.5 text-slate-500" />
                 <h4 className="text-xs font-semibold text-slate-700">Assine o Pro</h4>
               </div>
               <p className="text-xs text-slate-400 mb-2 font-normal">Desbloqueie recursos avancados.</p>
-              <button className="w-full bg-[#2F5FD0] text-white rounded-lg py-1.5 text-xs font-medium hover:bg-[#2450b8] transition-colors">
+              <button className="w-full bg-white border border-slate-200 text-slate-700 rounded-lg py-1.5 text-xs font-medium hover:bg-slate-50 hover:shadow-sm transition-colors">
                 Fazer upgrade
               </button>
             </div>
