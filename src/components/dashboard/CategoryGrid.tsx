@@ -38,7 +38,8 @@ interface CategoryGridProps {
   onUpdateCategoryIcon: (categoryId: string, iconName: string) => void;
 }
 
-const GAP = 16; // px – matches gap-4 (1rem)
+const GAP_MOBILE = 16; // px – mobile gap
+const GAP_DESKTOP = 20; // px – desktop gap (md:)
 
 function getColumnCount(width: number): number {
   if (width >= 1024) return 4;
@@ -90,6 +91,7 @@ export function CategoryGrid({
     const containerWidth = container.offsetWidth;
     if (containerWidth === 0) return;
 
+    const GAP = containerWidth >= 768 ? GAP_DESKTOP : GAP_MOBILE;
     const numCols = getColumnCount(containerWidth);
     const colWidth = (containerWidth - GAP * (numCols - 1)) / numCols;
     const colHeights = new Array(numCols).fill(0) as number[];
@@ -156,11 +158,11 @@ export function CategoryGrid({
 
   return (
     <section>
-      <div className="flex items-center gap-1.5 mb-5">
+      <div className="flex items-center gap-1.5 mb-5 md:mb-6">
         <div className="bg-primary-100/80 p-1 rounded-md">
           <LayoutGrid className="w-3.5 h-3.5 text-primary-600" />
         </div>
-        <h2 className="text-[15px] md:text-sm font-bold text-slate-700 tracking-tight">Seções</h2>
+        <h2 className="text-[15px] md:text-sm font-bold text-slate-700 tracking-tight md:tracking-wider">Seções</h2>
       </div>
 
       <DndContext

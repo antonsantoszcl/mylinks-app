@@ -426,7 +426,7 @@ export function CategoryCard({
       <article
         className="rounded-xl md:rounded-[10px] flex flex-col group/card category-card hover:-translate-y-0.5"
         style={{
-          border: '1px solid #E5E7EB',
+          border: '1px solid #EDEEF0',
           backgroundColor: '#FFFFFF',
           boxShadow: `inset ${isMobile ? '3px' : '2px'} 0 0 ${isMobile ? 'rgba(148, 163, 184, 0.35)' : 'rgba(148, 163, 184, 0.22)'}, 0 6px 16px rgba(0,0,0,0.05)`,
           transition: 'all 0.2s ease-out',
@@ -496,7 +496,7 @@ export function CategoryCard({
                 />
               ) : (
                 <h3
-                  className="text-sm font-semibold cursor-text truncate text-slate-700 tracking-tight"
+                  className="text-sm font-semibold cursor-text truncate text-slate-600 tracking-wide"
                   onClick={() => setIsEditingTitle(true)}
                 >
                   {category.title}
@@ -506,7 +506,7 @@ export function CategoryCard({
           </div>
           <div className="flex items-center gap-0 md:gap-0.5 flex-shrink-0">
             <button
-              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-400 hover:bg-white/60 rounded transition-colors"
+              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-400 hover:bg-white/60 rounded transition-all md:opacity-60 md:group-hover/card:opacity-100"
               style={{ ['--hover-color' as string]: colors.accentText }}
               aria-label="Add new link to section"
               onClick={() => setShowAddLink(true)}
@@ -515,7 +515,7 @@ export function CategoryCard({
             </button>
             {dragHandleListeners && dragHandleAttributes && (
               <div
-                className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 transition-colors cursor-grab active:cursor-grabbing rounded"
+                className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-300 transition-all cursor-grab active:cursor-grabbing rounded md:opacity-60 md:group-hover/card:opacity-100"
                 aria-label="Drag to reorder section"
                 data-no-dnd="true"
                 style={{ touchAction: 'none' }}
@@ -556,7 +556,7 @@ export function CategoryCard({
               </div>
             )}
             <button
-              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-all md:opacity-60 md:group-hover/card:opacity-100"
               onClick={() => setShowDeleteModal(true)}
               aria-label="Delete section"
             >
@@ -636,7 +636,7 @@ export function CategoryCard({
             className="mx-2 mb-2 mt-1 px-2 py-1.5 rounded-b-xl"
           >
             <button
-              className="text-sm md:text-xs font-medium hover:opacity-75 transition-opacity flex items-center gap-1 min-h-[24px] md:min-h-0 py-0.5 md:py-0"
+              className="text-sm md:text-xs font-medium hover:opacity-100 transition-opacity flex items-center gap-1 min-h-[24px] md:min-h-0 py-0.5 md:py-0 md:opacity-40"
               style={{ color: colors.accentText }}
               onClick={() => setShowAddLink(true)}
             >
