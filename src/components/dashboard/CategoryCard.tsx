@@ -528,7 +528,7 @@ export function CategoryCard({
             {canMoveToPanel && (
               <div className="relative" ref={movePanelMenuRef} data-no-dnd="true">
                 <button
-                  className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-400 hover:text-primary-500 rounded transition-colors opacity-100 md:opacity-0 md:group-hover/card:opacity-100"
+                  className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-400 hover:text-primary-500 rounded transition-colors"
                   aria-label="Mover seção para outro painel"
                   title="Mover para outro painel"
                   data-no-dnd="true"
