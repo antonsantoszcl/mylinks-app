@@ -4,8 +4,6 @@ import {
   Globe,
   ChevronRight,
   ChevronLeft,
-  ChevronUp,
-  ChevronDown,
   Plus,
   Pencil,
   Trash2,
@@ -91,16 +89,13 @@ function DashboardNavItem({
   onDelete,
   onSelect,
   onChangeIcon,
-  onMoveUp,
-  onMoveDown,
-  canMoveUp,
-  canMoveDown,
   isDragging,
   isDragOver,
   onDragStart,
   onDragOver,
   onDragEnd,
   onDrop,
+  onTouchStartHandle,
 }: {
   dashboard: Dashboard;
   isActive: boolean;
@@ -109,16 +104,13 @@ function DashboardNavItem({
   onDelete: (id: string) => void;
   onSelect: (id: string) => void;
   onChangeIcon: (id: string, iconName: string) => void;
-  onMoveUp?: () => void;
-  onMoveDown?: () => void;
-  canMoveUp?: boolean;
-  canMoveDown?: boolean;
   isDragging?: boolean;
   isDragOver?: boolean;
   onDragStart?: (e: React.DragEvent) => void;
   onDragOver?: (e: React.DragEvent) => void;
   onDragEnd?: (e: React.DragEvent) => void;
   onDrop?: (e: React.DragEvent) => void;
+  onTouchStartHandle?: (e: React.TouchEvent) => void;
 }) {
   const [editing, setEditing] = useState(false);
   const [editValue, setEditValue] = useState(dashboard.title);
@@ -305,6 +297,7 @@ function DashboardNavItem({
   return (
     <>
       <div
+        data-dashid={dashboard.id}
         className={`group flex items-center rounded-lg transition-colors ${
           isDragOver ? 'bg-primary-50/50' : ''
         } ${isDragging ? 'opacity-40' : ''}`}
@@ -381,7 +374,7 @@ function DashboardNavItem({
           )}
         </button>
 
-        {/* Actions: pencil/drag/trash + mobile up/down arrows (non-default, not editing) */}
+        {/* Actions: pencil/drag/trash (non-default, not editing) */}
         {!dashboard.isDefault && !editing && (
           <div className="flex items-center gap-0.5 transition-opacity pr-1 opacity-100 md:opacity-0 md:group-hover:opacity-100">
             {/* Pencil — first */}
@@ -393,38 +386,18 @@ function DashboardNavItem({
               <Pencil className="w-3 h-3" />
             </button>
 
-            {/* Middle: GripVertical on desktop, up/down arrows on mobile */}
-            {!isMobile ? (
-              <div
-                className="p-1 cursor-grab active:cursor-grabbing text-slate-300"
-                style={{ touchAction: 'none' }}
-                title="Arrastar"
-              >
-                <GripVertical className="w-3 h-3" />
-              </div>
-            ) : (
-              <>
-                <button
-                  onClick={(e) => { e.stopPropagation(); onMoveUp?.(); }}
-                  disabled={!canMoveUp}
-                  className="p-1 rounded text-slate-400 hover:text-slate-600 disabled:opacity-30 disabled:pointer-events-none transition-colors"
-                  title="Mover para cima"
-                >
-                  <ChevronUp className="w-3 h-3" />
-                </button>
-                <button
-                  onClick={(e) => { e.stopPropagation(); onMoveDown?.(); }}
-                  disabled={!canMoveDown}
-                  className="p-1 rounded text-slate-400 hover:text-slate-600 disabled:opacity-30 disabled:pointer-events-none transition-colors"
-                  title="Mover para baixo"
-                >
-                  <ChevronDown className="w-3 h-3" />
-                </button>
-              </>
-            )}
+            {/* GripVertical — drag handle on both desktop and mobile */}
+            <div
+              className="p-1 cursor-grab active:cursor-grabbing text-slate-300"
+              style={{ touchAction: 'none' }}
+              title="Arrastar"
+              onTouchStart={onTouchStartHandle}
+            >
+              <GripVertical className="w-3 h-3" />
+            </div>
 
-            {/* Trash — last (contacts panel has no trash) */}
-            {!dashboard.isContacts && (
+            {/* Trash — last (contacts panel: invisible placeholder for alignment) */}
+            {!dashboard.isContacts ? (
               <button
                 onClick={(e) => { e.stopPropagation(); onDelete(dashboard.id); }}
                 className="p-1 rounded text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
@@ -432,6 +405,8 @@ function DashboardNavItem({
               >
                 <Trash2 className="w-3 h-3" />
               </button>
+            ) : (
+              <div className="w-[20px] h-[20px] p-1 flex-shrink-0" aria-hidden="true" />
             )}
           </div>
         )}
@@ -573,33 +548,71 @@ function SidebarContent({
     reorderDashboards(orderedIds);
   };
 
-  // Mobile: move up/down
-  const handleMoveUp = (id: string) => () => {
-    const nonDefaults = dashboards.filter((d) => !d.isDefault);
-    const defaultPanel = dashboards.find((d) => d.isDefault);
-    const idx = nonDefaults.findIndex((d) => d.id === id);
-    if (idx <= 0) return;
-    const reordered = [...nonDefaults];
-    [reordered[idx - 1], reordered[idx]] = [reordered[idx], reordered[idx - 1]];
-    const orderedIds = [
-      ...(defaultPanel ? [defaultPanel.id] : []),
-      ...reordered.map((d) => d.id),
-    ];
-    reorderDashboards(orderedIds);
-  };
+  // Touch drag reorder (mobile)
+  const touchDragIdRef = useRef<string | null>(null);
+  const touchStartYRef = useRef<number>(0);
+  const itemHeightRef = useRef<number>(36);
 
-  const handleMoveDown = (id: string) => () => {
-    const nonDefaults = dashboards.filter((d) => !d.isDefault);
-    const defaultPanel = dashboards.find((d) => d.isDefault);
-    const idx = nonDefaults.findIndex((d) => d.id === id);
-    if (idx === -1 || idx >= nonDefaults.length - 1) return;
-    const reordered = [...nonDefaults];
-    [reordered[idx], reordered[idx + 1]] = [reordered[idx + 1], reordered[idx]];
-    const orderedIds = [
-      ...(defaultPanel ? [defaultPanel.id] : []),
-      ...reordered.map((d) => d.id),
-    ];
-    reorderDashboards(orderedIds);
+  const handleTouchStartHandle = (id: string) => (e: React.TouchEvent) => {
+    touchDragIdRef.current = id;
+    touchStartYRef.current = e.touches[0].clientY;
+    setDraggingId(id);
+    // measure item height from DOM if possible
+    const el = (e.currentTarget as HTMLElement).closest('[data-dashid]') as HTMLElement | null;
+    if (el) itemHeightRef.current = el.getBoundingClientRect().height || 36;
+
+    const onTouchMove = (ev: TouchEvent) => {
+      ev.preventDefault();
+      const dy = ev.touches[0].clientY - touchStartYRef.current;
+      const steps = Math.round(dy / itemHeightRef.current);
+      if (steps === 0) return;
+
+      const srcId = touchDragIdRef.current;
+      if (!srcId) return;
+      const nonDefaults = dashboards.filter((d) => !d.isDefault);
+      const srcIdx = nonDefaults.findIndex((d) => d.id === srcId);
+      const tgtIdx = Math.max(0, Math.min(nonDefaults.length - 1, srcIdx + steps));
+      if (tgtIdx !== srcIdx) {
+        setDragOverId(nonDefaults[tgtIdx]?.id ?? null);
+      }
+    };
+
+    const onTouchEnd = (ev: TouchEvent) => {
+      document.removeEventListener('touchmove', onTouchMove);
+      document.removeEventListener('touchend', onTouchEnd);
+
+      const srcId = touchDragIdRef.current;
+      touchDragIdRef.current = null;
+      setDraggingId(null);
+
+      if (!srcId) { setDragOverId(null); return; }
+
+      const dy = ev.changedTouches[0].clientY - touchStartYRef.current;
+      const steps = Math.round(dy / itemHeightRef.current);
+      setDragOverId(null);
+
+      if (steps === 0) return;
+
+      const nonDefaults = dashboards.filter((d) => !d.isDefault);
+      const defaultPanel = dashboards.find((d) => d.isDefault);
+      const srcIdx = nonDefaults.findIndex((d) => d.id === srcId);
+      if (srcIdx === -1) return;
+      const tgtIdx = Math.max(0, Math.min(nonDefaults.length - 1, srcIdx + steps));
+      if (tgtIdx === srcIdx) return;
+
+      const reordered = [...nonDefaults];
+      const [moved] = reordered.splice(srcIdx, 1);
+      reordered.splice(tgtIdx, 0, moved);
+
+      const orderedIds = [
+        ...(defaultPanel ? [defaultPanel.id] : []),
+        ...reordered.map((d) => d.id),
+      ];
+      reorderDashboards(orderedIds);
+    };
+
+    document.addEventListener('touchmove', onTouchMove, { passive: false });
+    document.addEventListener('touchend', onTouchEnd, { once: true });
   };
 
   const handleCreateDashboard = async () => {
@@ -696,8 +709,6 @@ function SidebarContent({
                 Paineis
               </p>
               {dashboards.map((d) => {
-                const nonDefaults = dashboards.filter((x) => !x.isDefault);
-                const nonDefaultIdx = nonDefaults.findIndex((x) => x.id === d.id);
                 return (
                   <DashboardNavItem
                     key={d.id}
@@ -708,16 +719,13 @@ function SidebarContent({
                     onDelete={handleDeleteDashboard}
                     onSelect={handleSelectDashboard}
                     onChangeIcon={updateDashboardIcon}
-                    onMoveUp={!d.isDefault ? handleMoveUp(d.id) : undefined}
-                    onMoveDown={!d.isDefault ? handleMoveDown(d.id) : undefined}
-                    canMoveUp={!d.isDefault && nonDefaultIdx > 0}
-                    canMoveDown={!d.isDefault && nonDefaultIdx < nonDefaults.length - 1}
                     isDragging={draggingId === d.id}
                     isDragOver={dragOverId === d.id}
                     onDragStart={!d.isDefault ? handleDragStart(d.id) : undefined}
                     onDragOver={!d.isDefault ? handleDragOver(d.id) : undefined}
                     onDragEnd={!d.isDefault ? handleDragEnd() : undefined}
                     onDrop={!d.isDefault ? handleDrop(d.id) : undefined}
+                    onTouchStartHandle={!d.isDefault ? handleTouchStartHandle(d.id) : undefined}
                   />
                 );
               })}
