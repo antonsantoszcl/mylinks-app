@@ -73,6 +73,7 @@ export type ContactSectionRow = {
   user_id: string;
   title: string;
   sort_order: number;
+  icon_name: string | null;
   created_at: string;
 };
 export type ContactRow = {

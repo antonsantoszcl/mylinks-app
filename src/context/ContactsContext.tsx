@@ -18,8 +18,9 @@ type ContactsContextType = {
   sections: ContactSection[];
   contacts: Contact[];
   isLoading: boolean;
-  createSection: (title: string) => Promise<ContactSection | null>;
+  createSection: (title: string, iconName?: string) => Promise<ContactSection | null>;
   renameSection: (id: string, title: string) => Promise<void>;
+  updateSectionIcon: (id: string, iconName: string) => Promise<void>;
   deleteSection: (id: string) => Promise<void>;
   reorderSections: (orderedIds: string[]) => Promise<void>;
   createContact: (data: CreateContactData) => Promise<Contact | null>;
@@ -34,6 +35,7 @@ const ContactsContext = createContext<ContactsContextType>({
   isLoading: true,
   createSection: async () => null,
   renameSection: async () => {},
+  updateSectionIcon: async () => {},
   deleteSection: async () => {},
   reorderSections: async () => {},
   createContact: async () => null,
@@ -84,6 +86,7 @@ export function ContactsProvider({ children }: { children: ReactNode }) {
       id: s.id as string,
       title: s.title as string,
       sortOrder: s.sort_order as number,
+      iconName: (s.icon_name as string | null) ?? 'star',
     }));
 
     const mappedContacts: Contact[] = (contactsData ?? [])
@@ -107,13 +110,13 @@ export function ContactsProvider({ children }: { children: ReactNode }) {
 
   // ── Sections ──────────────────────────────────────────────────────────────
 
-  const createSection = async (title: string): Promise<ContactSection | null> => {
+  const createSection = async (title: string, iconName = 'star'): Promise<ContactSection | null> => {
     if (!userId) return null;
     const supabase = getSupabaseClient();
     const order = sections.length;
     const { data } = await supabase
       .from('contact_sections')
-      .insert({ user_id: userId, title: title.trim(), sort_order: order })
+      .insert({ user_id: userId, title: title.trim(), sort_order: order, icon_name: iconName })
       .select()
       .single();
     if (!data) return null;
@@ -121,6 +124,7 @@ export function ContactsProvider({ children }: { children: ReactNode }) {
       id: data.id as string,
       title: data.title as string,
       sortOrder: data.sort_order as number,
+      iconName: (data.icon_name as string | null) ?? 'star',
     };
     setSections((prev) => [...prev, newSection]);
     return newSection;
@@ -131,6 +135,13 @@ export function ContactsProvider({ children }: { children: ReactNode }) {
     const supabase = getSupabaseClient();
     setSections((prev) => prev.map((s) => (s.id === id ? { ...s, title: title.trim() } : s)));
     await supabase.from('contact_sections').update({ title: title.trim() }).eq('id', id);
+  };
+
+  const updateSectionIcon = async (id: string, iconName: string): Promise<void> => {
+    if (!userId) return;
+    setSections((prev) => prev.map((s) => (s.id === id ? { ...s, iconName } : s)));
+    const supabase = getSupabaseClient();
+    await supabase.from('contact_sections').update({ icon_name: iconName }).eq('id', id);
   };
 
   const deleteSection = async (id: string): Promise<void> => {
@@ -241,6 +252,7 @@ export function ContactsProvider({ children }: { children: ReactNode }) {
         isLoading,
         createSection,
         renameSection,
+        updateSectionIcon,
         deleteSection,
         reorderSections,
         createContact,

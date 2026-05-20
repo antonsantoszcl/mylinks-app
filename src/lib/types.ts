@@ -53,6 +53,7 @@ export interface ContactSection {
   id: string;
   title: string;
   sortOrder: number;
+  iconName: string;
 }
 
 export interface Contact {
