@@ -117,29 +117,29 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
           {/* Column 1: intro text */}
           <div className="space-y-2">
             <p className="text-sm text-slate-600 leading-relaxed">
-              Essa página destina-se a facilitar sua navegação reunindo todos os links que você utiliza no seu dia a dia.
+              Essa página destina-se a facilitar sua navegação reunindo num ambiente organizado e funcional todos os links e contatos importantes no seu dia a dia.
             </p>
             <p className="text-sm text-slate-600 leading-relaxed">
-              É constituída de Seções contendo links.
+              Painéis contêm seções. E seções contêm links.
             </p>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Todos os elementos são removíveis e/ou personalizáveis.
+              Dito isso, você pode incluir, excluir, alterar, mover ou deletar qualquer link, seção ou painel de maneira a transformar esse aplicativo na página de navegação que você sempre imaginou.
             </p>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Ou seja, você organiza seções e links com o objetivo de acessá-los com facilidade.
+              O Painel Contatos oferece comunicação instantânea com todas as pessoas próximas através de vários meios.
             </p>
             <p className="text-sm text-slate-600 leading-relaxed">
               O Painel Principal inicialmente apresentado como exemplo é uma compilação dos sites mais populares do Brasil.
             </p>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Pode ser mantido, alterado ou excluído conforme sua preferência.
+              Pode ser mantido, ou alterado do jeito que você bem entender.
             </p>
           </div>
 
           {/* Column 2: icons legend */}
           <div className="space-y-2">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-              Ícones — Links &amp; Seções
+              Painéis, Seções e Links — Ícones
             </p>
             <div className="space-y-1.5">
               {ICONS_LEGEND.map(({ icon: Icon, label }) => (
