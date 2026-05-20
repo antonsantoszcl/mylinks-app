@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react';
 import { Contact } from '@/lib/types';
 import { MiniCard, buildChannels } from './MiniCard';
+import { ContactForm } from './ContactForm';
 import { MessageCircle } from 'lucide-react';
 
 interface ContactCardProps {
@@ -11,6 +12,7 @@ interface ContactCardProps {
 
 export function ContactCard({ contact }: ContactCardProps) {
   const [showMini, setShowMini] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
   const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
   const cardRef = useRef<HTMLButtonElement>(null);
 
@@ -79,6 +81,15 @@ export function ContactCard({ contact }: ContactCardProps) {
           contact={contact}
           anchorRect={anchorRect}
           onClose={() => setShowMini(false)}
+          onEdit={() => setShowEdit(true)}
+        />
+      )}
+
+      {showEdit && (
+        <ContactForm
+          sectionId={contact.sectionId}
+          contact={contact}
+          onClose={() => setShowEdit(false)}
         />
       )}
     </>

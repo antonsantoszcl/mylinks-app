@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { useContacts } from '@/context/ContactsContext';
 import { ContactCard } from './ContactCard';
+import { ContactForm } from './ContactForm';
 import { ContactSection } from '@/lib/types';
 import { Plus, Star } from 'lucide-react';
 
@@ -153,9 +154,14 @@ function SectionCard({ title, children, isFrequents }: SectionCardProps) {
 
 // ── Main panel ─────────────────────────────────────────────────────────────────
 
+interface AddContactFormState {
+  sectionId: string;
+}
+
 export function ContactsPanel() {
   const { sections, contacts, isLoading, createSection, renameSection, deleteSection } = useContacts();
   const [showNewSection, setShowNewSection] = useState(false);
+  const [addContactFor, setAddContactFor] = useState<AddContactFormState | null>(null);
 
   const frequentContacts = contacts.filter((c) => c.isFrequent).sort((a, b) => a.name.localeCompare(b.name));
 
@@ -230,6 +236,19 @@ export function ContactsPanel() {
                 Nenhum contato nesta seção
               </p>
             )}
+            {/* ── Add contact button ── */}
+            <button
+              type="button"
+              onClick={() => setAddContactFor({ sectionId: section.id })}
+              className="
+                mt-1.5 flex items-center gap-1
+                text-xs text-slate-400 hover:text-primary-500
+                transition-colors py-0.5 px-1
+              "
+            >
+              <Plus className="w-3 h-3" />
+              Contato
+            </button>
           </SectionCard>
         );
       })}
@@ -257,6 +276,14 @@ export function ContactsPanel() {
           <Plus className="w-3.5 h-3.5" />
           Nova Seção
         </button>
+      )}
+
+      {/* ── ContactForm modal ── */}
+      {addContactFor && (
+        <ContactForm
+          sectionId={addContactFor.sectionId}
+          onClose={() => setAddContactFor(null)}
+        />
       )}
     </div>
   );

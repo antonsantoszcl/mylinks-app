@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { Pencil } from 'lucide-react';
 import { Contact } from '@/lib/types';
 
 // ── Channel icons (inline SVGs for precision) ─────────────────────────────────
@@ -102,9 +103,11 @@ interface MiniCardProps {
   /** Position of the anchor element (getBoundingClientRect) — desktop only */
   anchorRect: DOMRect | null;
   onClose: () => void;
+  /** Optional: open the edit form for this contact */
+  onEdit?: () => void;
 }
 
-export function MiniCard({ contact, anchorRect, onClose }: MiniCardProps) {
+export function MiniCard({ contact, anchorRect, onClose, onEdit }: MiniCardProps) {
   const channels = buildChannels(contact);
   const popupRef = useRef<HTMLDivElement>(null);
 
@@ -172,9 +175,20 @@ export function MiniCard({ contact, anchorRect, onClose }: MiniCardProps) {
         style={popupStyle}
         className="bg-white rounded-lg shadow-lg border border-slate-200 min-w-[180px] py-2 overflow-hidden"
       >
-        {/* Contact name */}
-        <div className="px-3 pb-1.5 border-b border-slate-100 mb-1">
+        {/* Contact name + edit button */}
+        <div className="px-3 pb-1.5 border-b border-slate-100 mb-1 flex items-center justify-between gap-2">
           <p className="font-semibold text-sm text-slate-800 truncate">{contact.name}</p>
+          {onEdit && (
+            <button
+              type="button"
+              onClick={() => { onEdit(); onClose(); }}
+              className="flex-shrink-0 p-1 rounded-md text-slate-400 hover:text-primary-500 hover:bg-slate-100 transition-colors"
+              title="Editar contato"
+              aria-label="Editar contato"
+            >
+              <Pencil className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
         {/* Channels */}
         {channels.map((ch) => (
