@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import { Contact } from '@/lib/types';
 import { MiniCard, buildChannels } from './MiniCard';
 import { ContactForm } from './ContactForm';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, Pencil } from 'lucide-react';
 
 interface ContactCardProps {
   contact: Contact;
@@ -20,7 +20,16 @@ export function ContactCard({ contact }: ContactCardProps) {
 
   const handleClick = () => {
     if (channels.length === 0) return;
-    // Always open MiniCard (even with 1 channel), so the user can also edit
+    if (channels.length === 1) {
+      const url = channels[0].url;
+      if (channels[0].key === 'email') {
+        window.location.href = url;
+      } else {
+        window.open(url, '_blank', 'noopener,noreferrer');
+      }
+      return;
+    }
+    // 2+ channels → show MiniCard
     const rect = cardRef.current?.getBoundingClientRect() ?? null;
     setAnchorRect(rect);
     setShowMini(true);
@@ -59,9 +68,21 @@ export function ContactCard({ contact }: ContactCardProps) {
         </span>
 
         {/* Contact name */}
-        <span className="text-sm md:text-xs font-medium text-slate-700 md:text-slate-600 truncate leading-tight">
+        <span className="text-sm md:text-xs font-medium text-slate-700 md:text-slate-600 truncate leading-tight flex-1">
           {contact.name}
         </span>
+
+        {/* Pencil edit button — only for single-channel contacts (multi-channel uses MiniCard's pencil) */}
+        {channels.length === 1 && (
+          <span
+            role="button"
+            aria-label="Editar contato"
+            onClick={(e) => { e.stopPropagation(); setShowEdit(true); }}
+            className="flex-shrink-0 p-0.5 rounded text-slate-400 hover:text-primary-500 hover:bg-primary-50 transition-colors opacity-0 group-hover/contact:opacity-100"
+          >
+            <Pencil className="w-3 h-3" />
+          </span>
+        )}
       </button>
 
       {showMini && (
