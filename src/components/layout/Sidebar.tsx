@@ -406,7 +406,7 @@ function DashboardNavItem({
                 <Trash2 className="w-3 h-3" />
               </button>
             ) : (
-              <div className="w-[20px] h-[20px] p-1 flex-shrink-0" aria-hidden="true" />
+              <div className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
             )}
           </div>
         )}
