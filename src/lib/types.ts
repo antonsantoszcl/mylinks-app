@@ -48,3 +48,21 @@ export interface RecentAccess {
   iconUrl: string;
   accessedAtLabel: string;
 }
+
+export interface ContactSection {
+  id: string;
+  title: string;
+  sortOrder: number;
+}
+
+export interface Contact {
+  id: string;
+  sectionId: string;
+  name: string;
+  whatsapp: string | null;
+  instagram: string | null;
+  email: string | null;
+  linkedin: string | null;
+  isFrequent: boolean;
+  sortOrder: number;
+}

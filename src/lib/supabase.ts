@@ -68,6 +68,26 @@ type SocialLinkRow = {
   sort_order: number;
   created_at: string;
 };
+export type ContactSectionRow = {
+  id: string;
+  user_id: string;
+  title: string;
+  sort_order: number;
+  created_at: string;
+};
+export type ContactRow = {
+  id: string;
+  user_id: string;
+  section_id: string;
+  name: string;
+  whatsapp: string | null;
+  instagram: string | null;
+  email: string | null;
+  linkedin: string | null;
+  is_frequent: boolean;
+  sort_order: number;
+  created_at: string;
+};
 
 // GenericTable requires Relationships: []
 type TableDef<Row extends Record<string, unknown>, Insert = Partial<Row>, Update = Partial<Row>> = {
@@ -87,6 +107,8 @@ export type Database = {
       quick_access: TableDef<QuickAccessRow>;
       public_links: TableDef<PublicLinkRow>;
       social_links: TableDef<SocialLinkRow>;
+      contact_sections: TableDef<ContactSectionRow>;
+      contacts: TableDef<ContactRow>;
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
