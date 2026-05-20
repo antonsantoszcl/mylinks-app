@@ -7,6 +7,7 @@ import { useActiveDashboard } from '@/context/ActiveDashboardContext';
 import { QuickAccessRow } from '@/components/dashboard/QuickAccessRow';
 import { CategoryGrid } from '@/components/dashboard/CategoryGrid';
 import { RecentAccessRow } from '@/components/dashboard/RecentAccessRow';
+import { ContactsPanel } from '@/components/contacts/ContactsPanel';
 import { Hand } from 'lucide-react';
 import { TopNavControls } from '@/components/layout/TopNav';
 import { RecentAccess } from '@/lib/types';
@@ -122,7 +123,9 @@ export function ActiveDashboardView() {
   // recentAccess is not yet persisted — kept as empty local state
   const [recentAccess] = useState<RecentAccess[]>([]);
 
-  const dashboardTitle = dashboards.find((d) => d.id === activeDashboardId)?.title ?? '';
+  const activeDashboard = dashboards.find((d) => d.id === activeDashboardId);
+  const dashboardTitle = activeDashboard?.title ?? '';
+  const isContacts = activeDashboard?.isContacts ?? false;
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite';
@@ -134,8 +137,9 @@ export function ActiveDashboardView() {
 
   if (isLoading || !data) return <Spinner />;
 
-  return (
-    <div className="max-w-full space-y-6 pb-8">
+  // ── Header (shared between links and contacts views) ──────────────────────
+  const headerBlock = (
+    <>
       {/* ── MOBILE: greeting row ── */}
       <header className="flex items-center gap-2 pt-4 md:hidden">
         <Hand className="w-4 h-4 text-primary-500" />
@@ -179,6 +183,23 @@ export function ActiveDashboardView() {
           <TopNavControls />
         </div>
       </header>
+    </>
+  );
+
+  // ── Contacts view ──────────────────────────────────────────────────────────
+  if (isContacts) {
+    return (
+      <div className="max-w-full space-y-6 pb-8">
+        {headerBlock}
+        <ContactsPanel />
+      </div>
+    );
+  }
+
+  // ── Links view (default) ───────────────────────────────────────────────────
+  return (
+    <div className="max-w-full space-y-6 pb-8">
+      {headerBlock}
 
       <QuickAccessRow
         links={data.quickAccess}
