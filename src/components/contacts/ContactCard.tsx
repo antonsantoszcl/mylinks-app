@@ -53,7 +53,7 @@ export function ContactCard({ contact }: ContactCardProps) {
         disabled={channels.length === 0}
         className="
           flex items-center gap-2 w-full
-          px-3 py-2 md:px-2 md:py-1.5
+          pl-3 pr-0 py-2 md:px-2 md:py-1.5
           rounded-lg
           text-left
           transition-colors duration-100
@@ -82,7 +82,7 @@ export function ContactCard({ contact }: ContactCardProps) {
         </span>
 
         {/* Action icons — aligned with section header icons */}
-        <span className="flex items-center gap-0 flex-shrink-0">
+        <span className="flex items-center gap-0 flex-shrink-0 md:mr-0">
           {/* Pencil edit button */}
           <span
             role="button"
