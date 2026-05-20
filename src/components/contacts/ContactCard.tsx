@@ -53,7 +53,7 @@ export function ContactCard({ contact }: ContactCardProps) {
         disabled={channels.length === 0}
         className="
           flex items-center gap-2 w-full
-          px-2.5 py-2 md:px-2 md:py-1.5
+          px-3 py-2 md:px-2 md:py-1.5
           rounded-lg
           text-left
           transition-colors duration-100
@@ -81,24 +81,27 @@ export function ContactCard({ contact }: ContactCardProps) {
           {contact.name}
         </span>
 
-        {/* Pencil edit button */}
-        <span
-          role="button"
-          aria-label="Editar contato"
-          onClick={(e) => { e.stopPropagation(); setShowEdit(true); }}
-          className="flex-shrink-0 flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-0.5 rounded text-slate-400/75 hover:text-primary-500 hover:bg-primary-50 transition-colors md:text-slate-400 md:opacity-0 md:group-hover/contact:opacity-100"
-        >
-          <Pencil className="w-4 h-4 md:w-3 md:h-3" />
-        </span>
+        {/* Action icons — aligned with section header icons */}
+        <span className="flex items-center gap-0 flex-shrink-0">
+          {/* Pencil edit button */}
+          <span
+            role="button"
+            aria-label="Editar contato"
+            onClick={(e) => { e.stopPropagation(); setShowEdit(true); }}
+            className="flex-shrink-0 flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-0.5 rounded text-slate-400/75 hover:text-primary-500 hover:bg-primary-50 transition-colors md:text-slate-400 md:opacity-0 md:group-hover/contact:opacity-100"
+          >
+            <Pencil className="w-4 h-4 md:w-3 md:h-3" />
+          </span>
 
-        {/* Trash delete button */}
-        <span
-          role="button"
-          aria-label="Excluir contato"
-          onClick={handleDelete}
-          className="flex-shrink-0 flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-0.5 rounded text-slate-400/75 hover:text-red-500 hover:bg-red-50 transition-colors md:text-slate-400 md:opacity-0 md:group-hover/contact:opacity-100"
-        >
-          <Trash2 className="w-4 h-4 md:w-3 md:h-3" />
+          {/* Trash delete button */}
+          <span
+            role="button"
+            aria-label="Excluir contato"
+            onClick={handleDelete}
+            className="flex-shrink-0 flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-0.5 rounded text-slate-400/75 hover:text-red-500 hover:bg-red-50 transition-colors md:text-slate-400 md:opacity-0 md:group-hover/contact:opacity-100"
+          >
+            <Trash2 className="w-4 h-4 md:w-3 md:h-3" />
+          </span>
         </span>
       </button>
 
