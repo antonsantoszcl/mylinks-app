@@ -260,10 +260,6 @@ function ContactSectionCard({
 
   const inset = isMobile ? color.insetColorMobile : color.insetColor;
 
-  const ringStyle: React.CSSProperties = isDragOver
-    ? { outline: '2px solid #7CB3F4', outlineOffset: '1px' }
-    : {};
-
   return (
     <article
       draggable={draggable && !isFrequents}
@@ -278,11 +274,10 @@ function ContactSectionCard({
       className="rounded-xl md:rounded-[10px] flex flex-col group category-card hover:-translate-y-0.5"
       style={{
         border: '1px solid #E5E7EB',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: isDragOver ? 'rgba(235, 242, 255, 0.6)' : '#FFFFFF',
         boxShadow: `inset ${isMobile ? '3px' : '2px'} 0 0 ${isMobile ? 'rgba(148, 163, 184, 0.35)' : 'rgba(148, 163, 184, 0.22)'}, 0 6px 16px rgba(0,0,0,0.05)`,
         transition: 'all 0.2s ease-out',
         opacity: isDragging ? 0.5 : 1,
-        ...ringStyle,
       }}
       onMouseEnter={(e) => {
         if (isDragging || isDragOver) return;

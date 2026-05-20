@@ -306,7 +306,7 @@ function DashboardNavItem({
     <>
       <div
         className={`group flex items-center rounded-lg transition-colors ${
-          isDragOver ? 'ring-2 ring-primary-300 ring-inset bg-primary-50/40' : ''
+          isDragOver ? 'bg-primary-50/50' : ''
         } ${isDragging ? 'opacity-40' : ''}`}
         draggable={!dashboard.isDefault}
         onDragStart={!dashboard.isDefault ? onDragStart : undefined}
