@@ -15,8 +15,6 @@ import { ContactForm } from './ContactForm';
 import { Contact } from '@/lib/types';
 import { QuickAccessRow } from '@/components/dashboard/QuickAccessRow';
 import {
-  ChevronDown,
-  ChevronUp,
   GripVertical,
   Inbox,
   LayoutGrid,
@@ -52,41 +50,25 @@ interface SectionCardHeaderProps {
   onRename?: (newTitle: string) => void;
   onDelete?: () => void;
   onAddContact?: () => void;
-  // drag handle (desktop)
+  // drag handle
   onDragHandleMouseDown?: (e: React.MouseEvent) => void;
-  // mobile reorder
-  onMoveUp?: () => void;
-  onMoveDown?: () => void;
-  canMoveUp?: boolean;
-  canMoveDown?: boolean;
 }
 
 function SectionCardHeader({
   title,
   isFrequents,
-  accentText,
+  accentText: _accentText,
   onRename,
   onDelete,
   onAddContact,
   onDragHandleMouseDown,
-  onMoveUp,
-  onMoveDown,
-  canMoveUp,
-  canMoveDown,
 }: SectionCardHeaderProps) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [isMobile, setIsMobile] = useState(getIsMobile);
 
   useEffect(() => { setDraft(title); }, [title]);
   useEffect(() => { if (editing) inputRef.current?.focus(); }, [editing]);
-
-  useEffect(() => {
-    const handler = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', handler);
-    return () => window.removeEventListener('resize', handler);
-  }, []);
 
   const save = () => {
     const clean = draft.trim();
@@ -141,7 +123,19 @@ function SectionCardHeader({
           </button>
         )}
 
-        {/* Pencil — desktop: hover only; mobile: always visible */}
+        {/* GripVertical — always visible on mobile, hover only on desktop */}
+        {!isFrequents && onDragHandleMouseDown && (
+          <div
+            className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-300 transition-colors cursor-grab active:cursor-grabbing rounded opacity-100 md:opacity-0 md:group-hover:opacity-100"
+            aria-label="Arrastar seção"
+            style={{ touchAction: 'none' }}
+            onMouseDown={onDragHandleMouseDown}
+          >
+            <GripVertical className="w-5 h-5 md:w-3.5 md:h-3.5" />
+          </div>
+        )}
+
+        {/* Pencil — always visible on mobile, hover only on desktop */}
         {onRename && !editing && (
           <button
             className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:text-primary-500 hover:bg-primary-50 rounded transition-colors opacity-100 md:opacity-0 md:group-hover:opacity-100"
@@ -152,40 +146,7 @@ function SectionCardHeader({
           </button>
         )}
 
-        {/* GripVertical — desktop only, hover only */}
-        {!isFrequents && onDragHandleMouseDown && !isMobile && (
-          <button
-            className="hidden md:flex items-center justify-center md:p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded transition-colors cursor-grab active:cursor-grabbing md:opacity-0 md:group-hover:opacity-100"
-            aria-label="Arrastar seção"
-            onMouseDown={onDragHandleMouseDown}
-          >
-            <GripVertical className="w-3 h-3" />
-          </button>
-        )}
-
-        {/* ChevronUp / ChevronDown — mobile only */}
-        {!isFrequents && isMobile && onMoveUp && (
-          <button
-            className="flex md:hidden items-center justify-center min-w-[28px] min-h-[28px] text-slate-400 hover:text-primary-500 hover:bg-primary-50 rounded transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-            onClick={onMoveUp}
-            disabled={!canMoveUp}
-            aria-label="Mover seção para cima"
-          >
-            <ChevronUp className="w-4 h-4" />
-          </button>
-        )}
-        {!isFrequents && isMobile && onMoveDown && (
-          <button
-            className="flex md:hidden items-center justify-center min-w-[28px] min-h-[28px] text-slate-400 hover:text-primary-500 hover:bg-primary-50 rounded transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-            onClick={onMoveDown}
-            disabled={!canMoveDown}
-            aria-label="Mover seção para baixo"
-          >
-            <ChevronDown className="w-4 h-4" />
-          </button>
-        )}
-
-        {/* Trash — desktop: hover only; mobile: always visible */}
+        {/* Trash — always visible on mobile, hover only on desktop */}
         {onDelete && (
           <button
             className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors opacity-100 md:opacity-0 md:group-hover:opacity-100"
@@ -219,11 +180,6 @@ interface ContactSectionCardProps {
   onDragLeave?: (e: DragEvent<HTMLElement>) => void;
   onDrop?: (e: DragEvent<HTMLElement>) => void;
   draggable?: boolean;
-  // mobile reorder
-  onMoveUp?: () => void;
-  onMoveDown?: () => void;
-  canMoveUp?: boolean;
-  canMoveDown?: boolean;
 }
 
 function ContactSectionCard({
@@ -242,10 +198,6 @@ function ContactSectionCard({
   onDragLeave,
   onDrop,
   draggable,
-  onMoveUp,
-  onMoveDown,
-  canMoveUp,
-  canMoveDown,
 }: ContactSectionCardProps) {
   const [isMobile, setIsMobile] = useState(getIsMobile);
   const color = isFrequents ? FREQUENT_COLOR : SECTION_COLORS[colorIndex % SECTION_COLORS.length];
@@ -297,11 +249,7 @@ function ContactSectionCard({
         onRename={onRename}
         onDelete={onDelete}
         onAddContact={onAddContact}
-        onDragHandleMouseDown={draggable && !isFrequents ? (e) => { dragFromHandle.current = true; } : undefined}
-        onMoveUp={onMoveUp}
-        onMoveDown={onMoveDown}
-        canMoveUp={canMoveUp}
-        canMoveDown={canMoveDown}
+        onDragHandleMouseDown={draggable && !isFrequents ? (_e) => { dragFromHandle.current = true; } : undefined}
       />
 
       {/* Body */}
@@ -596,22 +544,7 @@ export function ContactsPanel() {
     reorderSections(reordered);
   }, [sortedSections, reorderSections]);
 
-  // ── Mobile move handlers ────────────────────────────────────────────────────
-  const handleMoveUp = useCallback((index: number) => () => {
-    if (index <= 0) return;
-    const ids = sortedSections.map((s) => s.id);
-    const reordered = [...ids];
-    [reordered[index - 1], reordered[index]] = [reordered[index], reordered[index - 1]];
-    reorderSections(reordered);
-  }, [sortedSections, reorderSections]);
-
-  const handleMoveDown = useCallback((index: number) => () => {
-    if (index >= sortedSections.length - 1) return;
-    const ids = sortedSections.map((s) => s.id);
-    const reordered = [...ids];
-    [reordered[index], reordered[index + 1]] = [reordered[index + 1], reordered[index]];
-    reorderSections(reordered);
-  }, [sortedSections, reorderSections]);
+  // ── Mobile move handlers removed — now using GripVertical drag on mobile ──
 
   if (isLoading) {
     return (
@@ -656,10 +589,6 @@ export function ContactsPanel() {
         onDragOver={handleDragOver(section.id)}
         onDragLeave={handleDragLeave(section.id)}
         onDrop={handleDrop(section.id)}
-        onMoveUp={handleMoveUp(idx)}
-        onMoveDown={handleMoveDown(idx)}
-        canMoveUp={idx > 0}
-        canMoveDown={idx < sortedSections.length - 1}
       />
     );
   });
