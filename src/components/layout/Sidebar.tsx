@@ -376,37 +376,41 @@ function DashboardNavItem({
 
         {/* Actions: pencil/drag/trash (non-default, not editing) */}
         {!dashboard.isDefault && !editing && (
-          <div className="flex items-center gap-0.5 transition-opacity pr-1 opacity-100 md:opacity-0 md:group-hover:opacity-100">
-            {/* Pencil — first */}
-            <button
-              onClick={(e) => { e.stopPropagation(); setEditing(true); setPickerOpen(true); }}
-              className="p-1 rounded text-slate-400 hover:text-primary-500 hover:bg-primary-50 transition-colors"
-              title="Editar"
-            >
-              <Pencil className="w-3 h-3" />
-            </button>
+          <div className="flex items-center gap-1 transition-opacity pr-1 opacity-100 md:opacity-0 md:group-hover:opacity-100">
+            {/* Pencil — first (contacts panel: invisible placeholder for alignment) */}
+            {!dashboard.isContacts ? (
+              <button
+                onClick={(e) => { e.stopPropagation(); setEditing(true); setPickerOpen(true); }}
+                className="min-w-[32px] min-h-[32px] md:min-w-[28px] md:min-h-[28px] flex items-center justify-center p-1 rounded text-slate-400 hover:text-primary-500 hover:bg-primary-50 transition-colors"
+                title="Editar"
+              >
+                <Pencil className="w-4 h-4 md:w-3.5 md:h-3.5" />
+              </button>
+            ) : (
+              <div className="min-w-[32px] min-h-[32px] md:min-w-[28px] md:min-h-[28px] flex-shrink-0" aria-hidden="true" />
+            )}
 
             {/* GripVertical — drag handle on both desktop and mobile */}
             <div
-              className="p-1 cursor-grab active:cursor-grabbing text-slate-300"
+              className="min-w-[32px] min-h-[32px] md:min-w-[28px] md:min-h-[28px] flex items-center justify-center p-1 cursor-grab active:cursor-grabbing text-slate-300"
               style={{ touchAction: 'none' }}
               title="Arrastar"
               onTouchStart={onTouchStartHandle}
             >
-              <GripVertical className="w-3 h-3" />
+              <GripVertical className="w-4 h-4 md:w-3.5 md:h-3.5" />
             </div>
 
             {/* Trash — last (contacts panel: invisible placeholder for alignment) */}
             {!dashboard.isContacts ? (
               <button
                 onClick={(e) => { e.stopPropagation(); onDelete(dashboard.id); }}
-                className="p-1 rounded text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                className="min-w-[32px] min-h-[32px] md:min-w-[28px] md:min-h-[28px] flex items-center justify-center p-1 rounded text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
                 title="Excluir"
               >
-                <Trash2 className="w-3 h-3" />
+                <Trash2 className="w-4 h-4 md:w-3.5 md:h-3.5" />
               </button>
             ) : (
-              <div className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
+              <div className="min-w-[32px] min-h-[32px] md:min-w-[28px] md:min-h-[28px] flex-shrink-0" aria-hidden="true" />
             )}
           </div>
         )}
