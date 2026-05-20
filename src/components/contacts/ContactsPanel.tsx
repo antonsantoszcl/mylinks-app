@@ -251,31 +251,29 @@ function SectionCardHeader({
     <>
       <header className="flex items-center justify-between px-3 py-2.5 md:py-2 rounded-t-xl md:rounded-t-[10px]">
         <div className="flex items-center gap-2 min-w-0 flex-1">
-          {/* Emoji icon — shown for user sections, clickable to enter edit+picker */}
-          {!isFrequents && (
-            <div
-              ref={iconRef}
-              className="flex-shrink-0 p-1 flex items-center justify-center cursor-pointer"
-              onClick={() => { if (onRename) setEditing(true); }}
-            >
-              {isMobile ? (
-                <span className="select-none leading-none" style={{ fontSize: '1rem', lineHeight: 1 }}>
-                  {getSectionEmoji(iconName)}
-                </span>
-              ) : (
-                <img
-                  src={getEmojiUrl(getSectionEmoji(iconName))}
-                  alt=""
-                  className="w-4 h-4 select-none"
-                  draggable={false}
-                  onError={(e) => {
-                    const img = e.currentTarget;
-                    if (!img.dataset.fallback) { img.dataset.fallback = '1'; img.src = getTwemojiUrl(getSectionEmoji(iconName)); }
-                  }}
-                />
-              )}
-            </div>
-          )}
+          {/* Emoji icon — shown for all sections; clickable (opens picker) only for user sections */}
+          <div
+            ref={iconRef}
+            className={`flex-shrink-0 p-1 flex items-center justify-center ${isFrequents ? '' : 'cursor-pointer'}`}
+            onClick={() => { if (!isFrequents && onRename) setEditing(true); }}
+          >
+            {isMobile ? (
+              <span className="select-none leading-none" style={{ fontSize: '1rem', lineHeight: 1 }}>
+                {getSectionEmoji(iconName)}
+              </span>
+            ) : (
+              <img
+                src={getEmojiUrl(getSectionEmoji(iconName))}
+                alt=""
+                className="w-4 h-4 select-none"
+                draggable={false}
+                onError={(e) => {
+                  const img = e.currentTarget;
+                  if (!img.dataset.fallback) { img.dataset.fallback = '1'; img.src = getTwemojiUrl(getSectionEmoji(iconName)); }
+                }}
+              />
+            )}
+          </div>
           <div className="flex flex-col min-w-0 flex-1">
             {editing && onRename ? (
               <input
