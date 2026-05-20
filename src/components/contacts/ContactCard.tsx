@@ -4,7 +4,8 @@ import { useRef, useState } from 'react';
 import { Contact } from '@/lib/types';
 import { MiniCard, buildChannels } from './MiniCard';
 import { ContactForm } from './ContactForm';
-import { MessagesSquare, Pencil } from 'lucide-react';
+import { useContacts } from '@/context/ContactsContext';
+import { MessagesSquare, Pencil, Trash2 } from 'lucide-react';
 
 interface ContactCardProps {
   contact: Contact;
@@ -15,8 +16,16 @@ export function ContactCard({ contact }: ContactCardProps) {
   const [showEdit, setShowEdit] = useState(false);
   const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
   const cardRef = useRef<HTMLButtonElement>(null);
+  const { deleteContact } = useContacts();
 
   const channels = buildChannels(contact);
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (window.confirm(`Excluir "${contact.name}"?`)) {
+      deleteContact(contact.id);
+    }
+  };
 
   const handleClick = () => {
     if (channels.length === 0) return;
@@ -80,6 +89,16 @@ export function ContactCard({ contact }: ContactCardProps) {
           className="flex-shrink-0 p-0.5 rounded text-[#d4dce8] md:text-slate-400 hover:text-primary-500 hover:bg-primary-50 transition-colors opacity-100 md:opacity-0 md:group-hover/contact:opacity-100"
         >
           <Pencil className="w-3 h-3" />
+        </span>
+
+        {/* Trash delete button */}
+        <span
+          role="button"
+          aria-label="Excluir contato"
+          onClick={handleDelete}
+          className="flex-shrink-0 p-0.5 rounded text-[#d4dce8] md:text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors opacity-100 md:opacity-0 md:group-hover/contact:opacity-100"
+        >
+          <Trash2 className="w-3 h-3" />
         </span>
       </button>
 
