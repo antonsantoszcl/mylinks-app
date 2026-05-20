@@ -4,11 +4,14 @@ import {
   Globe,
   ChevronRight,
   ChevronLeft,
+  ChevronUp,
+  ChevronDown,
   Plus,
   Pencil,
   Trash2,
   Check,
   X,
+  GripVertical,
 } from 'lucide-react';
 import { getNotoEmojiUrl } from '@/lib/emojiUtils';
 import { createPortal } from 'react-dom';
@@ -88,6 +91,16 @@ function DashboardNavItem({
   onDelete,
   onSelect,
   onChangeIcon,
+  onMoveUp,
+  onMoveDown,
+  canMoveUp,
+  canMoveDown,
+  isDragging,
+  isDragOver,
+  onDragStart,
+  onDragOver,
+  onDragEnd,
+  onDrop,
 }: {
   dashboard: Dashboard;
   isActive: boolean;
@@ -96,6 +109,16 @@ function DashboardNavItem({
   onDelete: (id: string) => void;
   onSelect: (id: string) => void;
   onChangeIcon: (id: string, iconName: string) => void;
+  onMoveUp?: () => void;
+  onMoveDown?: () => void;
+  canMoveUp?: boolean;
+  canMoveDown?: boolean;
+  isDragging?: boolean;
+  isDragOver?: boolean;
+  onDragStart?: (e: React.DragEvent) => void;
+  onDragOver?: (e: React.DragEvent) => void;
+  onDragEnd?: (e: React.DragEvent) => void;
+  onDrop?: (e: React.DragEvent) => void;
 }) {
   const [editing, setEditing] = useState(false);
   const [editValue, setEditValue] = useState(dashboard.title);
@@ -281,7 +304,23 @@ function DashboardNavItem({
 
   return (
     <>
-      <div className="group flex items-center rounded-lg transition-colors">
+      <div
+        className={`group flex items-center rounded-lg transition-colors ${
+          isDragOver ? 'ring-2 ring-primary-300 ring-inset bg-primary-50/40' : ''
+        } ${isDragging ? 'opacity-40' : ''}`}
+        draggable={!dashboard.isDefault}
+        onDragStart={!dashboard.isDefault ? onDragStart : undefined}
+        onDragOver={!dashboard.isDefault ? onDragOver : undefined}
+        onDragEnd={!dashboard.isDefault ? onDragEnd : undefined}
+        onDrop={!dashboard.isDefault ? onDrop : undefined}
+      >
+        {/* Drag handle (desktop hover, non-default only) */}
+        {!dashboard.isDefault && (
+          <div className="flex-shrink-0 pl-1 pr-0.5 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing hidden md:flex items-center">
+            <GripVertical className="w-3 h-3 text-slate-300" />
+          </div>
+        )}
+
         <button
           onClick={() => onSelect(dashboard.id)}
           onTouchStart={handleTouchStart}
@@ -349,9 +388,30 @@ function DashboardNavItem({
           )}
         </button>
 
-        {/* Pencil + Trash buttons: always visible on mobile, hover on desktop */}
+        {/* Actions: pencil/trash + mobile up/down arrows (non-default, not editing) */}
         {!dashboard.isDefault && !editing && (
           <div className="flex items-center gap-0.5 transition-opacity pr-1 opacity-100 md:opacity-0 md:group-hover:opacity-100">
+            {/* Mobile: up/down arrows (visible on mobile only) */}
+            {isMobile && (
+              <>
+                <button
+                  onClick={(e) => { e.stopPropagation(); onMoveUp?.(); }}
+                  disabled={!canMoveUp}
+                  className="p-1 rounded text-slate-400 hover:text-slate-600 disabled:opacity-30 disabled:pointer-events-none transition-colors md:hidden"
+                  title="Mover para cima"
+                >
+                  <ChevronUp className="w-3 h-3" />
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); onMoveDown?.(); }}
+                  disabled={!canMoveDown}
+                  className="p-1 rounded text-slate-400 hover:text-slate-600 disabled:opacity-30 disabled:pointer-events-none transition-colors md:hidden"
+                  title="Mover para baixo"
+                >
+                  <ChevronDown className="w-3 h-3" />
+                </button>
+              </>
+            )}
             <button
               onClick={(e) => { e.stopPropagation(); setEditing(true); setPickerOpen(true); }}
               className="p-1 rounded text-slate-400 hover:text-primary-500 hover:bg-primary-50 transition-colors"
@@ -386,7 +446,7 @@ function SidebarContent({
   onClose?: () => void;
 }) {
   const { profile } = useProfile();
-  const { dashboards, isLoading: dashLoading, createDashboard, renameDashboard, deleteDashboard, updateDashboardIcon } =
+  const { dashboards, isLoading: dashLoading, createDashboard, renameDashboard, deleteDashboard, updateDashboardIcon, reorderDashboards } =
     useDashboards();
   const { activeDashboardId, setActiveDashboard } = useActiveDashboard();
   const initials = getInitials(profile.displayName);
@@ -400,6 +460,11 @@ function SidebarContent({
   const [newDashPickerPos, setNewDashPickerPos] = useState<{ top: number; left: number } | null>(null);
   const [isMobileContent, setIsMobileContent] = useState(getIsMobile);
   const [pendingDeleteDash, setPendingDeleteDash] = useState<string | null>(null);
+
+  // Drag-and-drop state
+  const dragIdRef = useRef<string | null>(null);
+  const [dragOverId, setDragOverId] = useState<string | null>(null);
+  const [draggingId, setDraggingId] = useState<string | null>(null);
 
   useEffect(() => {
     const handler = () => setIsMobileContent(window.innerWidth < 768);
@@ -453,6 +518,81 @@ function SidebarContent({
   const handleSelectDashboard = (id: string) => {
     setActiveDashboard(id);
     onClose?.();
+  };
+
+  // Drag-and-drop handlers
+  const handleDragStart = (id: string) => (e: React.DragEvent) => {
+    dragIdRef.current = id;
+    setDraggingId(id);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (id: string) => (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (dragIdRef.current && dragIdRef.current !== id) {
+      setDragOverId(id);
+    }
+  };
+
+  const handleDragEnd = () => (_e: React.DragEvent) => {
+    dragIdRef.current = null;
+    setDraggingId(null);
+    setDragOverId(null);
+  };
+
+  const handleDrop = (targetId: string) => (e: React.DragEvent) => {
+    e.preventDefault();
+    const sourceId = dragIdRef.current;
+    dragIdRef.current = null;
+    setDragOverId(null);
+    if (!sourceId || sourceId === targetId) return;
+
+    const nonDefaults = dashboards.filter((d) => !d.isDefault);
+    const defaultPanel = dashboards.find((d) => d.isDefault);
+
+    const sourceIdx = nonDefaults.findIndex((d) => d.id === sourceId);
+    const targetIdx = nonDefaults.findIndex((d) => d.id === targetId);
+    if (sourceIdx === -1 || targetIdx === -1) return;
+
+    const reordered = [...nonDefaults];
+    const [moved] = reordered.splice(sourceIdx, 1);
+    reordered.splice(targetIdx, 0, moved);
+
+    const orderedIds = [
+      ...(defaultPanel ? [defaultPanel.id] : []),
+      ...reordered.map((d) => d.id),
+    ];
+    reorderDashboards(orderedIds);
+  };
+
+  // Mobile: move up/down
+  const handleMoveUp = (id: string) => () => {
+    const nonDefaults = dashboards.filter((d) => !d.isDefault);
+    const defaultPanel = dashboards.find((d) => d.isDefault);
+    const idx = nonDefaults.findIndex((d) => d.id === id);
+    if (idx <= 0) return;
+    const reordered = [...nonDefaults];
+    [reordered[idx - 1], reordered[idx]] = [reordered[idx], reordered[idx - 1]];
+    const orderedIds = [
+      ...(defaultPanel ? [defaultPanel.id] : []),
+      ...reordered.map((d) => d.id),
+    ];
+    reorderDashboards(orderedIds);
+  };
+
+  const handleMoveDown = (id: string) => () => {
+    const nonDefaults = dashboards.filter((d) => !d.isDefault);
+    const defaultPanel = dashboards.find((d) => d.isDefault);
+    const idx = nonDefaults.findIndex((d) => d.id === id);
+    if (idx === -1 || idx >= nonDefaults.length - 1) return;
+    const reordered = [...nonDefaults];
+    [reordered[idx], reordered[idx + 1]] = [reordered[idx + 1], reordered[idx]];
+    const orderedIds = [
+      ...(defaultPanel ? [defaultPanel.id] : []),
+      ...reordered.map((d) => d.id),
+    ];
+    reorderDashboards(orderedIds);
   };
 
   const handleCreateDashboard = async () => {
@@ -548,18 +688,32 @@ function SidebarContent({
               <p className="px-2 pb-1 text-[10px] font-semibold text-slate-400/80 uppercase tracking-widest">
                 Paineis
               </p>
-              {dashboards.map((d) => (
-                <DashboardNavItem
-                  key={d.id}
-                  dashboard={d}
-                  isActive={activeDashboardId === d.id}
-                  collapsed={false}
-                  onRename={renameDashboard}
-                  onDelete={handleDeleteDashboard}
-                  onSelect={handleSelectDashboard}
-                  onChangeIcon={updateDashboardIcon}
-                />
-              ))}
+              {dashboards.map((d) => {
+                const nonDefaults = dashboards.filter((x) => !x.isDefault);
+                const nonDefaultIdx = nonDefaults.findIndex((x) => x.id === d.id);
+                return (
+                  <DashboardNavItem
+                    key={d.id}
+                    dashboard={d}
+                    isActive={activeDashboardId === d.id}
+                    collapsed={false}
+                    onRename={renameDashboard}
+                    onDelete={handleDeleteDashboard}
+                    onSelect={handleSelectDashboard}
+                    onChangeIcon={updateDashboardIcon}
+                    onMoveUp={!d.isDefault ? handleMoveUp(d.id) : undefined}
+                    onMoveDown={!d.isDefault ? handleMoveDown(d.id) : undefined}
+                    canMoveUp={!d.isDefault && nonDefaultIdx > 0}
+                    canMoveDown={!d.isDefault && nonDefaultIdx < nonDefaults.length - 1}
+                    isDragging={draggingId === d.id}
+                    isDragOver={dragOverId === d.id}
+                    onDragStart={!d.isDefault ? handleDragStart(d.id) : undefined}
+                    onDragOver={!d.isDefault ? handleDragOver(d.id) : undefined}
+                    onDragEnd={!d.isDefault ? handleDragEnd() : undefined}
+                    onDrop={!d.isDefault ? handleDrop(d.id) : undefined}
+                  />
+                );
+              })}
 
               {/* New painel form / button */}
               {showNewDash ? (

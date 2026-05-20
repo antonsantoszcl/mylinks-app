@@ -100,6 +100,7 @@ type DashboardsContextType = {
   renameDashboard: (id: string, title: string) => Promise<void>;
   deleteDashboard: (id: string) => Promise<void>;
   updateDashboardIcon: (id: string, iconName: string) => Promise<void>;
+  reorderDashboards: (orderedIds: string[]) => Promise<void>;
 };
 
 const DashboardsContext = createContext<DashboardsContextType>({
@@ -109,6 +110,7 @@ const DashboardsContext = createContext<DashboardsContextType>({
   renameDashboard: async () => {},
   deleteDashboard: async () => {},
   updateDashboardIcon: async () => {},
+  reorderDashboards: async () => {},
 });
 
 export function DashboardsProvider({ children }: { children: ReactNode }) {
@@ -309,9 +311,26 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
     );
   };
 
+  const reorderDashboards = async (orderedIds: string[]): Promise<void> => {
+    // Optimistic update: keep default first, then reordered non-defaults
+    const reordered = orderedIds.map((id, i) => {
+      const d = dashboards.find((d) => d.id === id)!;
+      return { ...d, sortOrder: i };
+    });
+    setDashboards(reordered);
+
+    // Persist to Supabase
+    const supabase = getSupabaseClient();
+    await Promise.all(
+      orderedIds.map((id, index) =>
+        supabase.from('dashboards').update({ sort_order: index }).eq('id', id)
+      )
+    );
+  };
+
   return (
     <DashboardsContext.Provider
-      value={{ dashboards, isLoading, createDashboard, renameDashboard, deleteDashboard, updateDashboardIcon }}
+      value={{ dashboards, isLoading, createDashboard, renameDashboard, deleteDashboard, updateDashboardIcon, reorderDashboards }}
     >
       {children}
     </DashboardsContext.Provider>
