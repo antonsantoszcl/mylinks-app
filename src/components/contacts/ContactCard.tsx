@@ -77,7 +77,7 @@ export function ContactCard({ contact }: ContactCardProps) {
           role="button"
           aria-label="Editar contato"
           onClick={(e) => { e.stopPropagation(); setShowEdit(true); }}
-          className="flex-shrink-0 p-0.5 rounded text-slate-400 hover:text-primary-500 hover:bg-primary-50 transition-colors opacity-100 md:opacity-0 md:group-hover/contact:opacity-100"
+          className="flex-shrink-0 p-0.5 rounded text-[#d4dce8] md:text-slate-400 hover:text-primary-500 hover:bg-primary-50 transition-colors opacity-100 md:opacity-0 md:group-hover/contact:opacity-100"
         >
           <Pencil className="w-3 h-3" />
         </span>
