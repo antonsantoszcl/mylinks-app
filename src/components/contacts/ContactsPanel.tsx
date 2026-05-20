@@ -327,8 +327,12 @@ function ContactSectionCard({
         )}
       </div>
 
-      {/* Footer add-contact button */}
-      {onAddContact && (
+      {/* Footer */}
+      {isFrequents ? (
+        <div className="mx-2 mb-2 mt-1 px-3 py-2 text-center">
+          <p className="text-xs text-slate-400 italic">Assinale frequente ao incluir um contato</p>
+        </div>
+      ) : onAddContact && (
         <div className="mx-2 mb-2 mt-1 px-2 py-1.5 rounded-b-xl">
           <button
             type="button"
