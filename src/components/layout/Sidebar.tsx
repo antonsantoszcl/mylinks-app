@@ -552,6 +552,39 @@ function SidebarContent({
     reorderDashboards(orderedIds);
   };
 
+  // Drop at boundary: move to first or last position among non-defaults
+  const handleBoundaryDrop = (position: 'first' | 'last') => (e: React.DragEvent) => {
+    e.preventDefault();
+    const sourceId = dragIdRef.current;
+    dragIdRef.current = null;
+    setDraggingId(null);
+    setDragOverId(null);
+    if (!sourceId) return;
+
+    const nonDefaults = dashboards.filter((d) => !d.isDefault);
+    const defaultPanel = dashboards.find((d) => d.isDefault);
+    const sourceIdx = nonDefaults.findIndex((d) => d.id === sourceId);
+    if (sourceIdx === -1) return;
+
+    const targetIdx = position === 'first' ? 0 : nonDefaults.length - 1;
+    if (targetIdx === sourceIdx) return;
+
+    const reordered = [...nonDefaults];
+    const [moved] = reordered.splice(sourceIdx, 1);
+    reordered.splice(targetIdx, 0, moved);
+
+    const orderedIds = [
+      ...(defaultPanel ? [defaultPanel.id] : []),
+      ...reordered.map((d) => d.id),
+    ];
+    reorderDashboards(orderedIds);
+  };
+
+  const handleBoundaryDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
   // Touch drag reorder (mobile) — with visual translateY animation
   const touchDragIdRef = useRef<string | null>(null);
   const touchStartYRef = useRef<number>(0);
@@ -745,6 +778,12 @@ function SidebarContent({
               <p className="px-2 pb-1 text-[10px] font-semibold text-slate-400/80 uppercase tracking-widest">
                 Paineis
               </p>
+              {/* Drop zone: move to first position (right after Principal) */}
+              <div
+                className="h-1"
+                onDragOver={handleBoundaryDragOver}
+                onDrop={handleBoundaryDrop('first')}
+              />
               {dashboards.map((d) => {
                 const translateY = getTouchDragTranslate(d.id);
                 const isBeingDragged = draggingId === d.id;
@@ -770,14 +809,21 @@ function SidebarContent({
                       isDragging={draggingId === d.id}
                       isDragOver={dragOverId === d.id}
                       onDragStart={!d.isDefault ? handleDragStart(d.id) : undefined}
-                      onDragOver={!d.isDefault ? handleDragOver(d.id) : undefined}
+                      onDragOver={!d.isDefault ? handleDragOver(d.id) : d.isDefault ? handleBoundaryDragOver : undefined}
                       onDragEnd={!d.isDefault ? handleDragEnd() : undefined}
-                      onDrop={!d.isDefault ? handleDrop(d.id) : undefined}
+                      onDrop={!d.isDefault ? handleDrop(d.id) : handleBoundaryDrop('first')}
                       onTouchStartHandle={!d.isDefault ? handleTouchStartHandle(d.id) : undefined}
                     />
                   </div>
                 );
               })}
+
+              {/* Drop zone: move to last position (before + Novo Painel) */}
+              <div
+                className="h-1"
+                onDragOver={handleBoundaryDragOver}
+                onDrop={handleBoundaryDrop('last')}
+              />
 
               {/* New painel form / button */}
               {showNewDash ? (
@@ -821,6 +867,8 @@ function SidebarContent({
               ) : (
                 <button
                   onClick={() => setShowNewDash(true)}
+                  onDragOver={handleBoundaryDragOver}
+                  onDrop={handleBoundaryDrop('last')}
                   className="flex items-center gap-2 px-2 py-1.5 w-full text-[13px] text-slate-700 hover:text-[#2F5FD0] hover:bg-slate-50 rounded-lg transition-colors"
                 >
                   <Plus className="w-3.5 h-3.5" />
