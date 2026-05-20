@@ -279,7 +279,7 @@ function ContactSectionCard({
       style={{
         border: '1px solid #E5E7EB',
         backgroundColor: '#FFFFFF',
-        boxShadow: `inset ${isMobile ? '3px' : '2px'} 0 0 ${inset}, 0 6px 16px rgba(0,0,0,0.05)`,
+        boxShadow: `inset ${isMobile ? '3px' : '2px'} 0 0 ${isMobile ? 'rgba(148, 163, 184, 0.35)' : 'rgba(148, 163, 184, 0.22)'}, 0 6px 16px rgba(0,0,0,0.05)`,
         transition: 'all 0.2s ease-out',
         opacity: isDragging ? 0.5 : 1,
         ...ringStyle,
@@ -287,12 +287,12 @@ function ContactSectionCard({
       onMouseEnter={(e) => {
         if (isDragging || isDragOver) return;
         const el = e.currentTarget;
-        el.style.boxShadow = `inset ${isMobile ? '3px' : '2px'} 0 0 ${inset}, 0 8px 24px rgba(0,0,0,0.10)`;
+        el.style.boxShadow = `inset ${isMobile ? '3px' : '2px'} 0 0 ${isMobile ? 'rgba(148, 163, 184, 0.35)' : 'rgba(148, 163, 184, 0.22)'}, 0 8px 24px rgba(0,0,0,0.10)`;
       }}
       onMouseLeave={(e) => {
         if (isDragging || isDragOver) return;
         const el = e.currentTarget;
-        el.style.boxShadow = `inset ${isMobile ? '3px' : '2px'} 0 0 ${inset}, 0 6px 16px rgba(0,0,0,0.05)`;
+        el.style.boxShadow = `inset ${isMobile ? '3px' : '2px'} 0 0 ${isMobile ? 'rgba(148, 163, 184, 0.35)' : 'rgba(148, 163, 184, 0.22)'}, 0 6px 16px rgba(0,0,0,0.05)`;
       }}
     >
       <SectionCardHeader
@@ -418,8 +418,7 @@ function AddSectionCard({ onCreate }: AddSectionCardProps) {
 const GAP = 16;
 
 function getColumnCount(width: number): number {
-  if (width >= 1280) return 4;
-  if (width >= 1024) return 3;
+  if (width >= 1024) return 4;
   if (width >= 640) return 2;
   return 1;
 }
