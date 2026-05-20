@@ -314,13 +314,6 @@ function DashboardNavItem({
         onDragEnd={!dashboard.isDefault ? onDragEnd : undefined}
         onDrop={!dashboard.isDefault ? onDrop : undefined}
       >
-        {/* Drag handle (desktop hover, non-default only) */}
-        {!dashboard.isDefault && (
-          <div className="flex-shrink-0 pl-1 pr-0.5 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing hidden md:flex items-center">
-            <GripVertical className="w-3 h-3 text-slate-300" />
-          </div>
-        )}
-
         <button
           onClick={() => onSelect(dashboard.id)}
           onTouchStart={handleTouchStart}
@@ -388,30 +381,10 @@ function DashboardNavItem({
           )}
         </button>
 
-        {/* Actions: pencil/trash + mobile up/down arrows (non-default, not editing) */}
+        {/* Actions: pencil/drag/trash + mobile up/down arrows (non-default, not editing) */}
         {!dashboard.isDefault && !editing && (
           <div className="flex items-center gap-0.5 transition-opacity pr-1 opacity-100 md:opacity-0 md:group-hover:opacity-100">
-            {/* Mobile: up/down arrows (visible on mobile only) */}
-            {isMobile && (
-              <>
-                <button
-                  onClick={(e) => { e.stopPropagation(); onMoveUp?.(); }}
-                  disabled={!canMoveUp}
-                  className="p-1 rounded text-slate-400 hover:text-slate-600 disabled:opacity-30 disabled:pointer-events-none transition-colors md:hidden"
-                  title="Mover para cima"
-                >
-                  <ChevronUp className="w-3 h-3" />
-                </button>
-                <button
-                  onClick={(e) => { e.stopPropagation(); onMoveDown?.(); }}
-                  disabled={!canMoveDown}
-                  className="p-1 rounded text-slate-400 hover:text-slate-600 disabled:opacity-30 disabled:pointer-events-none transition-colors md:hidden"
-                  title="Mover para baixo"
-                >
-                  <ChevronDown className="w-3 h-3" />
-                </button>
-              </>
-            )}
+            {/* Pencil — first */}
             <button
               onClick={(e) => { e.stopPropagation(); setEditing(true); setPickerOpen(true); }}
               className="p-1 rounded text-slate-400 hover:text-primary-500 hover:bg-primary-50 transition-colors"
@@ -419,6 +392,38 @@ function DashboardNavItem({
             >
               <Pencil className="w-3 h-3" />
             </button>
+
+            {/* Middle: GripVertical on desktop, up/down arrows on mobile */}
+            {!isMobile ? (
+              <div
+                className="p-1 cursor-grab active:cursor-grabbing text-slate-300"
+                style={{ touchAction: 'none' }}
+                title="Arrastar"
+              >
+                <GripVertical className="w-3 h-3" />
+              </div>
+            ) : (
+              <>
+                <button
+                  onClick={(e) => { e.stopPropagation(); onMoveUp?.(); }}
+                  disabled={!canMoveUp}
+                  className="p-1 rounded text-slate-400 hover:text-slate-600 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                  title="Mover para cima"
+                >
+                  <ChevronUp className="w-3 h-3" />
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); onMoveDown?.(); }}
+                  disabled={!canMoveDown}
+                  className="p-1 rounded text-slate-400 hover:text-slate-600 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                  title="Mover para baixo"
+                >
+                  <ChevronDown className="w-3 h-3" />
+                </button>
+              </>
+            )}
+
+            {/* Trash — last (contacts panel has no trash) */}
             {!dashboard.isContacts && (
               <button
                 onClick={(e) => { e.stopPropagation(); onDelete(dashboard.id); }}

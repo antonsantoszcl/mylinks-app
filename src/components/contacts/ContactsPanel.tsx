@@ -8,19 +8,18 @@ import {
   useState,
 } from 'react';
 import { useContacts } from '@/context/ContactsContext';
+import { useActiveDashboard } from '@/context/ActiveDashboardContext';
 import { ContactCard } from './ContactCard';
 import { ContactForm } from './ContactForm';
-import { Contact, ContactSection } from '@/lib/types';
+import { Contact } from '@/lib/types';
+import { QuickAccessRow } from '@/components/dashboard/QuickAccessRow';
 import {
-  ChevronRight,
   GripVertical,
   Inbox,
   LayoutGrid,
   Plus,
   Star,
   Trash2,
-  X,
-  Zap,
 } from 'lucide-react';
 
 // ── Color palette — mirrors CATEGORY_COLORS from CategoryCard ─────────────────
@@ -38,104 +37,6 @@ const FREQUENT_COLOR = SECTION_COLORS[0];
 
 function getIsMobile(): boolean {
   return typeof window !== 'undefined' && window.innerWidth < 768;
-}
-
-// ── Quick Access Row (frequent contacts) ──────────────────────────────────────
-
-interface FrequentContact {
-  id: string;
-  name: string;
-  contact: Contact;
-}
-
-interface ContactsQuickAccessRowProps {
-  contacts: FrequentContact[];
-}
-
-function ContactsQuickAccessRow({ contacts }: ContactsQuickAccessRowProps) {
-  const [showChevron, setShowChevron] = useState(true);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [openMiniId, setOpenMiniId] = useState<string | null>(null);
-
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const checkScroll = () => {
-      const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 4;
-      setShowChevron(!atEnd);
-    };
-    checkScroll();
-    el.addEventListener('scroll', checkScroll);
-    window.addEventListener('resize', checkScroll);
-    return () => {
-      el.removeEventListener('scroll', checkScroll);
-      window.removeEventListener('resize', checkScroll);
-    };
-  }, [contacts]);
-
-  const handleContactClick = (contact: Contact) => {
-    // Import buildChannels inline by reconstructing the URL logic
-    const channels: { key: string; url: string }[] = [];
-    if (contact.whatsapp) channels.push({ key: 'whatsapp', url: `https://wa.me/${contact.whatsapp.replace(/\D/g, '')}` });
-    if (contact.instagram) channels.push({ key: 'instagram', url: `https://instagram.com/${contact.instagram.replace('@', '')}` });
-    if (contact.email) channels.push({ key: 'email', url: `mailto:${contact.email}` });
-    if (contact.linkedin) channels.push({ key: 'linkedin', url: `https://linkedin.com/in/${contact.linkedin}` });
-
-    if (channels.length === 0) return;
-    if (channels.length === 1) {
-      if (channels[0].key === 'email') {
-        window.location.href = channels[0].url;
-      } else {
-        window.open(channels[0].url, '_blank', 'noopener,noreferrer');
-      }
-      return;
-    }
-    // Multiple channels — toggle MiniCard via ContactCard (handled internally)
-    setOpenMiniId(openMiniId === contact.id ? null : contact.id);
-  };
-
-  if (contacts.length === 0) return null;
-
-  return (
-    <section>
-      <div className="flex items-center gap-1.5 mb-3">
-        <Zap className="w-3.5 h-3.5 text-primary-500" />
-        <h2 className="text-[15px] md:text-sm font-bold text-slate-700">Acesso rapido</h2>
-      </div>
-
-      <div className="relative">
-        <div
-          ref={scrollRef}
-          className="quick-access-scroll flex gap-1.5 items-center overflow-x-auto pb-1 flex-nowrap sm:flex-wrap"
-        >
-          {contacts.map(({ id, name, contact }) => (
-            <div key={id} className="relative flex-shrink-0 group">
-              <button
-                type="button"
-                onClick={() => handleContactClick(contact)}
-                className="bg-white border border-slate-200 rounded-lg px-3 py-2 flex items-center gap-2 hover:shadow-sm hover:bg-slate-50 transition-all cursor-pointer"
-              >
-                <div className="w-6 h-6 md:w-5 md:h-5 bg-amber-50 rounded flex items-center justify-center flex-shrink-0">
-                  <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-300" />
-                </div>
-                <span className="text-sm md:text-[12.5px] font-semibold text-slate-700 md:text-slate-600 whitespace-nowrap">
-                  {name}
-                </span>
-              </button>
-            </div>
-          ))}
-        </div>
-
-        {/* Chevron hint — mobile only, hidden when scrolled to end */}
-        {showChevron && contacts.length > 3 && (
-          <div className="quick-access-chevron pointer-events-none absolute right-0 top-0 bottom-1 flex items-center z-10">
-            <div className="w-10 h-full bg-gradient-to-l from-[#EEF2F7] to-transparent" />
-            <ChevronRight className="w-5 h-5 text-slate-600 flex-shrink-0 mr-0.5" />
-          </div>
-        )}
-      </div>
-    </section>
-  );
 }
 
 // ── Section card header with inline rename ────────────────────────────────────
@@ -521,6 +422,11 @@ export function ContactsPanel() {
     renameSection,
     deleteSection,
   } = useContacts();
+  const {
+    data,
+    addQuickAccess,
+    removeQuickAccess,
+  } = useActiveDashboard();
   const [addContactFor, setAddContactFor] = useState<string | null>(null);
 
   const frequentContacts = contacts
@@ -536,9 +442,6 @@ export function ContactsPanel() {
       </div>
     );
   }
-
-  // ── Quick Access Row items ─────────────────────────────────────────────────
-  const quickItems = frequentContacts.map((c) => ({ id: c.id, name: c.name, contact: c }));
 
   // ── Build grid items ───────────────────────────────────────────────────────
   // Item 0: FREQUENTES card
@@ -584,8 +487,12 @@ export function ContactsPanel() {
   return (
     <div className="max-w-full space-y-6 pb-8">
 
-      {/* ── Quick Access (frequent contacts) ── */}
-      <ContactsQuickAccessRow contacts={quickItems} />
+      {/* ── Quick Access (links, same as other panels) ── */}
+      <QuickAccessRow
+        links={data?.quickAccess ?? []}
+        onAdd={addQuickAccess}
+        onRemove={removeQuickAccess}
+      />
 
       {/* ── Sections grid ── */}
       <section>

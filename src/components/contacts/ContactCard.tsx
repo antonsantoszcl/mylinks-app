@@ -20,23 +20,11 @@ export function ContactCard({ contact }: ContactCardProps) {
 
   const handleClick = () => {
     if (channels.length === 0) return;
-    if (channels.length === 1) {
-      const url = channels[0].url;
-      if (channels[0].key === 'email') {
-        window.location.href = url;
-      } else {
-        window.open(url, '_blank', 'noopener,noreferrer');
-      }
-      return;
-    }
-    // 2+ channels → show MiniCard
+    // Always open MiniCard (even with 1 channel), so the user can also edit
     const rect = cardRef.current?.getBoundingClientRect() ?? null;
     setAnchorRect(rect);
     setShowMini(true);
   };
-
-  // Determine icon to display
-  const singleChannel = channels.length === 1 ? channels[0] : null;
 
   return (
     <>
@@ -61,9 +49,9 @@ export function ContactCard({ contact }: ContactCardProps) {
           className="flex-shrink-0 flex items-center justify-center w-5 h-5 md:w-4 md:h-4"
           aria-hidden="true"
         >
-          {singleChannel ? (
-            <span style={{ color: singleChannel.iconColor }}>
-              {singleChannel.icon}
+          {channels.length === 1 ? (
+            <span style={{ color: channels[0].iconColor }}>
+              {channels[0].icon}
             </span>
           ) : (
             <MessageCircle className="w-4 h-4 text-slate-400" />
