@@ -48,7 +48,7 @@ export function ContactCard({ contact }: ContactCardProps) {
           rounded-lg
           text-left
           transition-colors duration-100
-          hover:bg-slate-100 active:bg-slate-200
+          hover:bg-white/70 active:bg-white/90
           disabled:opacity-40 disabled:cursor-default
           group/contact
         "
