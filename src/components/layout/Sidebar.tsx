@@ -381,18 +381,18 @@ function DashboardNavItem({
             {!dashboard.isContacts ? (
               <button
                 onClick={(e) => { e.stopPropagation(); setEditing(true); setPickerOpen(true); }}
-                className="min-w-[32px] min-h-[32px] md:min-w-[28px] md:min-h-[28px] flex items-center justify-center p-1 rounded text-slate-400 hover:text-primary-500 hover:bg-primary-50 transition-colors"
+                className="min-w-[32px] min-h-[32px] md:min-w-[24px] md:min-h-[24px] flex items-center justify-center p-1 rounded text-slate-400 hover:text-primary-500 hover:bg-primary-50 transition-colors"
                 title="Editar"
               >
                 <Pencil className="w-4 h-4 md:w-3.5 md:h-3.5" />
               </button>
             ) : (
-              <div className="min-w-[32px] min-h-[32px] md:min-w-[28px] md:min-h-[28px] flex-shrink-0" aria-hidden="true" />
+              <div className="min-w-[32px] min-h-[32px] md:min-w-[24px] md:min-h-[24px] flex-shrink-0" aria-hidden="true" />
             )}
 
             {/* GripVertical — drag handle on both desktop and mobile */}
             <div
-              className="min-w-[32px] min-h-[32px] md:min-w-[28px] md:min-h-[28px] flex items-center justify-center p-1 cursor-grab active:cursor-grabbing text-slate-300"
+              className="min-w-[32px] min-h-[32px] md:min-w-[24px] md:min-h-[24px] flex items-center justify-center p-1 cursor-grab active:cursor-grabbing text-slate-300"
               style={{ touchAction: 'none' }}
               title="Arrastar"
               onTouchStart={onTouchStartHandle}
@@ -404,13 +404,13 @@ function DashboardNavItem({
             {!dashboard.isContacts ? (
               <button
                 onClick={(e) => { e.stopPropagation(); onDelete(dashboard.id); }}
-                className="min-w-[32px] min-h-[32px] md:min-w-[28px] md:min-h-[28px] flex items-center justify-center p-1 rounded text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                className="min-w-[32px] min-h-[32px] md:min-w-[24px] md:min-h-[24px] flex items-center justify-center p-1 rounded text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
                 title="Excluir"
               >
                 <Trash2 className="w-4 h-4 md:w-3.5 md:h-3.5" />
               </button>
             ) : (
-              <div className="min-w-[32px] min-h-[32px] md:min-w-[28px] md:min-h-[28px] flex-shrink-0" aria-hidden="true" />
+              <div className="min-w-[32px] min-h-[32px] md:min-w-[24px] md:min-h-[24px] flex-shrink-0" aria-hidden="true" />
             )}
           </div>
         )}
