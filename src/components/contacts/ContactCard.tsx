@@ -88,7 +88,7 @@ export function ContactCard({ contact }: ContactCardProps) {
           onClick={(e) => { e.stopPropagation(); setShowEdit(true); }}
           className="flex-shrink-0 p-0.5 rounded text-[#d4dce8] md:text-slate-400 hover:text-primary-500 hover:bg-primary-50 transition-colors opacity-100 md:opacity-0 md:group-hover/contact:opacity-100"
         >
-          <Pencil className="w-3 h-3" />
+          <Pencil className="w-4 h-4 md:w-3 md:h-3" />
         </span>
 
         {/* Trash delete button */}
@@ -98,7 +98,7 @@ export function ContactCard({ contact }: ContactCardProps) {
           onClick={handleDelete}
           className="flex-shrink-0 p-0.5 rounded text-[#d4dce8] md:text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors opacity-100 md:opacity-0 md:group-hover/contact:opacity-100"
         >
-          <Trash2 className="w-3 h-3" />
+          <Trash2 className="w-4 h-4 md:w-3 md:h-3" />
         </span>
       </button>
 
