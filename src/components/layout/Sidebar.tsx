@@ -552,15 +552,44 @@ function SidebarContent({
     reorderDashboards(orderedIds);
   };
 
-  // Touch drag reorder (mobile)
+  // Touch drag reorder (mobile) — with visual translateY animation
   const touchDragIdRef = useRef<string | null>(null);
   const touchStartYRef = useRef<number>(0);
   const itemHeightRef = useRef<number>(36);
+  const [touchDragOffset, setTouchDragOffset] = useState<number>(0); // raw px offset of dragged item
+  const [touchDragSteps, setTouchDragSteps] = useState<number>(0);   // clamped step count
+
+  // Compute per-item translateY during a touch drag
+  // dragging item: follows finger (touchDragOffset px)
+  // displaced items: shift by ±itemHeight to make room
+  const getTouchDragTranslate = (id: string): number => {
+    if (!draggingId) return 0;
+    const nonDefaults = dashboards.filter((d) => !d.isDefault);
+    const srcIdx = nonDefaults.findIndex((d) => d.id === draggingId);
+    if (srcIdx === -1) return 0;
+    const tgtIdx = Math.max(0, Math.min(nonDefaults.length - 1, srcIdx + touchDragSteps));
+    const itemIdx = nonDefaults.findIndex((d) => d.id === id);
+    if (itemIdx === -1) return 0;
+
+    if (id === draggingId) {
+      return touchDragOffset;
+    }
+    const h = itemHeightRef.current;
+    const lo = Math.min(srcIdx, tgtIdx);
+    const hi = Math.max(srcIdx, tgtIdx);
+    if (itemIdx >= lo && itemIdx <= hi && itemIdx !== srcIdx) {
+      // item needs to shift out of the way
+      return srcIdx < tgtIdx ? -h : h;
+    }
+    return 0;
+  };
 
   const handleTouchStartHandle = (id: string) => (e: React.TouchEvent) => {
     touchDragIdRef.current = id;
     touchStartYRef.current = e.touches[0].clientY;
     setDraggingId(id);
+    setTouchDragOffset(0);
+    setTouchDragSteps(0);
     // measure item height from DOM if possible
     const el = (e.currentTarget as HTMLElement).closest('[data-dashid]') as HTMLElement | null;
     if (el) itemHeightRef.current = el.getBoundingClientRect().height || 36;
@@ -568,16 +597,18 @@ function SidebarContent({
     const onTouchMove = (ev: TouchEvent) => {
       ev.preventDefault();
       const dy = ev.touches[0].clientY - touchStartYRef.current;
-      const steps = Math.round(dy / itemHeightRef.current);
-      if (steps === 0) return;
-
       const srcId = touchDragIdRef.current;
       if (!srcId) return;
       const nonDefaults = dashboards.filter((d) => !d.isDefault);
       const srcIdx = nonDefaults.findIndex((d) => d.id === srcId);
-      const tgtIdx = Math.max(0, Math.min(nonDefaults.length - 1, srcIdx + steps));
-      if (tgtIdx !== srcIdx) {
-        setDragOverId(nonDefaults[tgtIdx]?.id ?? null);
+      const rawSteps = dy / itemHeightRef.current;
+      const clampedSteps = Math.max(-(srcIdx), Math.min(nonDefaults.length - 1 - srcIdx, Math.round(rawSteps)));
+      setTouchDragOffset(dy);
+      setTouchDragSteps(clampedSteps);
+      if (clampedSteps !== 0) {
+        setDragOverId(nonDefaults[srcIdx + clampedSteps]?.id ?? null);
+      } else {
+        setDragOverId(null);
       }
     };
 
@@ -588,6 +619,8 @@ function SidebarContent({
       const srcId = touchDragIdRef.current;
       touchDragIdRef.current = null;
       setDraggingId(null);
+      setTouchDragOffset(0);
+      setTouchDragSteps(0);
 
       if (!srcId) { setDragOverId(null); return; }
 
@@ -713,24 +746,36 @@ function SidebarContent({
                 Paineis
               </p>
               {dashboards.map((d) => {
+                const translateY = getTouchDragTranslate(d.id);
+                const isBeingDragged = draggingId === d.id;
                 return (
-                  <DashboardNavItem
+                  <div
                     key={d.id}
-                    dashboard={d}
-                    isActive={activeDashboardId === d.id}
-                    collapsed={false}
-                    onRename={renameDashboard}
-                    onDelete={handleDeleteDashboard}
-                    onSelect={handleSelectDashboard}
-                    onChangeIcon={updateDashboardIcon}
-                    isDragging={draggingId === d.id}
-                    isDragOver={dragOverId === d.id}
-                    onDragStart={!d.isDefault ? handleDragStart(d.id) : undefined}
-                    onDragOver={!d.isDefault ? handleDragOver(d.id) : undefined}
-                    onDragEnd={!d.isDefault ? handleDragEnd() : undefined}
-                    onDrop={!d.isDefault ? handleDrop(d.id) : undefined}
-                    onTouchStartHandle={!d.isDefault ? handleTouchStartHandle(d.id) : undefined}
-                  />
+                    style={{
+                      transform: translateY !== 0 ? `translateY(${translateY}px)` : undefined,
+                      transition: isBeingDragged ? 'none' : 'transform 200ms ease-out',
+                      willChange: draggingId ? 'transform' : undefined,
+                      zIndex: isBeingDragged ? 10 : undefined,
+                      position: isBeingDragged ? 'relative' : undefined,
+                    }}
+                  >
+                    <DashboardNavItem
+                      dashboard={d}
+                      isActive={activeDashboardId === d.id}
+                      collapsed={false}
+                      onRename={renameDashboard}
+                      onDelete={handleDeleteDashboard}
+                      onSelect={handleSelectDashboard}
+                      onChangeIcon={updateDashboardIcon}
+                      isDragging={draggingId === d.id}
+                      isDragOver={dragOverId === d.id}
+                      onDragStart={!d.isDefault ? handleDragStart(d.id) : undefined}
+                      onDragOver={!d.isDefault ? handleDragOver(d.id) : undefined}
+                      onDragEnd={!d.isDefault ? handleDragEnd() : undefined}
+                      onDrop={!d.isDefault ? handleDrop(d.id) : undefined}
+                      onTouchStartHandle={!d.isDefault ? handleTouchStartHandle(d.id) : undefined}
+                    />
+                  </div>
                 );
               })}
 
