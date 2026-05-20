@@ -90,7 +90,7 @@ export function ContactCard({ contact }: ContactCardProps) {
             onClick={(e) => { e.stopPropagation(); setShowEdit(true); }}
             className="flex-shrink-0 flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-0.5 rounded text-slate-400/60 hover:text-primary-500 hover:bg-primary-50 transition-colors md:text-slate-400 md:opacity-0 md:group-hover/contact:opacity-100"
           >
-            <Pencil className="w-4 h-4 md:w-3 md:h-3" />
+            <Pencil className="w-5 h-5 md:w-3 md:h-3" />
           </span>
 
           {/* Trash delete button */}
@@ -100,7 +100,7 @@ export function ContactCard({ contact }: ContactCardProps) {
             onClick={handleDelete}
             className="flex-shrink-0 flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-0.5 rounded text-slate-400/60 hover:text-red-500 hover:bg-red-50 transition-colors md:text-slate-400 md:opacity-0 md:group-hover/contact:opacity-100"
           >
-            <Trash2 className="w-4 h-4 md:w-3 md:h-3" />
+            <Trash2 className="w-5 h-5 md:w-3 md:h-3" />
           </span>
         </span>
       </button>
