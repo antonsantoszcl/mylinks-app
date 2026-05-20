@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  DragEvent,
   FormEvent,
   useCallback,
   useEffect,
@@ -14,6 +15,9 @@ import { ContactForm } from './ContactForm';
 import { Contact } from '@/lib/types';
 import { QuickAccessRow } from '@/components/dashboard/QuickAccessRow';
 import {
+  ChevronDown,
+  ChevronUp,
+  GripVertical,
   Inbox,
   LayoutGrid,
   Pencil,
@@ -48,6 +52,13 @@ interface SectionCardHeaderProps {
   onRename?: (newTitle: string) => void;
   onDelete?: () => void;
   onAddContact?: () => void;
+  // drag handle (desktop)
+  onDragHandleMouseDown?: (e: React.MouseEvent) => void;
+  // mobile reorder
+  onMoveUp?: () => void;
+  onMoveDown?: () => void;
+  canMoveUp?: boolean;
+  canMoveDown?: boolean;
 }
 
 function SectionCardHeader({
@@ -57,13 +68,25 @@ function SectionCardHeader({
   onRename,
   onDelete,
   onAddContact,
+  onDragHandleMouseDown,
+  onMoveUp,
+  onMoveDown,
+  canMoveUp,
+  canMoveDown,
 }: SectionCardHeaderProps) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [isMobile, setIsMobile] = useState(getIsMobile);
 
   useEffect(() => { setDraft(title); }, [title]);
   useEffect(() => { if (editing) inputRef.current?.focus(); }, [editing]);
+
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
 
   const save = () => {
     const clean = draft.trim();
@@ -107,6 +130,7 @@ function SectionCardHeader({
       </div>
 
       <div className="flex items-center gap-0 md:gap-0.5 flex-shrink-0">
+        {/* Plus — always visible */}
         {onAddContact && (
           <button
             className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:bg-white/60 rounded transition-colors"
@@ -116,6 +140,8 @@ function SectionCardHeader({
             <Plus className="w-5 h-5 md:w-3.5 md:h-3.5" />
           </button>
         )}
+
+        {/* Pencil — desktop: hover only; mobile: always visible */}
         {onRename && !editing && (
           <button
             className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:text-primary-500 hover:bg-primary-50 rounded transition-colors opacity-100 md:opacity-0 md:group-hover:opacity-100"
@@ -125,6 +151,41 @@ function SectionCardHeader({
             <Pencil className="w-4 h-4 md:w-3 md:h-3" />
           </button>
         )}
+
+        {/* GripVertical — desktop only, hover only */}
+        {!isFrequents && onDragHandleMouseDown && !isMobile && (
+          <button
+            className="hidden md:flex items-center justify-center md:p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded transition-colors cursor-grab active:cursor-grabbing md:opacity-0 md:group-hover:opacity-100"
+            aria-label="Arrastar seção"
+            onMouseDown={onDragHandleMouseDown}
+          >
+            <GripVertical className="w-3 h-3" />
+          </button>
+        )}
+
+        {/* ChevronUp / ChevronDown — mobile only */}
+        {!isFrequents && isMobile && onMoveUp && (
+          <button
+            className="flex md:hidden items-center justify-center min-w-[28px] min-h-[28px] text-slate-400 hover:text-primary-500 hover:bg-primary-50 rounded transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            onClick={onMoveUp}
+            disabled={!canMoveUp}
+            aria-label="Mover seção para cima"
+          >
+            <ChevronUp className="w-4 h-4" />
+          </button>
+        )}
+        {!isFrequents && isMobile && onMoveDown && (
+          <button
+            className="flex md:hidden items-center justify-center min-w-[28px] min-h-[28px] text-slate-400 hover:text-primary-500 hover:bg-primary-50 rounded transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            onClick={onMoveDown}
+            disabled={!canMoveDown}
+            aria-label="Mover seção para baixo"
+          >
+            <ChevronDown className="w-4 h-4" />
+          </button>
+        )}
+
+        {/* Trash — desktop: hover only; mobile: always visible */}
         {onDelete && (
           <button
             className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors opacity-100 md:opacity-0 md:group-hover:opacity-100"
@@ -149,6 +210,20 @@ interface ContactSectionCardProps {
   onRename?: (newTitle: string) => void;
   onDelete?: () => void;
   onAddContact?: () => void;
+  // drag and drop
+  isDragging?: boolean;
+  isDragOver?: boolean;
+  onDragStart?: (e: DragEvent<HTMLElement>) => void;
+  onDragEnd?: (e: DragEvent<HTMLElement>) => void;
+  onDragOver?: (e: DragEvent<HTMLElement>) => void;
+  onDragLeave?: (e: DragEvent<HTMLElement>) => void;
+  onDrop?: (e: DragEvent<HTMLElement>) => void;
+  draggable?: boolean;
+  // mobile reorder
+  onMoveUp?: () => void;
+  onMoveDown?: () => void;
+  canMoveUp?: boolean;
+  canMoveDown?: boolean;
 }
 
 function ContactSectionCard({
@@ -159,9 +234,23 @@ function ContactSectionCard({
   onRename,
   onDelete,
   onAddContact,
+  isDragging,
+  isDragOver,
+  onDragStart,
+  onDragEnd,
+  onDragOver,
+  onDragLeave,
+  onDrop,
+  draggable,
+  onMoveUp,
+  onMoveDown,
+  canMoveUp,
+  canMoveDown,
 }: ContactSectionCardProps) {
   const [isMobile, setIsMobile] = useState(getIsMobile);
   const color = isFrequents ? FREQUENT_COLOR : SECTION_COLORS[colorIndex % SECTION_COLORS.length];
+  // Track whether drag started via the grip handle
+  const dragFromHandle = useRef(false);
 
   useEffect(() => {
     const handler = () => setIsMobile(window.innerWidth < 768);
@@ -171,20 +260,37 @@ function ContactSectionCard({
 
   const inset = isMobile ? color.insetColorMobile : color.insetColor;
 
+  const ringStyle: React.CSSProperties = isDragOver
+    ? { outline: '2px solid #7CB3F4', outlineOffset: '1px' }
+    : {};
+
   return (
     <article
+      draggable={draggable && !isFrequents}
+      onDragStart={(e) => {
+        if (!dragFromHandle.current) { e.preventDefault(); return; }
+        onDragStart?.(e);
+      }}
+      onDragEnd={(e) => { dragFromHandle.current = false; onDragEnd?.(e); }}
+      onDragOver={onDragOver}
+      onDragLeave={onDragLeave}
+      onDrop={onDrop}
       className="rounded-xl md:rounded-[10px] flex flex-col group category-card hover:-translate-y-0.5"
       style={{
         border: '1px solid #E5E7EB',
         backgroundColor: '#FFFFFF',
         boxShadow: `inset ${isMobile ? '3px' : '2px'} 0 0 ${inset}, 0 6px 16px rgba(0,0,0,0.05)`,
         transition: 'all 0.2s ease-out',
+        opacity: isDragging ? 0.5 : 1,
+        ...ringStyle,
       }}
       onMouseEnter={(e) => {
+        if (isDragging || isDragOver) return;
         const el = e.currentTarget;
         el.style.boxShadow = `inset ${isMobile ? '3px' : '2px'} 0 0 ${inset}, 0 8px 24px rgba(0,0,0,0.10)`;
       }}
       onMouseLeave={(e) => {
+        if (isDragging || isDragOver) return;
         const el = e.currentTarget;
         el.style.boxShadow = `inset ${isMobile ? '3px' : '2px'} 0 0 ${inset}, 0 6px 16px rgba(0,0,0,0.05)`;
       }}
@@ -196,6 +302,11 @@ function ContactSectionCard({
         onRename={onRename}
         onDelete={onDelete}
         onAddContact={onAddContact}
+        onDragHandleMouseDown={draggable && !isFrequents ? (e) => { dragFromHandle.current = true; } : undefined}
+        onMoveUp={onMoveUp}
+        onMoveDown={onMoveDown}
+        canMoveUp={canMoveUp}
+        canMoveDown={canMoveDown}
       />
 
       {/* Body */}
@@ -415,6 +526,7 @@ export function ContactsPanel() {
     createSection,
     renameSection,
     deleteSection,
+    reorderSections,
   } = useContacts();
   const {
     data,
@@ -423,11 +535,85 @@ export function ContactsPanel() {
   } = useActiveDashboard();
   const [addContactFor, setAddContactFor] = useState<string | null>(null);
 
+  // ── Drag state ──────────────────────────────────────────────────────────────
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [dragOverId, setDragOverId] = useState<string | null>(null);
+
   const frequentContacts = contacts
     .filter((c) => c.isFrequent)
     .sort((a, b) => a.name.localeCompare(b.name));
 
   const sortedSections = [...sections].sort((a, b) => a.sortOrder - b.sortOrder);
+
+  // ── Drag handlers ───────────────────────────────────────────────────────────
+  const handleDragStart = useCallback((id: string) => (e: DragEvent<HTMLElement>) => {
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', id);
+    setDraggingId(id);
+  }, []);
+
+  const handleDragEnd = useCallback(() => {
+    setDraggingId(null);
+    setDragOverId(null);
+  }, []);
+
+  const handleDragOver = useCallback((id: string) => (e: DragEvent<HTMLElement>) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (id !== draggingId) setDragOverId(id);
+  }, [draggingId]);
+
+  const handleDragLeave = useCallback((id: string) => (e: DragEvent<HTMLElement>) => {
+    // Only clear if truly leaving the card (not entering a child)
+    const related = e.relatedTarget as Node | null;
+    if (!e.currentTarget.contains(related)) {
+      setDragOverId((prev) => (prev === id ? null : prev));
+    }
+  }, []);
+
+  const handleDrop = useCallback((targetId: string) => (e: DragEvent<HTMLElement>) => {
+    e.preventDefault();
+    const sourceId = e.dataTransfer.getData('text/plain');
+    if (!sourceId || sourceId === targetId) {
+      setDraggingId(null);
+      setDragOverId(null);
+      return;
+    }
+
+    const ids = sortedSections.map((s) => s.id);
+    const fromIdx = ids.indexOf(sourceId);
+    const toIdx = ids.indexOf(targetId);
+    if (fromIdx === -1 || toIdx === -1) {
+      setDraggingId(null);
+      setDragOverId(null);
+      return;
+    }
+
+    const reordered = [...ids];
+    reordered.splice(fromIdx, 1);
+    reordered.splice(toIdx, 0, sourceId);
+
+    setDraggingId(null);
+    setDragOverId(null);
+    reorderSections(reordered);
+  }, [sortedSections, reorderSections]);
+
+  // ── Mobile move handlers ────────────────────────────────────────────────────
+  const handleMoveUp = useCallback((index: number) => () => {
+    if (index <= 0) return;
+    const ids = sortedSections.map((s) => s.id);
+    const reordered = [...ids];
+    [reordered[index - 1], reordered[index]] = [reordered[index], reordered[index - 1]];
+    reorderSections(reordered);
+  }, [sortedSections, reorderSections]);
+
+  const handleMoveDown = useCallback((index: number) => () => {
+    if (index >= sortedSections.length - 1) return;
+    const ids = sortedSections.map((s) => s.id);
+    const reordered = [...ids];
+    [reordered[index], reordered[index + 1]] = [reordered[index + 1], reordered[index]];
+    reorderSections(reordered);
+  }, [sortedSections, reorderSections]);
 
   if (isLoading) {
     return (
@@ -438,7 +624,7 @@ export function ContactsPanel() {
   }
 
   // ── Build grid items ───────────────────────────────────────────────────────
-  // Item 0: FREQUENTES card
+  // Item 0: FREQUENTES card (always first, not draggable)
   const frequentesCard = (
     <ContactSectionCard
       key="frequentes"
@@ -464,6 +650,18 @@ export function ContactsPanel() {
         onRename={(t) => renameSection(section.id, t)}
         onDelete={() => deleteSection(section.id)}
         onAddContact={() => setAddContactFor(section.id)}
+        draggable
+        isDragging={draggingId === section.id}
+        isDragOver={dragOverId === section.id}
+        onDragStart={handleDragStart(section.id)}
+        onDragEnd={handleDragEnd}
+        onDragOver={handleDragOver(section.id)}
+        onDragLeave={handleDragLeave(section.id)}
+        onDrop={handleDrop(section.id)}
+        onMoveUp={handleMoveUp(idx)}
+        onMoveDown={handleMoveDown(idx)}
+        canMoveUp={idx > 0}
+        canMoveDown={idx < sortedSections.length - 1}
       />
     );
   });
