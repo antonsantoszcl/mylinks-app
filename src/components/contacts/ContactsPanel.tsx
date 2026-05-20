@@ -14,9 +14,9 @@ import { ContactForm } from './ContactForm';
 import { Contact } from '@/lib/types';
 import { QuickAccessRow } from '@/components/dashboard/QuickAccessRow';
 import {
-  GripVertical,
   Inbox,
   LayoutGrid,
+  Pencil,
   Plus,
   Star,
   Trash2,
@@ -48,8 +48,6 @@ interface SectionCardHeaderProps {
   onRename?: (newTitle: string) => void;
   onDelete?: () => void;
   onAddContact?: () => void;
-  dragHandleListeners?: Record<string, unknown>;
-  dragHandleAttributes?: Record<string, unknown>;
 }
 
 function SectionCardHeader({
@@ -59,8 +57,6 @@ function SectionCardHeader({
   onRename,
   onDelete,
   onAddContact,
-  dragHandleListeners,
-  dragHandleAttributes,
 }: SectionCardHeaderProps) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(title);
@@ -120,24 +116,22 @@ function SectionCardHeader({
             <Plus className="w-5 h-5 md:w-3.5 md:h-3.5" />
           </button>
         )}
-        {dragHandleListeners && dragHandleAttributes && (
-          <div
-            className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-300 transition-colors cursor-grab active:cursor-grabbing rounded"
-            aria-label="Arrastar para reordenar"
-            style={{ touchAction: 'none' }}
-            {...dragHandleAttributes}
-            {...dragHandleListeners}
+        {onRename && !editing && (
+          <button
+            className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:text-primary-500 hover:bg-primary-50 rounded transition-colors opacity-100 md:opacity-0 md:group-hover:opacity-100"
+            onClick={() => setEditing(true)}
+            aria-label="Editar seção"
           >
-            <GripVertical className="w-5 h-5 md:w-3.5 md:h-3.5" />
-          </div>
+            <Pencil className="w-4 h-4 md:w-3 md:h-3" />
+          </button>
         )}
         {onDelete && (
           <button
-            className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+            className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors opacity-100 md:opacity-0 md:group-hover:opacity-100"
             onClick={onDelete}
             aria-label="Excluir seção"
           >
-            <Trash2 className="w-5 h-5 md:w-3 md:h-3" />
+            <Trash2 className="w-4 h-4 md:w-3 md:h-3" />
           </button>
         )}
       </div>
@@ -179,7 +173,7 @@ function ContactSectionCard({
 
   return (
     <article
-      className="rounded-xl md:rounded-[10px] flex flex-col group/card category-card hover:-translate-y-0.5"
+      className="rounded-xl md:rounded-[10px] flex flex-col group category-card hover:-translate-y-0.5"
       style={{
         border: '1px solid #E5E7EB',
         backgroundColor: '#FFFFFF',
