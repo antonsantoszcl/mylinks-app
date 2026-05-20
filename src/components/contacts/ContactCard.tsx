@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import { Contact } from '@/lib/types';
 import { MiniCard, buildChannels } from './MiniCard';
 import { ContactForm } from './ContactForm';
-import { MessageCircle, Pencil } from 'lucide-react';
+import { MessagesSquare, Pencil } from 'lucide-react';
 
 interface ContactCardProps {
   contact: Contact;
@@ -63,7 +63,7 @@ export function ContactCard({ contact }: ContactCardProps) {
               {channels[0].icon}
             </span>
           ) : (
-            <MessageCircle className="w-4 h-4 text-slate-400" />
+            <MessagesSquare className="w-4 h-4 text-slate-400" />
           )}
         </span>
 
