@@ -153,10 +153,13 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
       id: d.id as string,
       title: d.title as string,
       isDefault: d.is_default as boolean,
+      isContacts: (d.is_contacts as boolean) ?? false,
       sortOrder: d.sort_order as number,
       iconName: (d.is_default as boolean)
         ? 'house'
-        : ((d.icon_name as string | null) ?? 'star'),
+        : (d.is_contacts as boolean)
+          ? ((d.icon_name as string | null) ?? 'people')
+          : ((d.icon_name as string | null) ?? 'star'),
     }));
 
     // If no dashboards, create the default one
@@ -187,6 +190,12 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
       }
     }
 
+    // Ensure the Contacts panel exists
+    if (!list.find((d) => d.isContacts)) {
+      const contactsPanel = await insertContactsDashboard(uid, list.length);
+      if (contactsPanel) list = [...list, contactsPanel];
+    }
+
     setDashboards(list);
     setIsLoading(false);
   };
@@ -211,8 +220,27 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
       id: data.id as string,
       title: data.title as string,
       isDefault: data.is_default as boolean,
+      isContacts: false,
       sortOrder: data.sort_order as number,
       iconName: 'house',
+    };
+  };
+
+  const insertContactsDashboard = async (uid: string, sortOrder: number): Promise<Dashboard | null> => {
+    const supabase = getSupabaseClient();
+    const { data } = await supabase
+      .from('dashboards')
+      .insert({ user_id: uid, title: 'Contatos', is_default: false, is_contacts: true, sort_order: sortOrder, icon_name: 'people' })
+      .select()
+      .single();
+    if (!data) return null;
+    return {
+      id: data.id as string,
+      title: data.title as string,
+      isDefault: false,
+      isContacts: true,
+      sortOrder: data.sort_order as number,
+      iconName: 'people',
     };
   };
 
@@ -277,6 +305,7 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
       id: data.id as string,
       title: data.title as string,
       isDefault: data.is_default as boolean,
+      isContacts: false,
       sortOrder: data.sort_order as number,
       iconName: iconName,
     };

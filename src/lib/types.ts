@@ -2,6 +2,7 @@ export interface Dashboard {
   id: string;
   title: string;
   isDefault: boolean;
+  isContacts: boolean;
   sortOrder: number;
   iconName: string;
 }

@@ -419,13 +419,15 @@ function DashboardNavItem({
             >
               <Pencil className="w-3 h-3" />
             </button>
-            <button
-              onClick={(e) => { e.stopPropagation(); onDelete(dashboard.id); }}
-              className="p-1 rounded text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
-              title="Excluir"
-            >
-              <Trash2 className="w-3 h-3" />
-            </button>
+            {!dashboard.isContacts && (
+              <button
+                onClick={(e) => { e.stopPropagation(); onDelete(dashboard.id); }}
+                className="p-1 rounded text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                title="Excluir"
+              >
+                <Trash2 className="w-3 h-3" />
+              </button>
+            )}
           </div>
         )}
       </div>

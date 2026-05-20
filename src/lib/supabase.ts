@@ -18,6 +18,7 @@ type DashboardRow = {
   user_id: string;
   title: string;
   is_default: boolean;
+  is_contacts: boolean;
   sort_order: number;
   icon_name: string | null;
   created_at: string;
