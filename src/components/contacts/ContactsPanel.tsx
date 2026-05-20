@@ -317,7 +317,7 @@ function SectionCardHeader({
           )}
           {!isFrequents && onDragHandleMouseDown && (
             <div
-              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-300 transition-colors cursor-grab active:cursor-grabbing rounded opacity-100 md:opacity-0 md:group-hover:opacity-100"
+              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-300 transition-colors cursor-grab active:cursor-grabbing rounded"
               aria-label="Arrastar seção"
               style={{ touchAction: 'none' }}
               onMouseDown={onDragHandleMouseDown}
@@ -327,16 +327,16 @@ function SectionCardHeader({
           )}
           {onRename && !editing && (
             <button
-              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:text-primary-500 hover:bg-primary-50 rounded transition-colors opacity-100 md:opacity-0 md:group-hover:opacity-100"
+              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:text-primary-500 hover:bg-primary-50 rounded transition-colors md:hidden"
               onClick={() => setEditing(true)}
               aria-label="Editar seção"
             >
-              <Pencil className="w-4 h-4 md:w-3 md:h-3" />
+              <Pencil className="w-4 h-4" />
             </button>
           )}
           {onDelete && (
             <button
-              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors opacity-100 md:opacity-0 md:group-hover:opacity-100"
+              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
               onClick={onDelete}
               aria-label="Excluir seção"
             >
