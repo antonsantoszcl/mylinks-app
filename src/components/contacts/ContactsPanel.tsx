@@ -559,7 +559,7 @@ export function ContactsPanel() {
   const frequentesCard = (
     <ContactSectionCard
       key="frequentes"
-      title="Frequentes"
+      title="Contatos Frequentes"
       contacts={frequentContacts}
       colorIndex={0}
       isFrequents
