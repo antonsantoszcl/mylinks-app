@@ -585,6 +585,42 @@ function SidebarContent({
     e.dataTransfer.dropEffect = 'move';
   };
 
+  // Container-level drop: if the user drops anywhere in the panel list area
+  // that wasn't caught by a specific panel, clamp to first or last position
+  const panelListRef = useRef<HTMLDivElement>(null);
+  const handleContainerDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const sourceId = dragIdRef.current;
+    dragIdRef.current = null;
+    setDraggingId(null);
+    setDragOverId(null);
+    if (!sourceId) return;
+
+    const nonDefaults = dashboards.filter((d) => !d.isDefault);
+    const defaultPanel = dashboards.find((d) => d.isDefault);
+    const sourceIdx = nonDefaults.findIndex((d) => d.id === sourceId);
+    if (sourceIdx === -1) return;
+
+    // Determine position based on mouse Y relative to list midpoint
+    const container = panelListRef.current;
+    if (!container) return;
+    const rect = container.getBoundingClientRect();
+    const mouseY = e.clientY;
+    const midY = rect.top + rect.height / 2;
+    const targetIdx = mouseY < midY ? 0 : nonDefaults.length - 1;
+    if (targetIdx === sourceIdx) return;
+
+    const reordered = [...nonDefaults];
+    const [moved] = reordered.splice(sourceIdx, 1);
+    reordered.splice(targetIdx, 0, moved);
+
+    const orderedIds = [
+      ...(defaultPanel ? [defaultPanel.id] : []),
+      ...reordered.map((d) => d.id),
+    ];
+    reorderDashboards(orderedIds);
+  };
+
   // Touch drag reorder (mobile) — with visual translateY animation
   const touchDragIdRef = useRef<string | null>(null);
   const touchStartYRef = useRef<number>(0);
@@ -636,7 +672,9 @@ function SidebarContent({
       const srcIdx = nonDefaults.findIndex((d) => d.id === srcId);
       const rawSteps = dy / itemHeightRef.current;
       const clampedSteps = Math.max(-(srcIdx), Math.min(nonDefaults.length - 1 - srcIdx, Math.round(rawSteps)));
-      setTouchDragOffset(dy);
+      // Clamp visual offset to match clamped steps so the item doesn't fly beyond valid positions
+      const clampedOffset = clampedSteps * itemHeightRef.current;
+      setTouchDragOffset(clampedOffset);
       setTouchDragSteps(clampedSteps);
       if (clampedSteps !== 0) {
         setDragOverId(nonDefaults[srcIdx + clampedSteps]?.id ?? null);
@@ -774,16 +812,10 @@ function SidebarContent({
         <nav className="flex-1 px-2 pt-2 space-y-0.5 overflow-y-auto">
           {/* ── Paineis section ─────────────────────────── */}
           {!collapsed && !dashLoading && (
-            <div className="mb-1">
+            <div className="mb-1" ref={panelListRef} onDragOver={handleBoundaryDragOver} onDrop={handleContainerDrop}>
               <p className="px-2 pb-1 text-[10px] font-semibold text-slate-400/80 uppercase tracking-widest">
                 Paineis
               </p>
-              {/* Drop zone: move to first position (right after Principal) */}
-              <div
-                className="h-1"
-                onDragOver={handleBoundaryDragOver}
-                onDrop={handleBoundaryDrop('first')}
-              />
               {dashboards.map((d) => {
                 const translateY = getTouchDragTranslate(d.id);
                 const isBeingDragged = draggingId === d.id;
@@ -817,13 +849,6 @@ function SidebarContent({
                   </div>
                 );
               })}
-
-              {/* Drop zone: move to last position (before + Novo Painel) */}
-              <div
-                className="h-1"
-                onDragOver={handleBoundaryDragOver}
-                onDrop={handleBoundaryDrop('last')}
-              />
 
               {/* New painel form / button */}
               {showNewDash ? (
