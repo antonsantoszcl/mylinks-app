@@ -303,9 +303,9 @@ function DashboardNavItem({
         } ${isDragging ? 'opacity-40' : ''}`}
         draggable={!dashboard.isDefault}
         onDragStart={!dashboard.isDefault ? onDragStart : undefined}
-        onDragOver={!dashboard.isDefault ? onDragOver : undefined}
+        onDragOver={onDragOver}
         onDragEnd={!dashboard.isDefault ? onDragEnd : undefined}
-        onDrop={!dashboard.isDefault ? onDrop : undefined}
+        onDrop={onDrop}
       >
         <button
           onClick={() => onSelect(dashboard.id)}
