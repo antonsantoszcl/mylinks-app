@@ -1,6 +1,7 @@
 'use client';
 
 import { Category, Dashboard, Link as LinkType } from '@/lib/types';
+import { getNotoEmojiUrl } from '@/lib/emojiUtils';
 import { SortableCategoryCard } from './SortableCategoryCard';
 import { LayoutGrid, Plus } from 'lucide-react';
 import { FormEvent, useState, useRef, useEffect, useCallback } from 'react';
@@ -40,6 +41,48 @@ interface CategoryGridProps {
 
 const GAP = 16; // px – matches gap-4 (1rem)
 
+// Emoji picker icons (same as CategoryCard)
+const PICKER_ICONS: { name: string; emoji: string }[] = [
+  { name: 'folder',     emoji: '📂' },
+  { name: 'pin',        emoji: '📌' },
+  { name: 'tasks',      emoji: '✅' },
+  { name: 'briefcase',  emoji: '💼' },
+  { name: 'gear',       emoji: '⚙️' },
+  { name: 'computer',   emoji: '💻' },
+  { name: 'robot',      emoji: '🤖' },
+  { name: 'bolt',       emoji: '⚡' },
+  { name: 'book',       emoji: '📕' },
+  { name: 'graduation', emoji: '🎓' },
+  { name: 'notes',      emoji: '📝' },
+  { name: 'money',      emoji: '💰' },
+  { name: 'chart',      emoji: '📈' },
+  { name: 'bank',       emoji: '🏦' },
+  { name: 'chat',       emoji: '💬' },
+  { name: 'cart',       emoji: '🛒' },
+  { name: 'globe',      emoji: '🌐' },
+  { name: 'people',     emoji: '👥' },
+  { name: 'music',      emoji: '🎵' },
+  { name: 'film',       emoji: '🎬' },
+  { name: 'gaming',     emoji: '🎮' },
+  { name: 'tv',         emoji: '📺' },
+  { name: 'heart',      emoji: '❤️' },
+  { name: 'star',       emoji: '⭐' },
+];
+
+function getIsMobile(): boolean {
+  return typeof window !== 'undefined' && window.innerWidth < 768;
+}
+
+function getTwemojiUrl(emoji: string): string {
+  const codePoint = [...emoji]
+    .map((char) => char.codePointAt(0)?.toString(16))
+    .filter(Boolean)
+    .join('-')
+    .replace(/-fe0f$/, '')
+    .replace(/-fe0f-/, '-');
+  return `https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/${codePoint}.svg`;
+}
+
 function getColumnCount(width: number): number {
   if (width >= 1024) return 4;
   if (width >= 768) return 2;
@@ -71,6 +114,14 @@ export function CategoryGrid({
 }: CategoryGridProps) {
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
+  const [newCategoryIcon, setNewCategoryIcon] = useState('folder');
+  const [isMobile, setIsMobile] = useState(getIsMobile);
+
+  useEffect(() => {
+    const handler = () => setIsMobile(getIsMobile());
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
 
   // Masonry layout state
   const containerRef = useRef<HTMLDivElement>(null);
@@ -149,8 +200,9 @@ export function CategoryGrid({
   const submitCategory = (event: FormEvent) => {
     event.preventDefault();
     if (!newCategoryName.trim()) return;
-    onAddCategory(newCategoryName, 'folder');
+    onAddCategory(newCategoryName, newCategoryIcon);
     setNewCategoryName('');
+    setNewCategoryIcon('folder');
     setShowAddCategory(false);
   };
 
@@ -265,10 +317,47 @@ export function CategoryGrid({
                             className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-xs outline-none focus:ring-2 focus:ring-primary-300"
                             autoFocus
                           />
+                          {/* Emoji icon picker */}
+                          <div className="grid grid-cols-6 gap-0.5">
+                            {PICKER_ICONS.map(({ name, emoji }) => {
+                              const isSelected = name === newCategoryIcon;
+                              return (
+                                <button
+                                  key={name}
+                                  type="button"
+                                  title={name}
+                                  onClick={() => setNewCategoryIcon(name)}
+                                  className={`flex items-center justify-center w-9 h-9 rounded transition-colors ${
+                                    isSelected
+                                      ? 'bg-blue-50 ring-2 ring-blue-300 ring-offset-1'
+                                      : 'hover:bg-gray-100'
+                                  }`}
+                                >
+                                  {isMobile ? (
+                                    <span className="text-lg select-none">{emoji}</span>
+                                  ) : (
+                                    <img
+                                      src={getNotoEmojiUrl(emoji)}
+                                      alt={name}
+                                      className="w-5 h-5 select-none"
+                                      draggable={false}
+                                      onError={(e) => {
+                                        const img = e.currentTarget;
+                                        if (!img.dataset.fallback) {
+                                          img.dataset.fallback = '1';
+                                          img.src = getTwemojiUrl(emoji);
+                                        }
+                                      }}
+                                    />
+                                  )}
+                                </button>
+                              );
+                            })}
+                          </div>
                           <div className="flex justify-end gap-1.5">
                             <button
                               type="button"
-                              onClick={() => { setShowAddCategory(false); setNewCategoryName(''); }}
+                              onClick={() => { setShowAddCategory(false); setNewCategoryName(''); setNewCategoryIcon('folder'); }}
                               className="px-2 py-1 text-xs rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 min-h-[44px] md:min-h-0"
                             >
                               Cancelar
