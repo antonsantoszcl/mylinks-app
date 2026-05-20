@@ -329,7 +329,7 @@ function SectionCardHeader({
               onClick={() => setEditing(true)}
               aria-label="Editar seção"
             >
-              <Pencil className="w-4 h-4" />
+              <Pencil className="w-5 h-5" />
             </button>
           )}
           {onDelete && (
@@ -338,7 +338,7 @@ function SectionCardHeader({
               onClick={onDelete}
               aria-label="Excluir seção"
             >
-              <Trash2 className="w-4 h-4 md:w-3 md:h-3" />
+              <Trash2 className="w-5 h-5 md:w-3 md:h-3" />
             </button>
           )}
         </div>
