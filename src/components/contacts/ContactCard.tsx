@@ -72,17 +72,15 @@ export function ContactCard({ contact }: ContactCardProps) {
           {contact.name}
         </span>
 
-        {/* Pencil edit button — only for single-channel contacts (multi-channel uses MiniCard's pencil) */}
-        {channels.length === 1 && (
-          <span
-            role="button"
-            aria-label="Editar contato"
-            onClick={(e) => { e.stopPropagation(); setShowEdit(true); }}
-            className="flex-shrink-0 p-0.5 rounded text-slate-400 hover:text-primary-500 hover:bg-primary-50 transition-colors opacity-0 group-hover/contact:opacity-100"
-          >
-            <Pencil className="w-3 h-3" />
-          </span>
-        )}
+        {/* Pencil edit button */}
+        <span
+          role="button"
+          aria-label="Editar contato"
+          onClick={(e) => { e.stopPropagation(); setShowEdit(true); }}
+          className="flex-shrink-0 p-0.5 rounded text-slate-400 hover:text-primary-500 hover:bg-primary-50 transition-colors opacity-0 group-hover/contact:opacity-100"
+        >
+          <Pencil className="w-3 h-3" />
+        </span>
       </button>
 
       {showMini && (
