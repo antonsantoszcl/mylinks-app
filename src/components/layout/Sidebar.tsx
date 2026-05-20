@@ -521,10 +521,44 @@ function SidebarContent({
     }
   };
 
-  const handleDragEnd = () => (_e: React.DragEvent) => {
+  const handleDragEnd = () => (e: React.DragEvent) => {
+    const sourceId = dragIdRef.current;
     dragIdRef.current = null;
     setDraggingId(null);
     setDragOverId(null);
+
+    // If sourceId is still set, no drop handler caught it (cursor left the area)
+    // Use last known dragOverId or mouse Y to determine target position
+    if (!sourceId) return;
+    const container = panelListRef.current;
+    if (!container) return;
+
+    const nonDefaults = dashboards.filter((d) => !d.isDefault);
+    const defaultPanel = dashboards.find((d) => d.isDefault);
+    const sourceIdx = nonDefaults.findIndex((d) => d.id === sourceId);
+    if (sourceIdx === -1) return;
+
+    const rect = container.getBoundingClientRect();
+    const mouseY = e.clientY;
+    let targetIdx: number;
+    if (mouseY <= rect.top) {
+      targetIdx = 0; // above list → first position
+    } else if (mouseY >= rect.bottom) {
+      targetIdx = nonDefaults.length - 1; // below list → last position
+    } else {
+      return; // within bounds, a drop handler should have caught it
+    }
+    if (targetIdx === sourceIdx) return;
+
+    const reordered = [...nonDefaults];
+    const [moved] = reordered.splice(sourceIdx, 1);
+    reordered.splice(targetIdx, 0, moved);
+
+    const orderedIds = [
+      ...(defaultPanel ? [defaultPanel.id] : []),
+      ...reordered.map((d) => d.id),
+    ];
+    reorderDashboards(orderedIds);
   };
 
   const handleDrop = (targetId: string) => (e: React.DragEvent) => {
