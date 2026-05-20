@@ -306,7 +306,7 @@ function SectionCardHeader({
         <div className="flex items-center gap-0 md:gap-0.5 flex-shrink-0">
           {onAddContact && (
             <button
-              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:bg-white/60 rounded transition-colors"
+              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400/75 md:text-slate-400 hover:bg-white/60 rounded transition-colors"
               aria-label="Adicionar contato"
               onClick={onAddContact}
             >
@@ -325,7 +325,7 @@ function SectionCardHeader({
           )}
           {onRename && !editing && (
             <button
-              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:text-primary-500 hover:bg-primary-50 rounded transition-colors md:hidden"
+              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400/75 md:text-slate-400 hover:text-primary-500 hover:bg-primary-50 rounded transition-colors md:hidden"
               onClick={() => setEditing(true)}
               aria-label="Editar seção"
             >
@@ -334,7 +334,7 @@ function SectionCardHeader({
           )}
           {onDelete && (
             <button
-              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400/75 md:text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
               onClick={onDelete}
               aria-label="Excluir seção"
             >
