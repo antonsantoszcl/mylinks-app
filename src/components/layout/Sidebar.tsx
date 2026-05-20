@@ -376,7 +376,7 @@ function DashboardNavItem({
 
         {/* Actions: pencil/drag/trash (non-default, not editing) */}
         {!dashboard.isDefault && !editing && (
-          <div className="flex items-center gap-1 transition-opacity pr-1 opacity-100 md:opacity-0 md:group-hover:opacity-100">
+          <div className="flex items-center gap-1 md:gap-0 transition-opacity pr-1 md:pr-0 opacity-100 md:opacity-0 md:group-hover:opacity-100">
             {/* Pencil — first (contacts panel: invisible placeholder for alignment) */}
             {!dashboard.isContacts ? (
               <button
