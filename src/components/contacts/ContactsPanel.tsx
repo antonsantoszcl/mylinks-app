@@ -313,6 +313,15 @@ function SectionCardHeader({
               <Plus className="w-5 h-5 md:w-3.5 md:h-3.5" />
             </button>
           )}
+          {onRename && !editing && (
+            <button
+              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:text-primary-500 hover:bg-primary-50 rounded transition-colors md:hidden"
+              onClick={() => setEditing(true)}
+              aria-label="Editar seção"
+            >
+              <Pencil className="w-5 h-5" />
+            </button>
+          )}
           {!isFrequents && onDragHandleMouseDown && (
             <div
               className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-300 transition-colors cursor-grab active:cursor-grabbing rounded"
@@ -322,15 +331,6 @@ function SectionCardHeader({
             >
               <GripVertical className="w-5 h-5 md:w-3.5 md:h-3.5" />
             </div>
-          )}
-          {onRename && !editing && (
-            <button
-              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:text-primary-500 hover:bg-primary-50 rounded transition-colors md:hidden"
-              onClick={() => setEditing(true)}
-              aria-label="Editar seção"
-            >
-              <Pencil className="w-5 h-5" />
-            </button>
           )}
           {onDelete && (
             <button
