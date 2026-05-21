@@ -118,7 +118,7 @@ export function ContactCard({ contact }: ContactCardProps) {
         </span>
 
         {/* Contact name */}
-        <span className="text-[12.5px] font-medium text-slate-700 md:text-slate-600 truncate leading-tight flex-1">
+        <span className="text-[12.5px] md:text-xs font-medium text-slate-700 md:text-slate-600 truncate leading-tight flex-1">
           {contact.name}
         </span>
 
