@@ -121,7 +121,7 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
         </span>
 
         {/* Contact name */}
-        <span className="text-sm md:text-[12px] font-medium text-slate-700 md:text-slate-600 truncate leading-tight flex-1">
+        <span className="text-sm md:text-[12px] font-semibold text-slate-700 md:text-slate-600 truncate leading-tight flex-1">
           {contact.name}
         </span>
 
