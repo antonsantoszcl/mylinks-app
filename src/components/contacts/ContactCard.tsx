@@ -108,7 +108,7 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
       >
         {/* Channel icon */}
         <span
-          className="flex-shrink-0 flex items-center justify-center w-5 h-5 md:w-4 md:h-4"
+          className="flex-shrink-0 flex items-center justify-center w-5 h-5"
           aria-hidden="true"
         >
           {channels.length === 1 ? (
