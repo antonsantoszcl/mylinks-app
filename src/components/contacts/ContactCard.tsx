@@ -19,8 +19,8 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
   const [showMoveMenu, setShowMoveMenu] = useState(false);
   const [moveMenuPos, setMoveMenuPos] = useState<{ top: number; left: number } | null>(null);
   const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
-  const cardRef = useRef<HTMLButtonElement>(null);
-  const moveButtonRef = useRef<HTMLSpanElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const moveButtonRef = useRef<HTMLButtonElement>(null);
   const moveMenuRef = useRef<HTMLDivElement>(null);
   const { deleteContact, updateContact, sections } = useContacts();
 
@@ -90,70 +90,58 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
 
   return (
     <>
-      <button
+      <div
         ref={cardRef}
-        type="button"
-        onClick={handleClick}
-        disabled={channels.length === 0}
-        className="group/contact flex items-center gap-2 w-full py-[5px] pl-1.5 pr-0 rounded-lg text-left transition-colors duration-100 hover:bg-white/70 active:bg-white/90 disabled:opacity-40 disabled:cursor-default"
+        className="group/contact flex items-center justify-between py-[5px] pl-1.5 pr-0 rounded-lg hover:bg-white/70 transition-all cursor-pointer"
+        onClick={channels.length > 0 ? handleClick : undefined}
       >
-        {/* Channel icon */}
-        <span
-          className="flex-shrink-0 flex items-center justify-center w-5 h-5"
-          aria-hidden="true"
-        >
-          {channels.length === 1 ? (
-            <span style={{ color: channels[0].iconColor }}>
-              {channels[0].icon}
-            </span>
-          ) : (
-            <MessagesSquare className="w-5 h-5 text-slate-400" />
-          )}
-        </span>
-
-        {/* Contact name */}
-        <span className="text-sm md:text-[12px] font-semibold text-slate-700 md:text-slate-600 truncate flex-1">
-          {contact.name}
-        </span>
-
-        {/* Action icons — aligned with section header icons */}
-        <span className="flex items-center gap-0 md:gap-0.5 flex-shrink-0 -mr-2 relative">
-          {/* Pencil edit button */}
+        <div className="flex items-center gap-2 flex-1 min-w-0">
           <span
-            role="button"
-            aria-label="Editar contato"
-            onClick={(e) => { e.stopPropagation(); setShowEdit(true); }}
+            className="w-5 h-5 flex-shrink-0 flex items-center justify-center"
+            aria-hidden="true"
+          >
+            {channels.length === 1 ? (
+              <span style={{ color: channels[0].iconColor }}>
+                {channels[0].icon}
+              </span>
+            ) : (
+              <MessagesSquare className="w-5 h-5 text-slate-400" />
+            )}
+          </span>
+          <span className="text-sm md:text-[12px] font-semibold text-slate-700 md:text-slate-600 truncate flex-1">
+            {contact.name}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-0 md:gap-0.5 flex-shrink-0 -mr-2">
+          <button
             className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-[#d4dce8] md:text-slate-300 hover:text-primary-500 rounded opacity-100 md:opacity-0 md:group-hover/contact:opacity-100 transition-opacity"
+            title="Editar contato"
+            onClick={(e) => { e.stopPropagation(); setShowEdit(true); }}
           >
             <Pencil className="w-5 h-5 md:w-3 md:h-3" />
-          </span>
+          </button>
 
-          {/* Move to section button */}
           {otherSections.length > 0 && (
-            <span
+            <button
               ref={moveButtonRef}
-              role="button"
-              aria-label="Mover para outra seção"
-              onClick={toggleMoveMenu}
               className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-[#d4dce8] md:text-slate-300 hover:text-primary-500 rounded opacity-100 md:opacity-0 md:group-hover/contact:opacity-100 transition-opacity"
+              title="Mover para outra seção"
+              onClick={toggleMoveMenu}
             >
               <ArrowLeftRight className="w-5 h-5 md:w-3 md:h-3" />
-            </span>
+            </button>
           )}
 
-          {/* Trash delete button */}
-          <span
-            role="button"
-            aria-label="Excluir contato"
-            onClick={handleDelete}
+          <button
             className="flex items-center justify-center min-w-[32px] min-h-[32px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-[#d4dce8] md:text-slate-300 hover:text-red-500 rounded opacity-100 md:opacity-0 md:group-hover/contact:opacity-100 transition-opacity"
+            title="Excluir contato"
+            onClick={handleDelete}
           >
             <Trash2 className="w-5 h-5 md:w-3 md:h-3" />
-          </span>
-
-          {/* Move menu rendered via portal */}
-        </span>
-      </button>
+          </button>
+        </div>
+      </div>
 
       {showMoveMenu && moveMenuPos && createPortal(
         <div
