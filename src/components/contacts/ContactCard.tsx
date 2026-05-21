@@ -5,7 +5,7 @@ import { Contact } from '@/lib/types';
 import { MiniCard, buildChannels } from './MiniCard';
 import { ContactForm } from './ContactForm';
 import { useContacts } from '@/context/ContactsContext';
-import { MessagesSquare, Pencil, Trash2, FolderOutput } from 'lucide-react';
+import { MessagesSquare, Pencil, Trash2, ArrowLeftRight } from 'lucide-react';
 
 interface ContactCardProps {
   contact: Contact;
@@ -90,34 +90,34 @@ export function ContactCard({ contact }: ContactCardProps) {
 
         {/* Action icons — aligned with section header icons */}
         <span className="flex items-center gap-0 flex-shrink-0 md:mr-0 relative">
+          {/* Pencil edit button */}
+          <span
+            role="button"
+            aria-label="Editar contato"
+            onClick={(e) => { e.stopPropagation(); setShowEdit(true); }}
+            className="flex-shrink-0 flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-[24px] md:min-h-[24px] md:p-0.5 rounded text-[#d4dce8] hover:text-primary-500 hover:bg-primary-50 transition-colors md:text-slate-400 md:opacity-0 md:group-hover/contact:opacity-100"
+          >
+            <Pencil className="w-5 h-5 md:w-3 md:h-3" />
+          </span>
+
           {/* Move to section button */}
           {otherSections.length > 0 && (
             <span
               role="button"
               aria-label="Mover para outra seção"
               onClick={(e) => { e.stopPropagation(); setShowMoveMenu((v) => !v); }}
-              className="flex-shrink-0 flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-0.5 rounded text-[#d4dce8] hover:text-primary-500 hover:bg-primary-50 transition-colors md:text-slate-400 md:opacity-0 md:group-hover/contact:opacity-100"
+              className="flex-shrink-0 flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-[24px] md:min-h-[24px] md:p-0.5 rounded text-[#d4dce8] hover:text-primary-500 hover:bg-primary-50 transition-colors md:text-slate-400 md:opacity-0 md:group-hover/contact:opacity-100"
             >
-              <FolderOutput className="w-5 h-5 md:w-3 md:h-3" />
+              <ArrowLeftRight className="w-5 h-5 md:w-3 md:h-3" />
             </span>
           )}
-
-          {/* Pencil edit button */}
-          <span
-            role="button"
-            aria-label="Editar contato"
-            onClick={(e) => { e.stopPropagation(); setShowEdit(true); }}
-            className="flex-shrink-0 flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-0.5 rounded text-[#d4dce8] hover:text-primary-500 hover:bg-primary-50 transition-colors md:text-slate-400 md:opacity-0 md:group-hover/contact:opacity-100"
-          >
-            <Pencil className="w-5 h-5 md:w-3 md:h-3" />
-          </span>
 
           {/* Trash delete button */}
           <span
             role="button"
             aria-label="Excluir contato"
             onClick={handleDelete}
-            className="flex-shrink-0 flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-0.5 rounded text-[#d4dce8] hover:text-red-500 hover:bg-red-50 transition-colors md:text-slate-400 md:opacity-0 md:group-hover/contact:opacity-100"
+            className="flex-shrink-0 flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-[24px] md:min-h-[24px] md:p-0.5 rounded text-[#d4dce8] hover:text-red-500 hover:bg-red-50 transition-colors md:text-slate-400 md:opacity-0 md:group-hover/contact:opacity-100"
           >
             <Trash2 className="w-5 h-5 md:w-3 md:h-3" />
           </span>
