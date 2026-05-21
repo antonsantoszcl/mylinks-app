@@ -107,7 +107,7 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
               {channels[0].icon}
             </span>
           ) : (
-            <MessagesSquare className="w-4 h-4 text-slate-400" />
+            <MessagesSquare className="w-5 h-5 text-slate-400" />
           )}
         </span>
 

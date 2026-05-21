@@ -60,7 +60,7 @@ function buildChannels(contact: Contact): Channel[] {
       key: 'whatsapp',
       label: 'WhatsApp',
       url: `https://wa.me/${num}`,
-      icon: <WhatsAppIcon className="w-4 h-4" />,
+      icon: <WhatsAppIcon className="w-5 h-5" />,
       iconColor: '#25D366',
     });
   }
@@ -70,7 +70,7 @@ function buildChannels(contact: Contact): Channel[] {
       key: 'instagram',
       label: 'Instagram',
       url: `https://instagram.com/${user}`,
-      icon: <InstagramIcon className="w-4 h-4" />,
+      icon: <InstagramIcon className="w-5 h-5" />,
       iconColor: '#E1306C',
     });
   }
@@ -79,7 +79,7 @@ function buildChannels(contact: Contact): Channel[] {
       key: 'email',
       label: 'Email',
       url: `mailto:${contact.email}`,
-      icon: <EmailIcon className="w-4 h-4" />,
+      icon: <EmailIcon className="w-5 h-5" />,
       iconColor: '#64748B',
     });
   }
@@ -89,7 +89,7 @@ function buildChannels(contact: Contact): Channel[] {
       key: 'linkedin',
       label: 'LinkedIn',
       url: `https://linkedin.com/in/${slug}`,
-      icon: <LinkedInIcon className="w-4 h-4" />,
+      icon: <LinkedInIcon className="w-5 h-5" />,
       iconColor: '#0A66C2',
     });
   }
