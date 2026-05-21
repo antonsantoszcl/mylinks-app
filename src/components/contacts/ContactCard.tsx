@@ -97,7 +97,7 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
         disabled={channels.length === 0}
         className="
           flex items-center gap-2 w-full
-          pl-3 pr-0 py-2 md:px-2 md:py-1.5
+          pl-3 pr-0 py-2 md:px-2 md:py-[5px]
           rounded-lg
           text-left
           transition-colors duration-100
