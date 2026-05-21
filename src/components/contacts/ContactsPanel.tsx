@@ -458,7 +458,7 @@ function ContactSectionCard({
 
       {isFrequents ? (
         <div className="mx-2 mb-2 mt-1 px-3 py-2 text-center">
-          <p className="text-[10px] md:text-[10px] text-slate-400 italic whitespace-nowrap">Assinale frequente ao incluir um contato</p>
+          <p className="text-[11px] md:text-[10px] text-slate-500 italic whitespace-nowrap">Assinale frequente ao incluir um contato</p>
         </div>
       ) : onAddContact && (
         <div className="mx-2 mb-2 mt-1 px-2 py-1.5 rounded-b-xl">
