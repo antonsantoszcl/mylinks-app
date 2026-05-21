@@ -27,9 +27,10 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
   const channels = buildChannels(contact);
 
   // Other sections the contact can move to
-  // Frequent contacts can move to ANY section; normal contacts exclude their own section
-  const otherSections = sections.filter(
-    (s) => s.title !== 'CONTATOS FREQUENTES' && (isInFrequentes || contact.isFrequent || s.id !== contact.sectionId)
+  // Contacts in Frequentes section don't get move icon
+  // Normal section contacts can move to other sections (excluding their own)
+  const otherSections = isInFrequentes ? [] : sections.filter(
+    (s) => s.title !== 'CONTATOS FREQUENTES' && s.id !== contact.sectionId
   );
 
   const handleDelete = (e: React.MouseEvent) => {
