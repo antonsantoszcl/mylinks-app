@@ -10,9 +10,10 @@ import { MessagesSquare, Pencil, Trash2, ArrowLeftRight } from 'lucide-react';
 
 interface ContactCardProps {
   contact: Contact;
+  isInFrequentes?: boolean;
 }
 
-export function ContactCard({ contact }: ContactCardProps) {
+export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
   const [showMini, setShowMini] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showMoveMenu, setShowMoveMenu] = useState(false);
@@ -25,9 +26,11 @@ export function ContactCard({ contact }: ContactCardProps) {
 
   const channels = buildChannels(contact);
 
-  // Other sections the contact can move to (exclude current and CONTATOS FREQUENTES)
+  // Other sections the contact can move to
+  // When viewing in Frequentes, show ALL sections (including the contact's own section)
+  // When viewing in a normal section, exclude current section
   const otherSections = sections.filter(
-    (s) => s.id !== contact.sectionId && s.title !== 'CONTATOS FREQUENTES'
+    (s) => s.title !== 'CONTATOS FREQUENTES' && (isInFrequentes || s.id !== contact.sectionId)
   );
 
   const handleDelete = (e: React.MouseEvent) => {

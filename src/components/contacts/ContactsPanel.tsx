@@ -443,7 +443,7 @@ function ContactSectionCard({
         {contacts.length > 0 ? (
           <div className="flex flex-col gap-0.5">
             {contacts.map((c) => (
-              <ContactCard key={c.id} contact={c} />
+              <ContactCard key={c.id} contact={c} isInFrequentes={isFrequents} />
             ))}
           </div>
         ) : (
