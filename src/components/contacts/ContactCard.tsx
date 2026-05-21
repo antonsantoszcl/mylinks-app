@@ -95,16 +95,7 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
         type="button"
         onClick={handleClick}
         disabled={channels.length === 0}
-        className="
-          flex items-center gap-2 w-full
-          pl-3 pr-0 py-2 md:px-2 md:py-[5px]
-          rounded-lg
-          text-left
-          transition-colors duration-100
-          hover:bg-white/70 active:bg-white/90
-          disabled:opacity-40 disabled:cursor-default
-          group/contact
-        "
+        className="group/contact flex items-center gap-2 w-full py-[5px] pl-1.5 pr-0 rounded-lg text-left transition-colors duration-100 hover:bg-white/70 active:bg-white/90 disabled:opacity-40 disabled:cursor-default"
       >
         {/* Channel icon */}
         <span
@@ -121,18 +112,18 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
         </span>
 
         {/* Contact name */}
-        <span className="text-sm md:text-[12px] font-semibold text-slate-700 md:text-slate-600 truncate leading-tight flex-1">
+        <span className="text-sm md:text-[12px] font-semibold text-slate-700 md:text-slate-600 truncate flex-1">
           {contact.name}
         </span>
 
         {/* Action icons — aligned with section header icons */}
-        <span className="flex items-center gap-0 flex-shrink-0 md:mr-0 relative">
+        <span className="flex items-center gap-0 md:gap-0.5 flex-shrink-0 -mr-2 relative">
           {/* Pencil edit button */}
           <span
             role="button"
             aria-label="Editar contato"
             onClick={(e) => { e.stopPropagation(); setShowEdit(true); }}
-            className="flex-shrink-0 flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-[24px] md:min-h-[24px] md:p-0.5 rounded text-[#d4dce8] hover:text-primary-500 hover:bg-primary-50 transition-colors md:text-slate-400 md:opacity-0 md:group-hover/contact:opacity-100"
+            className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-[#d4dce8] md:text-slate-300 hover:text-primary-500 rounded opacity-100 md:opacity-0 md:group-hover/contact:opacity-100 transition-opacity"
           >
             <Pencil className="w-5 h-5 md:w-3 md:h-3" />
           </span>
@@ -144,7 +135,7 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
               role="button"
               aria-label="Mover para outra seção"
               onClick={toggleMoveMenu}
-              className="flex-shrink-0 flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-[24px] md:min-h-[24px] md:p-0.5 rounded text-[#d4dce8] hover:text-primary-500 hover:bg-primary-50 transition-colors md:text-slate-400 md:opacity-0 md:group-hover/contact:opacity-100"
+              className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-[#d4dce8] md:text-slate-300 hover:text-primary-500 rounded opacity-100 md:opacity-0 md:group-hover/contact:opacity-100 transition-opacity"
             >
               <ArrowLeftRight className="w-5 h-5 md:w-3 md:h-3" />
             </span>
@@ -155,7 +146,7 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
             role="button"
             aria-label="Excluir contato"
             onClick={handleDelete}
-            className="flex-shrink-0 flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-[24px] md:min-h-[24px] md:p-0.5 rounded text-[#d4dce8] hover:text-red-500 hover:bg-red-50 transition-colors md:text-slate-400 md:opacity-0 md:group-hover/contact:opacity-100"
+            className="flex items-center justify-center min-w-[32px] min-h-[32px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-[#d4dce8] md:text-slate-300 hover:text-red-500 rounded opacity-100 md:opacity-0 md:group-hover/contact:opacity-100 transition-opacity"
           >
             <Trash2 className="w-5 h-5 md:w-3 md:h-3" />
           </span>
