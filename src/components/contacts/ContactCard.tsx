@@ -92,7 +92,7 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
     <>
       <div
         ref={cardRef}
-        className="group/contact flex items-center justify-between py-[5px] pl-1.5 pr-0 rounded-lg hover:bg-white/70 transition-all cursor-pointer"
+        className="group/contact flex items-center justify-between py-[5px] md:py-[6px] pl-1.5 pr-0 rounded-lg hover:bg-white/70 transition-all cursor-pointer"
         onClick={channels.length > 0 ? handleClick : undefined}
       >
         <div className="flex items-center gap-2 flex-1 min-w-0">
