@@ -439,7 +439,7 @@ function ContactSectionCard({
         onDragHandleMouseDown={draggable && !isFrequents ? (_e) => { dragFromHandle.current = true; } : undefined}
       />
 
-      <div className="mx-2 rounded-xl md:rounded-[10px] flex-1 overflow-y-auto custom-scrollbar p-2.5 pr-1 md:pr-2.5 card-body-inner">
+      <div className="mx-2 rounded-xl md:rounded-[10px] flex-1 overflow-y-auto custom-scrollbar p-2.5 card-body-inner">
         {contacts.length > 0 ? (
           <div className="flex flex-col">
             {contacts.map((c) => (
