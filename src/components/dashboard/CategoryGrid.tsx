@@ -84,7 +84,7 @@ function getTwemojiUrl(emoji: string): string {
 }
 
 function getColumnCount(width: number): number {
-  if (width >= 1024) return 4;
+  if (width >= 1024) return 3;
   if (width >= 768) return 2;
   return 1;
 }
