@@ -196,7 +196,7 @@ export function CategoryCard({
   // Used to suppress onBlur→saveTitle so the picker tap completes before edit mode exits.
   const pickerActiveRef = useRef(false);
 
-  const otherDashboards = dashboards.filter((d) => d.id !== currentDashboardId);
+  const otherDashboards = dashboards.filter((d) => d.id !== currentDashboardId && !d.isContacts);
   const canMoveToPanel = otherDashboards.length > 0;
 
   // Keep isMobile in sync when the user resizes the browser window.
