@@ -1,6 +1,7 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { Contact } from '@/lib/types';
 import { MiniCard, buildChannels } from './MiniCard';
 import { ContactForm } from './ContactForm';
@@ -15,8 +16,11 @@ export function ContactCard({ contact }: ContactCardProps) {
   const [showMini, setShowMini] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showMoveMenu, setShowMoveMenu] = useState(false);
+  const [moveMenuPos, setMoveMenuPos] = useState<{ top: number; left: number } | null>(null);
   const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
   const cardRef = useRef<HTMLButtonElement>(null);
+  const moveButtonRef = useRef<HTMLSpanElement>(null);
+  const moveMenuRef = useRef<HTMLDivElement>(null);
   const { deleteContact, updateContact, sections } = useContacts();
 
   const channels = buildChannels(contact);
@@ -38,6 +42,36 @@ export function ContactCard({ contact }: ContactCardProps) {
     updateContact(contact.id, { sectionId: targetSectionId });
     setShowMoveMenu(false);
   };
+
+  const toggleMoveMenu = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (showMoveMenu) {
+      setShowMoveMenu(false);
+      return;
+    }
+    const btn = moveButtonRef.current;
+    if (!btn) return;
+    const rect = btn.getBoundingClientRect();
+    const menuHeight = (otherSections.length + 1) * 28 + 16; // estimate
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const top = spaceBelow < menuHeight ? rect.top - menuHeight : rect.bottom + 4;
+    const left = Math.min(rect.right, window.innerWidth - 170);
+    setMoveMenuPos({ top, left });
+    setShowMoveMenu(true);
+  };
+
+  // Close menu on outside click
+  useEffect(() => {
+    if (!showMoveMenu) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (moveMenuRef.current && !moveMenuRef.current.contains(e.target as Node) &&
+          moveButtonRef.current && !moveButtonRef.current.contains(e.target as Node)) {
+        setShowMoveMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showMoveMenu]);
 
   const handleClick = () => {
     if (channels.length === 0) return;
@@ -103,9 +137,10 @@ export function ContactCard({ contact }: ContactCardProps) {
           {/* Move to section button */}
           {otherSections.length > 0 && (
             <span
+              ref={moveButtonRef}
               role="button"
               aria-label="Mover para outra seção"
-              onClick={(e) => { e.stopPropagation(); setShowMoveMenu((v) => !v); }}
+              onClick={toggleMoveMenu}
               className="flex-shrink-0 flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-[24px] md:min-h-[24px] md:p-0.5 rounded text-[#d4dce8] hover:text-primary-500 hover:bg-primary-50 transition-colors md:text-slate-400 md:opacity-0 md:group-hover/contact:opacity-100"
             >
               <ArrowLeftRight className="w-5 h-5 md:w-3 md:h-3" />
@@ -122,26 +157,30 @@ export function ContactCard({ contact }: ContactCardProps) {
             <Trash2 className="w-5 h-5 md:w-3 md:h-3" />
           </span>
 
-          {/* Move to section dropdown */}
-          {showMoveMenu && (
-            <div
-              className="absolute right-0 top-full mt-1 bg-white rounded-lg border border-slate-200 shadow-lg z-50 min-w-[160px] py-1"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <p className="px-3 py-1 text-[10px] font-semibold text-slate-400 uppercase">Mover para</p>
-              {otherSections.map((s) => (
-                <button
-                  key={s.id}
-                  className="w-full text-left text-xs text-slate-700 px-3 py-1.5 hover:bg-slate-100 cursor-pointer truncate"
-                  onClick={(e) => handleMove(e, s.id)}
-                >
-                  {s.title}
-                </button>
-              ))}
-            </div>
-          )}
+          {/* Move menu rendered via portal */}
         </span>
       </button>
+
+      {showMoveMenu && moveMenuPos && createPortal(
+        <div
+          ref={moveMenuRef}
+          style={{ position: 'fixed', top: moveMenuPos.top, left: moveMenuPos.left, zIndex: 9999 }}
+          className="bg-white rounded-lg border border-slate-200 shadow-lg min-w-[160px] py-1"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <p className="px-3 py-1 text-[10px] font-semibold text-slate-400 uppercase">Mover para</p>
+          {otherSections.map((s) => (
+            <button
+              key={s.id}
+              className="w-full text-left text-xs text-slate-700 px-3 py-1.5 hover:bg-slate-100 cursor-pointer truncate"
+              onClick={(e) => handleMove(e, s.id)}
+            >
+              {s.title}
+            </button>
+          ))}
+        </div>,
+        document.body
+      )}
 
       {showMini && (
         <MiniCard
