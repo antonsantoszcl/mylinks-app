@@ -184,10 +184,12 @@ export function CategoryCard({
   const [linkUrl, setLinkUrl] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showMovePanelMenu, setShowMovePanelMenu] = useState(false);
+  const [movePanelMenuPos, setMovePanelMenuPos] = useState<{ top: number; left: number } | null>(null);
   const [isMobile, setIsMobile] = useState(getIsMobile);
   const [pickerPos, setPickerPos] = useState<{ top: number; left: number } | null>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
   const movePanelMenuRef = useRef<HTMLDivElement>(null);
+  const movePanelBtnRef = useRef<HTMLButtonElement>(null);
   const iconRef = useRef<HTMLDivElement>(null);
   const pickerRef = useRef<HTMLDivElement>(null);
   // Tracks whether the user is actively interacting with the picker (touch or mouse).
@@ -528,31 +530,27 @@ export function CategoryCard({
             {canMoveToPanel && (
               <div className="relative" ref={movePanelMenuRef} data-no-dnd="true">
                 <button
+                  ref={movePanelBtnRef}
                   className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-400 hover:text-primary-500 rounded transition-colors"
                   aria-label="Mover seção para outro painel"
                   title="Mover para outro painel"
                   data-no-dnd="true"
-                  onClick={(e) => { e.stopPropagation(); setShowMovePanelMenu((v) => !v); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (showMovePanelMenu) { setShowMovePanelMenu(false); return; }
+                    const btn = movePanelBtnRef.current;
+                    if (!btn) return;
+                    const rect = btn.getBoundingClientRect();
+                    const menuHeight = (otherDashboards.length + 1) * 28 + 16;
+                    const spaceBelow = window.innerHeight - rect.bottom;
+                    const top = spaceBelow < menuHeight ? rect.top - menuHeight : rect.bottom + 4;
+                    const left = Math.min(rect.right, window.innerWidth - 170);
+                    setMovePanelMenuPos({ top, left });
+                    setShowMovePanelMenu(true);
+                  }}
                 >
                   <FolderOutput className="w-5 h-5 md:w-3.5 md:h-3.5" />
                 </button>
-                {showMovePanelMenu && (
-                  <div className="absolute right-0 top-full mt-1 bg-white rounded-lg border border-slate-200 shadow-lg z-50 min-w-[160px] py-1" data-no-dnd="true">
-                    {otherDashboards.map((dash) => (
-                      <button
-                        key={dash.id}
-                        className="w-full text-left text-xs text-slate-700 px-3 py-1.5 hover:bg-slate-100 cursor-pointer truncate"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onMoveCategoryToPanel(category.id, dash.id);
-                          setShowMovePanelMenu(false);
-                        }}
-                      >
-                        {dash.title}
-                      </button>
-                    ))}
-                  </div>
-                )}
               </div>
             )}
             <button
@@ -648,6 +646,32 @@ export function CategoryCard({
       </article>
 
       {pickerPortal}
+
+      {showMovePanelMenu && movePanelMenuPos && createPortal(
+        <div
+          ref={movePanelMenuRef}
+          style={{ position: 'fixed', top: movePanelMenuPos.top, left: movePanelMenuPos.left, zIndex: 9999 }}
+          className="bg-white rounded-lg border border-slate-200 shadow-lg min-w-[160px] py-1"
+          data-no-dnd="true"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <p className="px-3 py-1 text-[10px] font-semibold text-slate-400 uppercase">Transferir para</p>
+          {otherDashboards.map((dash) => (
+            <button
+              key={dash.id}
+              className="w-full text-left text-xs text-slate-700 px-3 py-1.5 hover:bg-slate-100 cursor-pointer truncate uppercase"
+              onClick={(e) => {
+                e.stopPropagation();
+                onMoveCategoryToPanel(category.id, dash.id);
+                setShowMovePanelMenu(false);
+              }}
+            >
+              {dash.title}
+            </button>
+          ))}
+        </div>,
+        document.body
+      )}
 
       <ConfirmModal
         open={showDeleteModal}

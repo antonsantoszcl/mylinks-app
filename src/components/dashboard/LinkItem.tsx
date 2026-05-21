@@ -239,10 +239,11 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
                   style={{ position: 'fixed', top: dropdownPos.top, right: dropdownPos.right, zIndex: 9999 }}
                   className="bg-white rounded-lg border border-slate-200 shadow-lg w-[160px] max-h-[200px] overflow-y-auto py-1"
                 >
+                  <p className="px-3 py-1 text-[10px] font-semibold text-slate-400 uppercase">Mover para</p>
                   {otherCategories.map((cat) => (
                     <button
                       key={cat.id}
-                      className="w-full text-left text-xs text-slate-700 px-3 py-1.5 hover:bg-slate-100 cursor-pointer truncate"
+                      className="w-full text-left text-xs text-slate-700 px-3 py-1.5 hover:bg-slate-100 cursor-pointer truncate uppercase"
                       onClick={(e) => {
                         e.stopPropagation();
                         onMove!(link.id, cat.id);

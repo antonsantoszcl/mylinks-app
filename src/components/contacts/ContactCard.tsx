@@ -172,7 +172,7 @@ export function ContactCard({ contact }: ContactCardProps) {
           {otherSections.map((s) => (
             <button
               key={s.id}
-              className="w-full text-left text-xs text-slate-700 px-3 py-1.5 hover:bg-slate-100 cursor-pointer truncate"
+              className="w-full text-left text-xs text-slate-700 px-3 py-1.5 hover:bg-slate-100 cursor-pointer truncate uppercase"
               onClick={(e) => handleMove(e, s.id)}
             >
               {s.title}
