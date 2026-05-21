@@ -27,10 +27,9 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
   const channels = buildChannels(contact);
 
   // Other sections the contact can move to
-  // When viewing in Frequentes, show ALL sections (including the contact's own section)
-  // When viewing in a normal section, exclude current section
+  // Frequent contacts can move to ANY section; normal contacts exclude their own section
   const otherSections = sections.filter(
-    (s) => s.title !== 'CONTATOS FREQUENTES' && (isInFrequentes || s.id !== contact.sectionId)
+    (s) => s.title !== 'CONTATOS FREQUENTES' && (isInFrequentes || contact.isFrequent || s.id !== contact.sectionId)
   );
 
   const handleDelete = (e: React.MouseEvent) => {
