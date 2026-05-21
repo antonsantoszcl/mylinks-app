@@ -441,11 +441,11 @@ function ContactSectionCard({
 
       <div className="mx-2 rounded-xl md:rounded-[10px] flex-1 overflow-y-auto custom-scrollbar p-2.5 card-body-inner">
         {contacts.length > 0 ? (
-          <div className="flex flex-col">
+          <>
             {contacts.map((c) => (
               <ContactCard key={c.id} contact={c} isInFrequentes={isFrequents} />
             ))}
-          </div>
+          </>
         ) : (
           <div className="flex flex-col items-center justify-center h-16 text-slate-400 gap-1">
             <Inbox className="w-5 h-5 opacity-20" />
