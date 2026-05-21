@@ -511,6 +511,9 @@ function SidebarContent({
     dragIdRef.current = id;
     setDraggingId(id);
     e.dataTransfer.effectAllowed = 'move';
+    // Measure item height for desktop animation
+    const el = (e.currentTarget as HTMLElement).closest('[data-dashid]') as HTMLElement | null;
+    if (el) itemHeightRef.current = el.getBoundingClientRect().height;
   };
 
   const handleDragOver = (id: string) => (e: React.DragEvent) => {
@@ -670,6 +673,24 @@ function SidebarContent({
     const nonDefaults = dashboards.filter((d) => !d.isDefault);
     const srcIdx = nonDefaults.findIndex((d) => d.id === draggingId);
     if (srcIdx === -1) return 0;
+
+    // Desktop drag: use dragOverId as target
+    if (dragOverId && touchDragSteps === 0 && touchDragOffset === 0) {
+      const tgtIdx = nonDefaults.findIndex((d) => d.id === dragOverId);
+      if (tgtIdx === -1 || tgtIdx === srcIdx) return 0;
+      const itemIdx = nonDefaults.findIndex((d) => d.id === id);
+      if (itemIdx === -1) return 0;
+      if (id === draggingId) return 0; // browser handles the dragged element visually
+      const h = itemHeightRef.current;
+      const lo = Math.min(srcIdx, tgtIdx);
+      const hi = Math.max(srcIdx, tgtIdx);
+      if (itemIdx >= lo && itemIdx <= hi && itemIdx !== srcIdx) {
+        return srcIdx < tgtIdx ? -h : h;
+      }
+      return 0;
+    }
+
+    // Mobile touch drag
     const tgtIdx = Math.max(0, Math.min(nonDefaults.length - 1, srcIdx + touchDragSteps));
     const itemIdx = nonDefaults.findIndex((d) => d.id === id);
     if (itemIdx === -1) return 0;
@@ -856,6 +877,7 @@ function SidebarContent({
                 return (
                   <div
                     key={d.id}
+                    data-dashid={d.id}
                     style={{
                       transform: translateY !== 0 ? `translateY(${translateY}px)` : undefined,
                       transition: isBeingDragged ? 'none' : 'transform 200ms ease-out',
