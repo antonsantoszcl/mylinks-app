@@ -17,6 +17,7 @@ import { Contact } from '@/lib/types';
 import { QuickAccessRow } from '@/components/dashboard/QuickAccessRow';
 import { getNotoEmojiUrl } from '@/lib/emojiUtils';
 import {
+  AtSign,
   GripVertical,
   Inbox,
   LayoutGrid,
@@ -24,6 +25,8 @@ import {
   Plus,
   Trash2,
 } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import { getEmailComposeUrl } from './MiniCard';
 
 // ── Color palette — mirrors CATEGORY_COLORS from CategoryCard ─────────────────
 const SECTION_COLORS = [
@@ -99,6 +102,8 @@ interface SectionCardHeaderProps {
   iconName: string;
   isFrequents?: boolean;
   accentText: string;
+  contacts: Contact[];
+  userEmail: string;
   onRename?: (newTitle: string) => void;
   onIconChange?: (iconName: string) => void;
   onDelete?: () => void;
@@ -111,6 +116,8 @@ function SectionCardHeader({
   iconName,
   isFrequents,
   accentText: _accentText,
+  contacts,
+  userEmail,
   onRename,
   onIconChange,
   onDelete,
@@ -197,6 +204,35 @@ function SectionCardHeader({
   const handlePickEmoji = (name: string) => {
     pickerActiveRef.current = false;
     onIconChange?.(name);
+  };
+
+  const handleSendGroupEmail = () => {
+    const emails = contacts
+      .map((c) => c.email)
+      .filter((e): e is string => !!e && e.trim() !== '');
+    if (emails.length === 0) {
+      alert('Nenhum contato nesta seção possui email cadastrado.');
+      return;
+    }
+    const bccList = emails.join(',');
+    const { url } = getEmailComposeUrl(userEmail, '');
+    // Build BCC URL based on provider
+    let composeUrl: string;
+    if (url.includes('mail.google.com')) {
+      composeUrl = `https://mail.google.com/mail/?view=cm&fs=1&bcc=${encodeURIComponent(bccList)}`;
+    } else if (url.includes('outlook.live.com')) {
+      composeUrl = `https://outlook.live.com/mail/0/deeplink/compose?bcc=${encodeURIComponent(bccList)}`;
+    } else if (url.includes('compose.mail.yahoo.com')) {
+      composeUrl = `https://compose.mail.yahoo.com/?bcc=${encodeURIComponent(bccList)}`;
+    } else {
+      // mailto fallback
+      composeUrl = `mailto:?bcc=${encodeURIComponent(bccList)}`;
+    }
+    if (composeUrl.startsWith('mailto:')) {
+      window.location.href = composeUrl;
+    } else {
+      window.open(composeUrl, '_blank');
+    }
   };
 
   const pickerPortal = editing && onIconChange && pickerPos
@@ -304,6 +340,15 @@ function SectionCardHeader({
         </div>
 
         <div className="flex items-center gap-0 md:gap-0.5 flex-shrink-0">
+          {/* @ Email group button */}
+          <button
+            className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:text-primary-500 hover:bg-primary-50 rounded transition-colors"
+            aria-label="Enviar email para todos da seção"
+            title="Enviar email para todos da seção"
+            onClick={handleSendGroupEmail}
+          >
+            <AtSign className="w-5 h-5 md:w-3.5 md:h-3.5" />
+          </button>
           {onAddContact && (
             <button
               className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:bg-white/60 rounded transition-colors"
@@ -356,6 +401,7 @@ interface ContactSectionCardProps {
   contacts: Contact[];
   colorIndex: number;
   isFrequents?: boolean;
+  userEmail: string;
   onRename?: (newTitle: string) => void;
   onIconChange?: (iconName: string) => void;
   onDelete?: () => void;
@@ -376,6 +422,7 @@ function ContactSectionCard({
   contacts,
   colorIndex,
   isFrequents,
+  userEmail,
   onRename,
   onIconChange,
   onDelete,
@@ -432,6 +479,8 @@ function ContactSectionCard({
         iconName={iconName}
         isFrequents={isFrequents}
         accentText={color.accentText}
+        contacts={contacts}
+        userEmail={userEmail}
         onRename={onRename}
         onIconChange={onIconChange}
         onDelete={onDelete}
@@ -792,6 +841,8 @@ export function ContactsPanel() {
     deleteSection,
     reorderSections,
   } = useContacts();
+  const { user } = useAuth();
+  const userEmail = user?.email || '';
   const {
     data,
     addQuickAccess,
@@ -872,6 +923,7 @@ export function ContactsPanel() {
       contacts={frequentContacts}
       colorIndex={0}
       isFrequents
+      userEmail={userEmail}
     />
   );
 
@@ -886,6 +938,7 @@ export function ContactsPanel() {
         iconName={section.iconName}
         contacts={sectionContacts}
         colorIndex={(idx + 1) % SECTION_COLORS.length}
+        userEmail={userEmail}
         onRename={(t) => renameSection(section.id, t)}
         onIconChange={(name) => updateSectionIcon(section.id, name)}
         onDelete={() => deleteSection(section.id)}

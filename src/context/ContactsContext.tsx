@@ -174,6 +174,12 @@ export function ContactsProvider({ children }: { children: ReactNode }) {
 
   const createContact = async (data: CreateContactData): Promise<Contact | null> => {
     if (!userId) return null;
+    // Limit: max 50 contacts per section
+    const sectionCount = contacts.filter((c) => c.sectionId === data.sectionId).length;
+    if (sectionCount >= 50) {
+      alert('Limite de 50 contatos por seção atingido.');
+      return null;
+    }
     const supabase = getSupabaseClient();
     const { data: row } = await supabase
       .from('contacts')
