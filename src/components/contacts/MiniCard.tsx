@@ -115,7 +115,7 @@ function getEmailComposeUrl(email: string): { url: string; provider: string } {
   }
 
   // Yahoo
-  if (['yahoo.com', 'yahoo.com.br'].includes(domain)) {
+  if (['yahoo.com', 'yahoo.com.br', 'yahoomail.com', 'yahoomail.com.br', 'ymail.com'].includes(domain)) {
     return { url: `https://compose.mail.yahoo.com/?to=${encoded}`, provider: 'Yahoo' };
   }
 
@@ -128,24 +128,12 @@ function getEmailComposeUrl(email: string): { url: string; provider: string } {
   return { url: `mailto:${email}`, provider: 'email' };
 }
 
-function openEmailWithFallback(email: string, onFallback: () => void) {
+function openEmail(email: string) {
   const { url } = getEmailComposeUrl(email);
-
   if (url.startsWith('mailto:')) {
-    // Try mailto, but show fallback if it likely won't work
-    // Use a hidden iframe trick to detect failure
-    const w = window.open(url, '_self');
-    // Show fallback after a short delay (if nothing happened)
-    setTimeout(() => {
-      onFallback();
-    }, 500);
+    window.location.href = url;
   } else {
-    // Web compose URL — open in new tab
-    const w = window.open(url, '_blank');
-    if (!w || w.closed) {
-      // Popup blocked
-      onFallback();
-    }
+    window.open(url, '_blank');
   }
 }
 
@@ -161,7 +149,6 @@ interface MiniCardProps {
 export function MiniCard({ contact, anchorRect, onClose, onEdit }: MiniCardProps) {
   const channels = buildChannels(contact);
   const popupRef = useRef<HTMLDivElement>(null);
-  const [showEmailFallback, setShowEmailFallback] = useState(false);
   const [copied, setCopied] = useState(false);
 
   // Close on outside click / tap
@@ -244,60 +231,47 @@ export function MiniCard({ contact, anchorRect, onClose, onEdit }: MiniCardProps
           )}
         </div>
         {/* Channels */}
-        {showEmailFallback && contact.email ? (
-          <div className="px-3 py-2.5 space-y-2">
-            <p className="text-xs text-slate-500">Não foi possível abrir o email automaticamente.</p>
-            <div className="flex items-center gap-2 bg-slate-50 rounded-md px-2.5 py-1.5">
-              <span className="text-[12px] text-slate-600 truncate flex-1">{contact.email}</span>
+        {channels.map((ch) => (
+          ch.key === 'email' ? (
+            <div key={ch.key} className="flex items-center hover:bg-slate-50 transition-colors">
               <button
-                onClick={() => {
+                onClick={() => { openEmail(contact.email!); onClose(); }}
+                className="flex items-center gap-2.5 px-3 py-2 text-slate-700 text-sm flex-1 text-left"
+              >
+                <span style={{ color: ch.iconColor }} className="flex-shrink-0">
+                  {ch.icon}
+                </span>
+                <span className="text-[13px]">{ch.label}</span>
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
                   navigator.clipboard.writeText(contact.email!);
                   setCopied(true);
                   setTimeout(() => setCopied(false), 2000);
                 }}
-                className="flex-shrink-0 text-slate-400 hover:text-primary-500 transition-colors"
+                className="px-2.5 py-2 text-slate-300 hover:text-primary-500 transition-colors"
                 title="Copiar email"
               >
                 {copied ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
               </button>
             </div>
-            {copied && <p className="text-[11px] text-green-600">Email copiado!</p>}
-          </div>
-        ) : (
-          channels.map((ch) => (
-            ch.key === 'email' ? (
-              <button
-                key={ch.key}
-                onClick={() => {
-                  openEmailWithFallback(contact.email!, () => setShowEmailFallback(true));
-                  // If it's a web URL (not mailto), close MiniCard
-                  const { url } = getEmailComposeUrl(contact.email!);
-                  if (!url.startsWith('mailto:')) onClose();
-                }}
-                className="flex items-center gap-2.5 px-3 py-2 hover:bg-slate-50 transition-colors text-slate-700 text-sm w-full text-left"
-              >
-                <span style={{ color: ch.iconColor }} className="flex-shrink-0">
-                  {ch.icon}
-                </span>
-                <span className="text-[13px]">{ch.label}</span>
-              </button>
-            ) : (
-              <a
-                key={ch.key}
-                href={ch.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={onClose}
-                className="flex items-center gap-2.5 px-3 py-2 hover:bg-slate-50 transition-colors text-slate-700 text-sm"
-              >
-                <span style={{ color: ch.iconColor }} className="flex-shrink-0">
-                  {ch.icon}
-                </span>
-                <span className="text-[13px]">{ch.label}</span>
-              </a>
-            )
-          ))
-        )}
+          ) : (
+            <a
+              key={ch.key}
+              href={ch.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={onClose}
+              className="flex items-center gap-2.5 px-3 py-2 hover:bg-slate-50 transition-colors text-slate-700 text-sm"
+            >
+              <span style={{ color: ch.iconColor }} className="flex-shrink-0">
+                {ch.icon}
+              </span>
+              <span className="text-[13px]">{ch.label}</span>
+            </a>
+          )
+        ))}
       </div>
     </>
   );
@@ -306,5 +280,5 @@ export function MiniCard({ contact, anchorRect, onClose, onEdit }: MiniCardProps
 }
 
 // Re-export helpers for ContactCard
-export { buildChannels, openEmailWithFallback, getEmailComposeUrl };
+export { buildChannels, openEmail, getEmailComposeUrl };
 export type { Channel };

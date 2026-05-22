@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { Contact } from '@/lib/types';
-import { MiniCard, buildChannels } from './MiniCard';
+import { MiniCard, buildChannels, openEmail } from './MiniCard';
 import { ContactForm } from './ContactForm';
 import { useContacts } from '@/context/ContactsContext';
 import { MessagesSquare, Pencil, Trash2, ArrowLeftRight } from 'lucide-react';
@@ -80,6 +80,10 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
     if (channels.length === 0) return;
     if (channels.length === 1 && channels[0].key !== 'email') {
       window.open(channels[0].url, '_blank');
+      return;
+    }
+    if (channels.length === 1 && channels[0].key === 'email') {
+      openEmail(contact.email!);
       return;
     }
     // 2+ channels or single email → show MiniCard (email needs provider picker)
