@@ -103,9 +103,11 @@ function buildChannels(contact: Contact): Channel[] {
 function getEmailProviders(email: string) {
   const encoded = encodeURIComponent(email);
   return [
-    { key: 'gmail', label: 'Gmail', url: `https://mail.google.com/mail/?view=cm&to=${encoded}`, color: '#EA4335' },
-    { key: 'outlook', label: 'Outlook', url: `https://outlook.live.com/mail/0/deeplink/compose?to=${encoded}`, color: '#0078D4' },
+    { key: 'gmail', label: 'Gmail / Google', url: `https://mail.google.com/mail/?view=cm&to=${encoded}`, color: '#EA4335' },
+    { key: 'outlook', label: 'Outlook / Hotmail', url: `https://outlook.live.com/mail/0/deeplink/compose?to=${encoded}`, color: '#0078D4' },
+    { key: 'office365', label: 'Outlook Corporativo', url: `https://outlook.office.com/mail/deeplink/compose?to=${encoded}`, color: '#0078D4' },
     { key: 'yahoo', label: 'Yahoo Mail', url: `https://compose.mail.yahoo.com/?to=${encoded}`, color: '#6001D2' },
+    { key: 'other', label: 'Outro email', url: `mailto:${email}`, color: '#64748B' },
   ];
 }
 
