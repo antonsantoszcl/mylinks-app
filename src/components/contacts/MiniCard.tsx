@@ -128,7 +128,18 @@ function getEmailComposeUrl(senderEmail: string, recipientEmail: string): { url:
   return { url: `mailto:${recipientEmail}`, provider: 'email' };
 }
 
+function isMobile() {
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
 function openEmail(senderEmail: string, recipientEmail: string) {
+  // On mobile, mailto works great — OS handles it via installed apps (Gmail, Outlook, etc.)
+  if (isMobile()) {
+    window.location.href = `mailto:${recipientEmail}`;
+    return;
+  }
+
+  // On desktop, use web compose URL based on sender's provider
   const { url } = getEmailComposeUrl(senderEmail, recipientEmail);
   if (url.startsWith('mailto:')) {
     window.location.href = url;
