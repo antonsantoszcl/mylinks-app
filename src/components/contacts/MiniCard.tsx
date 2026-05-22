@@ -100,9 +100,9 @@ function buildChannels(contact: Contact): Channel[] {
 
 // ── Email providers ───────────────────────────────────────────────────────────
 
-function getEmailComposeUrl(email: string): { url: string; provider: string } {
-  const domain = email.split('@')[1]?.toLowerCase() || '';
-  const encoded = encodeURIComponent(email);
+function getEmailComposeUrl(senderEmail: string, recipientEmail: string): { url: string; provider: string } {
+  const domain = senderEmail.split('@')[1]?.toLowerCase() || '';
+  const encoded = encodeURIComponent(recipientEmail);
 
   // Gmail / Google Workspace
   if (['gmail.com', 'googlemail.com'].includes(domain)) {
@@ -121,15 +121,15 @@ function getEmailComposeUrl(email: string): { url: string; provider: string } {
 
   // iCloud
   if (['icloud.com', 'me.com', 'mac.com'].includes(domain)) {
-    return { url: `mailto:${email}`, provider: 'iCloud' };
+    return { url: `mailto:${recipientEmail}`, provider: 'iCloud' };
   }
 
   // Unknown / corporate → mailto fallback
-  return { url: `mailto:${email}`, provider: 'email' };
+  return { url: `mailto:${recipientEmail}`, provider: 'email' };
 }
 
-function openEmail(email: string) {
-  const { url } = getEmailComposeUrl(email);
+function openEmail(senderEmail: string, recipientEmail: string) {
+  const { url } = getEmailComposeUrl(senderEmail, recipientEmail);
   if (url.startsWith('mailto:')) {
     window.location.href = url;
   } else {
@@ -139,6 +139,8 @@ function openEmail(email: string) {
 
 interface MiniCardProps {
   contact: Contact;
+  /** Email of the logged-in user (sender) for email provider detection */
+  userEmail: string;
   /** Position of the anchor element (getBoundingClientRect) — desktop only */
   anchorRect: DOMRect | null;
   onClose: () => void;
@@ -146,7 +148,7 @@ interface MiniCardProps {
   onEdit?: () => void;
 }
 
-export function MiniCard({ contact, anchorRect, onClose, onEdit }: MiniCardProps) {
+export function MiniCard({ contact, userEmail, anchorRect, onClose, onEdit }: MiniCardProps) {
   const channels = buildChannels(contact);
   const popupRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
@@ -235,7 +237,7 @@ export function MiniCard({ contact, anchorRect, onClose, onEdit }: MiniCardProps
           ch.key === 'email' ? (
             <div key={ch.key} className="flex items-center hover:bg-slate-50 transition-colors">
               <button
-                onClick={() => { openEmail(contact.email!); onClose(); }}
+                onClick={() => { openEmail(userEmail, contact.email!); onClose(); }}
                 className="flex items-center gap-2.5 px-3 py-2 text-slate-700 text-sm flex-1 text-left"
               >
                 <span style={{ color: ch.iconColor }} className="flex-shrink-0">

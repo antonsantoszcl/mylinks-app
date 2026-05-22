@@ -6,6 +6,7 @@ import { Contact } from '@/lib/types';
 import { MiniCard, buildChannels, openEmail } from './MiniCard';
 import { ContactForm } from './ContactForm';
 import { useContacts } from '@/context/ContactsContext';
+import { useAuth } from '@/context/AuthContext';
 import { MessagesSquare, Pencil, Trash2, ArrowLeftRight } from 'lucide-react';
 
 interface ContactCardProps {
@@ -23,6 +24,8 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
   const moveButtonRef = useRef<HTMLButtonElement>(null);
   const moveMenuRef = useRef<HTMLDivElement>(null);
   const { deleteContact, updateContact, sections } = useContacts();
+  const { user } = useAuth();
+  const userEmail = user?.email || '';
 
   const channels = buildChannels(contact);
 
@@ -83,7 +86,7 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
       return;
     }
     if (channels.length === 1 && channels[0].key === 'email') {
-      openEmail(contact.email!);
+      openEmail(userEmail, contact.email!);
       return;
     }
     // 2+ channels or single email → show MiniCard (email needs provider picker)
@@ -171,6 +174,7 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
       {showMini && (
         <MiniCard
           contact={contact}
+          userEmail={userEmail}
           anchorRect={anchorRect}
           onClose={() => setShowMini(false)}
           onEdit={() => setShowEdit(true)}
