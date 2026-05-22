@@ -78,7 +78,7 @@ function buildChannels(contact: Contact): Channel[] {
     channels.push({
       key: 'email',
       label: 'Email',
-      url: `mailto:${contact.email}`,
+      url: `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(contact.email)}`,
       icon: <EmailIcon className="w-5 h-5" />,
       iconColor: '#64748B',
     });
@@ -195,7 +195,7 @@ export function MiniCard({ contact, anchorRect, onClose, onEdit }: MiniCardProps
           <a
             key={ch.key}
             href={ch.url}
-            target={ch.key === 'email' ? '_self' : '_blank'}
+            target="_blank"
             rel="noopener noreferrer"
             onClick={onClose}
             className="flex items-center gap-2.5 px-3 py-2 hover:bg-slate-50 transition-colors text-slate-700 text-sm"
