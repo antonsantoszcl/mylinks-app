@@ -78,7 +78,7 @@ function buildChannels(contact: Contact): Channel[] {
     channels.push({
       key: 'email',
       label: 'Email',
-      url: `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(contact.email)}`,
+      url: `mailto:${contact.email}`,
       icon: <EmailIcon className="w-5 h-5" />,
       iconColor: '#64748B',
     });
