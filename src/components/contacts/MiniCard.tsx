@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Pencil } from 'lucide-react';
+import { Pencil, ArrowLeft } from 'lucide-react';
 import { Contact } from '@/lib/types';
 
 // ── Channel icons (inline SVGs for precision) ─────────────────────────────────
@@ -98,6 +98,17 @@ function buildChannels(contact: Contact): Channel[] {
 
 // ── Component ──────────────────────────────────────────────────────────────────
 
+// ── Email providers ───────────────────────────────────────────────────────────
+
+function getEmailProviders(email: string) {
+  const encoded = encodeURIComponent(email);
+  return [
+    { key: 'gmail', label: 'Gmail', url: `https://mail.google.com/mail/?view=cm&to=${encoded}`, color: '#EA4335' },
+    { key: 'outlook', label: 'Outlook', url: `https://outlook.live.com/mail/0/deeplink/compose?to=${encoded}`, color: '#0078D4' },
+    { key: 'yahoo', label: 'Yahoo Mail', url: `https://compose.mail.yahoo.com/?to=${encoded}`, color: '#6001D2' },
+  ];
+}
+
 interface MiniCardProps {
   contact: Contact;
   /** Position of the anchor element (getBoundingClientRect) — desktop only */
@@ -110,6 +121,7 @@ interface MiniCardProps {
 export function MiniCard({ contact, anchorRect, onClose, onEdit }: MiniCardProps) {
   const channels = buildChannels(contact);
   const popupRef = useRef<HTMLDivElement>(null);
+  const [showEmailPicker, setShowEmailPicker] = useState(false);
 
   // Close on outside click / tap
   useEffect(() => {
@@ -190,22 +202,62 @@ export function MiniCard({ contact, anchorRect, onClose, onEdit }: MiniCardProps
             </button>
           )}
         </div>
-        {/* Channels */}
-        {channels.map((ch) => (
-          <a
-            key={ch.key}
-            href={ch.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={onClose}
-            className="flex items-center gap-2.5 px-3 py-2 hover:bg-slate-50 transition-colors text-slate-700 text-sm"
-          >
-            <span style={{ color: ch.iconColor }} className="flex-shrink-0">
-              {ch.icon}
-            </span>
-            <span className="text-[13px]">{ch.label}</span>
-          </a>
-        ))}
+        {/* Channels / Email provider picker */}
+        {showEmailPicker && contact.email ? (
+          <>
+            <button
+              onClick={() => setShowEmailPicker(false)}
+              className="flex items-center gap-2 px-3 py-1.5 text-slate-400 hover:text-slate-600 text-xs transition-colors"
+            >
+              <ArrowLeft className="w-3 h-3" />
+              <span>Voltar</span>
+            </button>
+            {getEmailProviders(contact.email).map((p) => (
+              <a
+                key={p.key}
+                href={p.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={onClose}
+                className="flex items-center gap-2.5 px-3 py-2 hover:bg-slate-50 transition-colors text-slate-700 text-sm"
+              >
+                <span style={{ color: p.color }} className="flex-shrink-0 w-5 h-5 flex items-center justify-center font-bold text-[11px]">
+                  {p.key === 'gmail' ? 'G' : p.key === 'outlook' ? 'O' : 'Y'}
+                </span>
+                <span className="text-[13px]">{p.label}</span>
+              </a>
+            ))}
+          </>
+        ) : (
+          channels.map((ch) => (
+            ch.key === 'email' ? (
+              <button
+                key={ch.key}
+                onClick={() => setShowEmailPicker(true)}
+                className="flex items-center gap-2.5 px-3 py-2 hover:bg-slate-50 transition-colors text-slate-700 text-sm w-full text-left"
+              >
+                <span style={{ color: ch.iconColor }} className="flex-shrink-0">
+                  {ch.icon}
+                </span>
+                <span className="text-[13px]">{ch.label}</span>
+              </button>
+            ) : (
+              <a
+                key={ch.key}
+                href={ch.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={onClose}
+                className="flex items-center gap-2.5 px-3 py-2 hover:bg-slate-50 transition-colors text-slate-700 text-sm"
+              >
+                <span style={{ color: ch.iconColor }} className="flex-shrink-0">
+                  {ch.icon}
+                </span>
+                <span className="text-[13px]">{ch.label}</span>
+              </a>
+            )
+          ))
+        )}
       </div>
     </>
   );

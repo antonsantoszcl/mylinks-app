@@ -78,11 +78,11 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
 
   const handleClick = () => {
     if (channels.length === 0) return;
-    if (channels.length === 1) {
+    if (channels.length === 1 && channels[0].key !== 'email') {
       window.open(channels[0].url, '_blank');
       return;
     }
-    // 2+ channels → show MiniCard
+    // 2+ channels or single email → show MiniCard (email needs provider picker)
     const rect = cardRef.current?.getBoundingClientRect() ?? null;
     setAnchorRect(rect);
     setShowMini(true);
