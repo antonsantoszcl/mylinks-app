@@ -17,10 +17,10 @@ import { Contact } from '@/lib/types';
 import { QuickAccessRow } from '@/components/dashboard/QuickAccessRow';
 import { getNotoEmojiUrl } from '@/lib/emojiUtils';
 import {
-  AtSign,
   GripVertical,
   Inbox,
   LayoutGrid,
+  Mail,
   Pencil,
   Plus,
   Trash2,
@@ -347,7 +347,7 @@ function SectionCardHeader({
             title="Enviar email para todos da seção"
             onClick={handleSendGroupEmail}
           >
-            <AtSign className="w-5 h-5 md:w-3.5 md:h-3.5" />
+            <Mail className="w-5 h-5 md:w-3.5 md:h-3.5" />
           </button>
           {onAddContact && (
             <button
