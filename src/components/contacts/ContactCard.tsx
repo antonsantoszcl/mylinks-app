@@ -109,14 +109,14 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
           >
             {channels.length > 1 ? (
               <span
-                className="w-5 h-5 flex-shrink-0 rounded border border-slate-300 bg-white flex flex-wrap items-center justify-center"
-                style={{ gap: '1.5px', padding: '2.5px' }}
+                className="w-5 h-5 flex-shrink-0 rounded-[4px] border-[1.5px] border-slate-400 bg-white inline-grid place-items-center"
+                style={{ gridTemplateColumns: channels.length === 2 ? '1fr 1fr' : '1fr 1fr', gridTemplateRows: channels.length <= 2 ? '1fr' : '1fr 1fr', gap: '2px', padding: '3px' }}
               >
                 {channels.slice(0, 4).map((ch) => (
                   <span
                     key={ch.key}
                     className="rounded-full"
-                    style={{ backgroundColor: ch.iconColor, width: '6px', height: '6px' }}
+                    style={{ backgroundColor: ch.iconColor, width: '5px', height: '5px' }}
                   />
                 ))}
               </span>
