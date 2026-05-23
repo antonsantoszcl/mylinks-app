@@ -38,10 +38,15 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
   }, [link.title, link.url, isEditing]);
 
   // Auto-focus title input when edit mode opens
+  const editContainerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (isEditing) {
       titleInputRef.current?.focus();
       titleInputRef.current?.select();
+      // Scroll into view so form isn't hidden behind next section
+      setTimeout(() => {
+        editContainerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 50);
     }
   }, [isEditing]);
 
@@ -130,6 +135,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
   if (isEditing) {
     return (
       <div
+        ref={editContainerRef}
         className="rounded-lg border border-primary-200 bg-white shadow-sm p-2 my-0.5"
         data-no-dnd="true"
       >
