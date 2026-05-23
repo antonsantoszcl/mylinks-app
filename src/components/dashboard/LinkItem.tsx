@@ -136,7 +136,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
     return (
       <div
         ref={editContainerRef}
-        className="rounded-lg border border-primary-200 bg-white shadow-sm p-2 my-0.5"
+        className="rounded-lg border border-primary-200 bg-white shadow-sm p-2 my-0.5 relative z-20"
         data-no-dnd="true"
       >
         <div className="space-y-1.5">
