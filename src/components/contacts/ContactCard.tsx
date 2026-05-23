@@ -107,7 +107,17 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
             className="w-5 h-5 flex-shrink-0 flex items-center justify-center"
             aria-hidden="true"
           >
-            {channels.length >= 1 ? (
+            {channels.length > 1 ? (
+              <span className="w-5 h-5 grid grid-cols-2 gap-[2px] p-[2px]">
+                {channels.slice(0, 4).map((ch) => (
+                  <span
+                    key={ch.key}
+                    className="rounded-full"
+                    style={{ backgroundColor: ch.iconColor }}
+                  />
+                ))}
+              </span>
+            ) : channels.length === 1 ? (
               <span style={{ color: channels[0].iconColor }}>
                 {channels[0].icon}
               </span>
