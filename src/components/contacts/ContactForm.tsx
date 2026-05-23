@@ -246,7 +246,7 @@ export function ContactForm({ sectionId, contact, onClose }: ContactFormProps) {
               onChange={set('isFrequent')}
               className="w-4 h-4 rounded border-slate-300 text-primary-500 accent-primary-500 cursor-pointer"
             />
-            <span className="text-xs font-medium text-slate-600">Mostrar em Frequentes</span>
+            <span className="text-xs font-medium text-slate-600">Contato Frequente</span>
           </label>
 
           {/* Error */}
