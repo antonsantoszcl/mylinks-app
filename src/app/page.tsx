@@ -140,7 +140,7 @@ export default function Home() {
           <h1 className="text-3xl sm:text-5xl font-bold text-slate-900 leading-tight mb-5 tracking-tight">
             A homepage que faltava.
           </h1>
-          <p className="text-base sm:text-xl text-slate-500 mb-8 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-2xl text-slate-700 font-medium mb-8 max-w-2xl mx-auto leading-relaxed">
             Organize seus contatos, links e presença digital em um só lugar.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">

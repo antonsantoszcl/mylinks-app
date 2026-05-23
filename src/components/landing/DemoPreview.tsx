@@ -84,6 +84,7 @@ function DemoCategoryCard({ category }: { category: DemoCategory }) {
   const { emoji, title, links } = category;
   return (
     <article
+      className="transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
       style={{
         border: '1px solid #E5E7EB',
         backgroundColor: '#FFFFFF',
@@ -118,7 +119,7 @@ function DemoCategoryCard({ category }: { category: DemoCategory }) {
         {links.map((link) => (
           <div
             key={link.domain + link.title}
-            className="flex items-center gap-2 py-1 pl-1.5 pr-2 rounded-lg"
+            className="flex items-center gap-2 py-1 pl-1.5 pr-2 rounded-lg transition-all duration-200 hover:bg-white hover:shadow-sm cursor-pointer group"
           >
             <Image
               src={`https://www.google.com/s2/favicons?domain=${link.domain}&sz=32`}
@@ -128,7 +129,7 @@ function DemoCategoryCard({ category }: { category: DemoCategory }) {
               className="w-4 h-4 rounded-sm flex-shrink-0 object-contain"
               unoptimized
             />
-            <span className="text-xs font-semibold text-slate-700 truncate">
+            <span className="text-xs font-semibold text-slate-700 truncate group-hover:text-primary-600 transition-colors">
               {link.title}
             </span>
           </div>
@@ -214,6 +215,7 @@ function ContactDotIcon({ channels }: { channels: DemoContact['channels'] }) {
 function DemoContactCard({ section }: { section: DemoContactSection }) {
   return (
     <article
+      className="transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
       style={{
         border: '1px solid #E5E7EB',
         backgroundColor: '#FFFFFF',
@@ -239,9 +241,14 @@ function DemoContactCard({ section }: { section: DemoContactSection }) {
 
       <div className="mx-2 mb-1.5 rounded-lg p-2 space-y-0.5" style={{ background: '#F1F5F9' }}>
         {section.contacts.map((contact) => (
-          <div key={contact.name} className="flex items-center gap-2 py-1 pl-1.5 pr-2 rounded-lg">
+          <div key={contact.name} className="flex items-center gap-2 py-1 pl-1.5 pr-2 rounded-lg transition-all duration-200 hover:bg-white hover:shadow-sm cursor-pointer group">
             <ContactDotIcon channels={contact.channels} />
-            <span className="text-xs font-semibold text-slate-700 truncate">{contact.name}</span>
+            <span className="text-xs font-semibold text-slate-700 truncate group-hover:text-primary-600 transition-colors">{contact.name}</span>
+            <div className="ml-auto flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              {contact.channels.map((ch) => (
+                <span key={ch.type} className="w-2 h-2 rounded-full" style={{ backgroundColor: ch.color }} />
+              ))}
+            </div>
           </div>
         ))}
       </div>
