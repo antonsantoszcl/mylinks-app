@@ -108,18 +108,29 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
             aria-hidden="true"
           >
             {channels.length > 1 ? (
-              <span
-                className="w-5 h-5 flex-shrink-0 rounded-[4px] border-[1.5px] border-slate-400 bg-white inline-grid place-items-center"
-                style={{ gridTemplateColumns: channels.length === 2 ? '1fr 1fr' : '1fr 1fr', gridTemplateRows: channels.length <= 2 ? '1fr' : '1fr 1fr', gap: '2px', padding: '3px' }}
-              >
-                {channels.slice(0, 4).map((ch) => (
+              (() => {
+                // Fixed positions: WhatsApp=top-left, Instagram=top-right, Email=bottom-left, LinkedIn=bottom-right
+                const positionMap: Record<string, number> = { whatsapp: 0, instagram: 1, email: 2, linkedin: 3 };
+                const slots: (string | null)[] = [null, null, null, null];
+                channels.slice(0, 4).forEach((ch) => {
+                  const pos = positionMap[ch.key] ?? slots.indexOf(null);
+                  if (pos !== -1) slots[pos] = ch.iconColor;
+                });
+                return (
                   <span
-                    key={ch.key}
-                    className="rounded-full"
-                    style={{ backgroundColor: ch.iconColor, width: '5px', height: '5px' }}
-                  />
-                ))}
-              </span>
+                    className="w-5 h-5 flex-shrink-0 rounded-[4px] border-[1.5px] border-slate-400 bg-white inline-grid"
+                    style={{ gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: '2px', padding: '3px' }}
+                  >
+                    {slots.map((color, i) => (
+                      <span
+                        key={i}
+                        className="rounded-full"
+                        style={{ width: '5px', height: '5px', backgroundColor: color || 'transparent' }}
+                      />
+                    ))}
+                  </span>
+                );
+              })()
             ) : channels.length === 1 ? (
               <span style={{ color: channels[0].iconColor }}>
                 {channels[0].icon}
