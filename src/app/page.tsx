@@ -29,7 +29,7 @@ const features = [
   {
     icon: Users,
     title: 'Contatos Integrados',
-    desc: 'Pessoas organizadas por seção. Clicou, comunicou — WhatsApp, email, Instagram.',
+    desc: 'Pessoas organizadas por seção. Clicou, comunicou — WhatsApp, email, Instagram, LinkedIn.',
   },
   {
     icon: GripVertical,
