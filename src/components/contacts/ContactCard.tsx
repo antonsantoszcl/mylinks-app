@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { Contact } from '@/lib/types';
 import { MiniCard, buildChannels, openEmail } from './MiniCard';
 import { ContactForm } from './ContactForm';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { useContacts } from '@/context/ContactsContext';
 import { useAuth } from '@/context/AuthContext';
 import { MessagesSquare, Pencil, Trash2, ArrowLeftRight } from 'lucide-react';
@@ -17,6 +18,7 @@ interface ContactCardProps {
 export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
   const [showMini, setShowMini] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showMoveMenu, setShowMoveMenu] = useState(false);
   const [moveMenuPos, setMoveMenuPos] = useState<{ top: number; left: number } | null>(null);
   const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
@@ -38,9 +40,7 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (window.confirm(`Excluir "${contact.name}"?`)) {
-      deleteContact(contact.id);
-    }
+    setShowDeleteModal(true);
   };
 
   const handleMove = (e: React.MouseEvent, targetSectionId: string) => {
@@ -188,6 +188,17 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
           onClose={() => setShowEdit(false)}
         />
       )}
+
+      <ConfirmModal
+        open={showDeleteModal}
+        title="Excluir contato"
+        message={`Remover o contato "${contact.name}"?`}
+        onCancel={() => setShowDeleteModal(false)}
+        onConfirm={() => {
+          setShowDeleteModal(false);
+          deleteContact(contact.id);
+        }}
+      />
     </>
   );
 }

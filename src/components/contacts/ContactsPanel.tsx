@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { getEmailComposeUrl } from './MiniCard';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
 
 // ── Color palette — mirrors CATEGORY_COLORS from CategoryCard ─────────────────
 const SECTION_COLORS = [
@@ -126,6 +127,7 @@ function SectionCardHeader({
 }: SectionCardHeaderProps) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(title);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isMobile, setIsMobile] = useState(getIsMobile);
   const [pickerPos, setPickerPos] = useState<{ top: number; left: number } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -380,7 +382,7 @@ function SectionCardHeader({
           {onDelete && (
             <button
               className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
-              onClick={onDelete}
+              onClick={() => setShowDeleteModal(true)}
               aria-label="Excluir seção"
             >
               <Trash2 className="w-5 h-5 md:w-3 md:h-3" />
@@ -389,6 +391,18 @@ function SectionCardHeader({
         </div>
       </header>
       {pickerPortal}
+      {onDelete && (
+        <ConfirmModal
+          open={showDeleteModal}
+          title="Excluir seção"
+          message={`Remover a seção "${title}" e todos os contatos dentro dela?`}
+          onCancel={() => setShowDeleteModal(false)}
+          onConfirm={() => {
+            setShowDeleteModal(false);
+            onDelete();
+          }}
+        />
+      )}
     </>
   );
 }
