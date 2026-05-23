@@ -53,11 +53,11 @@ export function SortableCategoryCard({
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-    zIndex: isDragging ? 50 : 'auto' as const,
+    zIndex: isDragging ? 50 : undefined,
   };
 
   return (
-    <div ref={setNodeRef} style={style} className="relative group/category">
+    <div ref={setNodeRef} style={style} className="relative group/category [&:has([data-no-dnd='true'])]:!z-20">
       <CategoryCard
         category={category}
         colorIndex={colorIndex}
