@@ -78,12 +78,16 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
       const right = window.innerWidth - rect.right;
       setDropdownPos({ top, right });
     }
-    const closeMenu = () => setShowMoveMenu(false);
+    const closeMenu = (e?: Event) => {
+      if (e && moveMenuRef.current && moveMenuRef.current.contains(e.target as Node)) return;
+      setShowMoveMenu(false);
+    };
+    const closeOnResize = () => setShowMoveMenu(false);
     window.addEventListener('scroll', closeMenu, true);
-    window.addEventListener('resize', closeMenu);
+    window.addEventListener('resize', closeOnResize);
     return () => {
       window.removeEventListener('scroll', closeMenu, true);
-      window.removeEventListener('resize', closeMenu);
+      window.removeEventListener('resize', closeOnResize);
     };
   }, [showMoveMenu]);
 
