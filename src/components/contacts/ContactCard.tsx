@@ -70,10 +70,13 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
   useEffect(() => {
     if (!showMoveMenu) return;
     const handleClickOutside = (e: MouseEvent) => {
-      if (moveMenuRef.current && !moveMenuRef.current.contains(e.target as Node) &&
-          moveButtonRef.current && !moveButtonRef.current.contains(e.target as Node)) {
-        setShowMoveMenu(false);
+      // Use bounding rect to cover scrollbar clicks
+      if (moveMenuRef.current) {
+        const rect = moveMenuRef.current.getBoundingClientRect();
+        if (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) return;
       }
+      if (moveButtonRef.current && moveButtonRef.current.contains(e.target as Node)) return;
+      setShowMoveMenu(false);
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
