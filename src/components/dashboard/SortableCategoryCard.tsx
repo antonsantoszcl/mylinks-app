@@ -57,7 +57,7 @@ export function SortableCategoryCard({
   };
 
   return (
-    <div ref={setNodeRef} style={style} className="relative group/category [&:has([data-no-dnd='true'])]:!z-20">
+    <div ref={setNodeRef} style={style} className="relative group/category">
       <CategoryCard
         category={category}
         colorIndex={colorIndex}

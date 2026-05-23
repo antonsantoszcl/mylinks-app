@@ -244,7 +244,7 @@ export function CategoryGrid({
                   <div
                     key={category.id}
                     ref={(el) => { itemRefs.current[index] = el; }}
-                    className="z-0 [&:has([data-no-dnd='true'])]:z-20"
+                    className=""
                     style={
                       layout
                         ? {

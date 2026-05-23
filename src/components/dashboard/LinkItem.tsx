@@ -24,8 +24,10 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
   const [editUrl, setEditUrl] = useState(link.url);
   const [showMoveMenu, setShowMoveMenu] = useState(false);
   const [dropdownPos, setDropdownPos] = useState<{ top: number; right: number } | null>(null);
+  const [editRect, setEditRect] = useState<DOMRect | null>(null);
   const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
+  const linkRowRef = useRef<HTMLDivElement>(null);
   const moveMenuRef = useRef<HTMLDivElement>(null);
   const moveButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -38,15 +40,10 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
   }, [link.title, link.url, isEditing]);
 
   // Auto-focus title input when edit mode opens
-  const editContainerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (isEditing) {
       titleInputRef.current?.focus();
       titleInputRef.current?.select();
-      // Scroll into view so form isn't hidden behind next section
-      setTimeout(() => {
-        editContainerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }, 50);
     }
   }, [isEditing]);
 
@@ -93,6 +90,8 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
   const openEdit = () => {
     setEditTitle(link.title);
     setEditUrl(link.url);
+    const rect = linkRowRef.current?.getBoundingClientRect() ?? null;
+    setEditRect(rect);
     setIsEditing(true);
   };
 
@@ -131,60 +130,84 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
   const otherCategories = categories?.filter((c) => c.id !== currentCategoryId) ?? [];
   const canMove = onMove && otherCategories.length > 0;
 
-  // Edit mode: render inline form
+  // Edit mode: render form as portal overlay
   if (isEditing) {
-    return (
+    const portalForm = (
       <div
-        ref={editContainerRef}
-        className="rounded-lg border border-primary-200 bg-white shadow-sm p-2 my-0.5 relative z-20"
-        data-no-dnd="true"
+        className="fixed inset-0 z-50"
+        onClick={cancelEdit}
       >
-        <div className="space-y-1.5">
-          <input
-            ref={titleInputRef}
-            value={editTitle}
-            onChange={(e) => setEditTitle(e.target.value)}
-            placeholder="Título"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') saveEdit();
-              if (e.key === 'Escape') cancelEdit();
-            }}
-            className="w-full rounded border border-slate-200 px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-primary-300 bg-white min-h-[32px]"
-          />
-          <input
-            value={editUrl}
-            onChange={(e) => setEditUrl(e.target.value)}
-            placeholder="https://exemplo.com"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') saveEdit();
-              if (e.key === 'Escape') cancelEdit();
-            }}
-            className="w-full rounded border border-slate-200 px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-primary-300 bg-white min-h-[32px]"
-          />
-          <div className="flex justify-end gap-1.5">
-            <button
-              type="button"
-              onClick={cancelEdit}
-              className="px-2 py-1 text-xs rounded bg-slate-100 text-slate-600 hover:bg-slate-200 min-h-[32px]"
-            >
-              Cancelar
-            </button>
-            <button
-              type="button"
-              onClick={saveEdit}
-              className="px-2 py-1 text-xs rounded bg-primary-600 text-white hover:bg-primary-700 min-h-[32px]"
-            >
-              Salvar
-            </button>
+        <div
+          className="absolute rounded-lg border border-primary-200 bg-white shadow-lg p-2"
+          style={editRect ? {
+            top: editRect.top,
+            left: editRect.left,
+            width: editRect.width,
+          } : {
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '300px',
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="space-y-1.5">
+            <input
+              ref={titleInputRef}
+              value={editTitle}
+              onChange={(e) => setEditTitle(e.target.value)}
+              placeholder="Título"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') saveEdit();
+                if (e.key === 'Escape') cancelEdit();
+              }}
+              className="w-full rounded border border-slate-200 px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-primary-300 bg-white min-h-[32px]"
+            />
+            <input
+              value={editUrl}
+              onChange={(e) => setEditUrl(e.target.value)}
+              placeholder="https://exemplo.com"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') saveEdit();
+                if (e.key === 'Escape') cancelEdit();
+              }}
+              className="w-full rounded border border-slate-200 px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-primary-300 bg-white min-h-[32px]"
+            />
+            <div className="flex justify-end gap-1.5">
+              <button
+                type="button"
+                onClick={cancelEdit}
+                className="px-2 py-1 text-xs rounded bg-slate-100 text-slate-600 hover:bg-slate-200 min-h-[32px]"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={saveEdit}
+                className="px-2 py-1 text-xs rounded bg-primary-600 text-white hover:bg-primary-700 min-h-[32px]"
+              >
+                Salvar
+              </button>
+            </div>
           </div>
         </div>
       </div>
+    );
+
+    return (
+      <>
+        <div className="py-[5px] pl-1.5 pr-0 opacity-30">
+          <span className="text-sm md:text-[12px]">{link.title || 'Editando...'}</span>
+        </div>
+        {createPortal(portalForm, document.body)}
+      </>
     );
   }
 
   return (
     <>
       <div
+        ref={linkRowRef}
         className="group/link flex items-center justify-between py-[5px] pl-1.5 pr-0 rounded-lg hover:bg-white/70 transition-all cursor-pointer"
         onDoubleClick={handleDoubleClick}
       >
