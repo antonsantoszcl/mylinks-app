@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Search } from 'lucide-react';
+import { Search, Mail } from 'lucide-react';
 import { getNotoEmojiUrl } from '@/lib/emojiUtils';
 
 interface DemoLink {
@@ -143,6 +143,116 @@ function DemoCategoryCard({ category }: { category: DemoCategory }) {
   );
 }
 
+interface DemoContact {
+  name: string;
+  channels: { type: 'whatsapp' | 'instagram' | 'linkedin' | 'email'; color: string }[];
+}
+
+interface DemoContactSection {
+  id: string;
+  title: string;
+  contacts: DemoContact[];
+}
+
+const demoContactSections: DemoContactSection[] = [
+  {
+    id: 'trabalho',
+    title: 'CONTATOS TRABALHO',
+    contacts: [
+      { name: 'Ana Silva', channels: [{ type: 'whatsapp', color: '#25D366' }, { type: 'email', color: '#6B7280' }] },
+      { name: 'Carlos Mendes', channels: [{ type: 'whatsapp', color: '#25D366' }, { type: 'linkedin', color: '#0A66C2' }, { type: 'email', color: '#6B7280' }] },
+      { name: 'Fernanda Rocha', channels: [{ type: 'whatsapp', color: '#25D366' }, { type: 'instagram', color: '#E1306C' }] },
+    ],
+  },
+  {
+    id: 'clientes',
+    title: 'CLIENTES',
+    contacts: [
+      { name: 'João Pereira', channels: [{ type: 'whatsapp', color: '#25D366' }, { type: 'email', color: '#6B7280' }, { type: 'linkedin', color: '#0A66C2' }] },
+      { name: 'Marina Costa', channels: [{ type: 'whatsapp', color: '#25D366' }, { type: 'instagram', color: '#E1306C' }] },
+      { name: 'Rafael Lima', channels: [{ type: 'whatsapp', color: '#25D366' }] },
+    ],
+  },
+  {
+    id: 'parceiros',
+    title: 'PARCEIROS',
+    contacts: [
+      { name: 'Studio Pixel', channels: [{ type: 'email', color: '#6B7280' }, { type: 'instagram', color: '#E1306C' }] },
+      { name: 'Agência Norte', channels: [{ type: 'whatsapp', color: '#25D366' }, { type: 'email', color: '#6B7280' }, { type: 'linkedin', color: '#0A66C2' }, { type: 'instagram', color: '#E1306C' }] },
+      { name: 'Diego Santos', channels: [{ type: 'whatsapp', color: '#25D366' }, { type: 'linkedin', color: '#0A66C2' }] },
+    ],
+  },
+];
+
+function ContactDotIcon({ channels }: { channels: DemoContact['channels'] }) {
+  if (channels.length === 1) {
+    return (
+      <span className="w-4 h-4 flex items-center justify-center flex-shrink-0">
+        <span className="w-3 h-3 rounded-full" style={{ backgroundColor: channels[0].color }} />
+      </span>
+    );
+  }
+  // Fixed positions: whatsapp=0, instagram=1, email=2, linkedin=3
+  const positionMap: Record<string, number> = { whatsapp: 0, instagram: 1, email: 2, linkedin: 3 };
+  const slots: (string | null)[] = [null, null, null, null];
+  channels.slice(0, 4).forEach((ch) => {
+    const pos = positionMap[ch.type] ?? slots.indexOf(null);
+    if (pos !== -1) slots[pos] = ch.color;
+  });
+  return (
+    <span
+      className="w-4 h-4 flex-shrink-0 rounded-[3px] border border-slate-300 bg-white inline-grid"
+      style={{ gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: '1.5px', padding: '2px' }}
+    >
+      {slots.map((color, i) => (
+        <span key={i} className="rounded-full" style={{ width: '4px', height: '4px', backgroundColor: color || 'transparent' }} />
+      ))}
+    </span>
+  );
+}
+
+function DemoContactCard({ section }: { section: DemoContactSection }) {
+  return (
+    <article
+      style={{
+        border: '1px solid #E5E7EB',
+        backgroundColor: '#FFFFFF',
+        boxShadow: 'inset 2px 0 0 rgba(148, 163, 184, 0.22), 0 6px 16px rgba(0,0,0,0.05)',
+        borderRadius: '10px',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <header className="flex items-center gap-2 px-3 py-2.5">
+        <Image
+          src={getNotoEmojiUrl('👥')}
+          alt=""
+          width={16}
+          height={16}
+          className="w-4 h-4 select-none flex-shrink-0"
+          draggable={false}
+          unoptimized
+        />
+        <h3 className="text-xs font-semibold text-slate-800 truncate flex-1">{section.title}</h3>
+        <Mail className="w-3.5 h-3.5 text-slate-300 flex-shrink-0" />
+      </header>
+
+      <div className="mx-2 mb-1.5 rounded-lg p-2 space-y-0.5" style={{ background: '#F1F5F9' }}>
+        {section.contacts.map((contact) => (
+          <div key={contact.name} className="flex items-center gap-2 py-1 pl-1.5 pr-2 rounded-lg">
+            <ContactDotIcon channels={contact.channels} />
+            <span className="text-xs font-semibold text-slate-700 truncate">{contact.name}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="px-3 pb-2.5 pt-0.5">
+        <span className="text-[10px] text-slate-400 font-medium">+ Adicionar contato</span>
+      </div>
+    </article>
+  );
+}
+
 export function DemoPreview() {
   return (
     <section className="py-14 sm:py-20">
@@ -156,7 +266,7 @@ export function DemoPreview() {
             Veja como fica seu dashboard
           </h2>
           <p className="text-slate-500 text-base max-w-xl mx-auto">
-            Organize seus links favoritos em categorias e acesse tudo com um clique.
+            Links organizados por categorias. Acesso rápido a tudo com um clique.
           </p>
         </div>
 
@@ -231,6 +341,47 @@ export function DemoPreview() {
 
         <p className="text-center text-xs text-slate-400 mt-4">
           Exemplo de dashboard — o seu pode ser totalmente personalizado
+        </p>
+
+        {/* Contacts Dashboard Preview */}
+        <div className="text-center mt-16 mb-10">
+          <span className="inline-flex items-center gap-2 bg-primary-50 text-primary-600 text-xs font-medium px-3 py-1.5 rounded-full mb-4 border border-primary-100">
+            <span className="w-1.5 h-1.5 rounded-full bg-primary-500" />
+            Contatos integrados
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-3">
+            Dashboard de Contatos
+          </h2>
+          <p className="text-slate-500 text-base max-w-xl mx-auto">
+            Organize pessoas por seção e comunique-se com um clique. Simples assim.
+          </p>
+        </div>
+
+        <div className="relative mx-auto max-w-4xl rounded-2xl shadow-2xl shadow-primary-100/60 border border-slate-200 overflow-hidden">
+          <div className="bg-slate-100 border-b border-slate-200 px-4 py-2.5 flex items-center gap-3">
+            <div className="flex items-center gap-1.5">
+              <span className="w-3 h-3 rounded-full bg-red-400" />
+              <span className="w-3 h-3 rounded-full bg-yellow-400" />
+              <span className="w-3 h-3 rounded-full bg-green-400" />
+            </div>
+            <div className="flex-1 mx-4">
+              <div className="bg-white rounded-md px-3 py-1 text-xs text-slate-400 max-w-sm mx-auto text-center border border-slate-200">
+                alllinks.app/dashboard — contatos
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-[#F8FAFC] p-4 sm:p-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3" style={{ alignItems: 'start' }}>
+              {demoContactSections.map((section) => (
+                <DemoContactCard key={section.id} section={section} />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <p className="text-center text-xs text-slate-400 mt-4">
+          Clicou no contato → comunicou. WhatsApp, email, Instagram ou LinkedIn.
         </p>
       </div>
     </section>

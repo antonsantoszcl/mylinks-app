@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
 import { signInWithGoogle } from '@/lib/googleSignIn';
-import { Link2, Grid3x3, Zap, ChevronRight, GripVertical } from 'lucide-react';
+import { Link2, Grid3x3, Zap, ChevronRight, GripVertical, Users } from 'lucide-react';
 import { DemoPreview } from '@/components/landing/DemoPreview';
 
 function GoogleIcon() {
@@ -24,17 +24,22 @@ const features = [
   {
     icon: Grid3x3,
     title: 'Dashboard Privado',
-    desc: 'Organize todos os seus links por categoria, do jeito que faz sentido pra você.',
+    desc: 'Organize links e contatos por categoria, do jeito que faz sentido pra você.',
+  },
+  {
+    icon: Users,
+    title: 'Contatos Integrados',
+    desc: 'Pessoas organizadas por seção. Clicou, comunicou — WhatsApp, email, Instagram.',
   },
   {
     icon: GripVertical,
     title: 'Drag & Drop',
-    desc: 'Reorganize links e categorias com um simples arrastar e soltar.',
+    desc: 'Reorganize links, contatos e categorias com um simples arrastar e soltar.',
   },
   {
     icon: Zap,
     title: 'Acesso Rápido',
-    desc: 'Seus links favoritos fixados no topo para acesso instantâneo.',
+    desc: 'Tudo à mão em uma homepage pessoal. Abriu o navegador, já está lá.',
   },
 ];
 
@@ -46,13 +51,13 @@ const steps = [
   },
   {
     step: '02',
-    title: 'Organize seus links',
-    desc: 'Adicione links e crie categorias do seu jeito.',
+    title: 'Organize tudo',
+    desc: 'Adicione links, contatos e crie categorias do seu jeito.',
   },
   {
     step: '03',
     title: 'Acesse de qualquer lugar',
-    desc: 'Use no celular, tablet ou computador. Seus links sempre à mão.',
+    desc: 'Use no celular ou computador. Sua homepage pessoal sempre à mão.',
   },
 ];
 
@@ -136,7 +141,7 @@ export default function Home() {
             A homepage que faltava.
           </h1>
           <p className="text-base sm:text-xl text-slate-500 mb-8 max-w-2xl mx-auto leading-relaxed">
-            Pare de perder tempo procurando links. Organize tudo por categorias e acesse de qualquer lugar.
+            Organize seus contatos, links e presença digital em um só lugar.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
@@ -174,9 +179,9 @@ export default function Home() {
       <section className="py-14 sm:py-20 bg-slate-50">
         <div className="max-w-5xl mx-auto px-4">
           <div className="text-center mb-10 sm:mb-14">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-3">Tudo que você precisa</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-3">Tudo em um só lugar</h2>
             <p className="text-slate-500 text-base">
-              Simples de usar, poderoso o suficiente para organizar sua vida digital.
+              Links, contatos e presença digital organizados na sua homepage pessoal.
             </p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
