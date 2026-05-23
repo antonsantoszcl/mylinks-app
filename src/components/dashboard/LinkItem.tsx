@@ -51,12 +51,13 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
   useEffect(() => {
     if (!showMoveMenu) return;
     const handler = (e: MouseEvent) => {
-      if (
-        moveMenuRef.current && !moveMenuRef.current.contains(e.target as Node) &&
-        moveButtonRef.current && !moveButtonRef.current.contains(e.target as Node)
-      ) {
-        setShowMoveMenu(false);
+      // Check if click is within menu bounding rect (covers scrollbar clicks)
+      if (moveMenuRef.current) {
+        const rect = moveMenuRef.current.getBoundingClientRect();
+        if (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) return;
       }
+      if (moveButtonRef.current && moveButtonRef.current.contains(e.target as Node)) return;
+      setShowMoveMenu(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
