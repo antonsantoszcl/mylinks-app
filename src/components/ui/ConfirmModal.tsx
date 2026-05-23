@@ -35,11 +35,9 @@ export function ConfirmModal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
-      onClick={onCancel}
     >
       <div
         className="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 w-full max-w-sm"
-        onClick={(e) => e.stopPropagation()}
       >
         <h3 className="text-sm font-bold text-slate-800">{title}</h3>
         {message && <p className="text-xs text-slate-500 mt-1.5 mb-4">{message}</p>}
