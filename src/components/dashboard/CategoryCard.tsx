@@ -494,7 +494,7 @@ export function CategoryCard({
                     if (e.key === 'Enter') saveTitle();
                     if (e.key === 'Escape') cancelTitleEdit();
                   }}
-                  className="text-xs font-semibold text-slate-800 border border-primary-200 rounded px-1.5 py-0.5 outline-none focus:ring-1 focus:ring-primary-300 w-full bg-white"
+                  className="text-xs font-semibold text-slate-800 border border-primary-200 rounded px-1.5 py-0.5 outline-none focus:ring-1 focus:ring-primary-300 w-full bg-white uppercase"
                 />
               ) : (
                 <h3

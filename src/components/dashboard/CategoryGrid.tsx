@@ -315,7 +315,7 @@ export function CategoryGrid({
                             value={newCategoryName}
                             onChange={(e) => setNewCategoryName(e.target.value)}
                             placeholder="Nome da seção"
-                            className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-xs outline-none focus:ring-2 focus:ring-primary-300"
+                            className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-xs outline-none focus:ring-2 focus:ring-primary-300 uppercase"
                             autoFocus
                           />
                           {/* Emoji icon picker */}

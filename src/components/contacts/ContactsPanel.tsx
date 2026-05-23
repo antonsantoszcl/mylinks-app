@@ -327,7 +327,7 @@ function SectionCardHeader({
                   if (e.key === 'Enter') save();
                   if (e.key === 'Escape') { setDraft(title); setEditing(false); }
                 }}
-                className="text-xs font-semibold text-slate-800 border border-primary-200 rounded px-1.5 py-0.5 outline-none focus:ring-1 focus:ring-primary-300 w-full bg-white"
+                className="text-xs font-semibold text-slate-800 border border-primary-200 rounded px-1.5 py-0.5 outline-none focus:ring-1 focus:ring-primary-300 w-full bg-white uppercase"
               />
             ) : (
               <h3
@@ -716,7 +716,7 @@ function AddSectionCard({ onCreate }: AddSectionCardProps) {
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
                 placeholder="Nome da seção"
-                className="flex-1 rounded-lg border border-slate-200 px-2 py-1.5 text-xs outline-none focus:ring-2 focus:ring-primary-300"
+                className="flex-1 rounded-lg border border-slate-200 px-2 py-1.5 text-xs outline-none focus:ring-2 focus:ring-primary-300 uppercase"
                 autoFocus
               />
             </div>
