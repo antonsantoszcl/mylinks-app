@@ -565,7 +565,7 @@ export function CategoryCard({
 
         {/* White body area */}
         <div
-          className="mx-2 rounded-xl md:rounded-[10px] flex-1 overflow-y-auto custom-scrollbar p-2.5 card-body-inner"
+          className="mx-2 rounded-xl md:rounded-[10px] flex-1 overflow-y-auto [&:has([data-editing])]:overflow-visible custom-scrollbar p-2.5 card-body-inner"
         >
           {showAddLink && (
             <form onSubmit={submitNewLink} className="mb-2 p-2 rounded-lg border border-slate-200 bg-white/80 space-y-1.5">
