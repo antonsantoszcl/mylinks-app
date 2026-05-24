@@ -10,8 +10,19 @@ const faviconDomainMap: Record<string, string> = {
   'wa.me': 'whatsapp.com',
   'api.whatsapp.com': 'whatsapp.com',
 };
+const faviconDomainSuffixes: [string, string][] = [
+  ['wixsite.com', 'wix.com'],
+  ['wix.com', 'wix.com'],
+];
+function resolveFaviconDomain(domain: string): string {
+  if (faviconDomainMap[domain]) return faviconDomainMap[domain];
+  for (const [suffix, mapped] of faviconDomainSuffixes) {
+    if (domain.endsWith(suffix)) return mapped;
+  }
+  return domain;
+}
 function faviconUrl(domain: string) {
-  const mapped = faviconDomainMap[domain] || domain;
+  const mapped = resolveFaviconDomain(domain);
   return `https://www.google.com/s2/favicons?domain=${mapped}&sz=32`;
 }
 

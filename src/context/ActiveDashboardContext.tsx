@@ -16,16 +16,29 @@ function safeHostname(url: string) {
   }
 }
 
-// Map subdomains/alt domains to their main domain for better favicon results
 const faviconDomainMap: Record<string, string> = {
   'web.whatsapp.com': 'whatsapp.com',
   'wa.me': 'whatsapp.com',
   'api.whatsapp.com': 'whatsapp.com',
 };
 
+// Domains that should map to their parent for favicon lookup
+const faviconDomainSuffixes: [string, string][] = [
+  ['wixsite.com', 'wix.com'],
+  ['wix.com', 'wix.com'],
+];
+
+function resolveFaviconDomain(domain: string): string {
+  if (faviconDomainMap[domain]) return faviconDomainMap[domain];
+  for (const [suffix, mapped] of faviconDomainSuffixes) {
+    if (domain.endsWith(suffix)) return mapped;
+  }
+  return domain;
+}
+
 function faviconFor(url: string, size = 32) {
   const domain = safeHostname(url);
-  const mappedDomain = faviconDomainMap[domain] || domain;
+  const mappedDomain = resolveFaviconDomain(domain);
   return `https://www.google.com/s2/favicons?domain=${mappedDomain}&sz=${size}`;
 }
 
