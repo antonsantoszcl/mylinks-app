@@ -91,14 +91,19 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     const supabase = getSupabaseClient();
 
-    const [profileRes, socialRes] = await Promise.all([
+    const [profileRes, socialRes, { data: { user: authUser } }] = await Promise.all([
       supabase.from('profiles').select('*').eq('id', uid).single(),
       supabase
         .from('social_links')
         .select('*')
         .eq('user_id', uid)
         .order('sort_order'),
+      supabase.auth.getUser(),
     ]);
+
+    // Get first name from Google user_metadata if available
+    const googleName = authUser?.user_metadata?.full_name || authUser?.user_metadata?.name || '';
+    const firstName = googleName ? googleName.split(' ')[0] : '';
 
     const p = profileRes.data;
     const socials = (socialRes.data ?? []) as Array<{
@@ -111,7 +116,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     if (p) {
       setProfile({
         username: p.username || '',
-        displayName: p.display_name || defaultProfile.displayName,
+        displayName: p.display_name || firstName || defaultProfile.displayName,
         avatarUrl: p.avatar_url || '',
         tagline: p.tagline || defaultProfile.tagline,
         bio: p.bio || defaultProfile.bio,
