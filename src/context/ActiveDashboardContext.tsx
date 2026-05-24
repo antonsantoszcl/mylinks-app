@@ -16,9 +16,17 @@ function safeHostname(url: string) {
   }
 }
 
+// Map subdomains/alt domains to their main domain for better favicon results
+const faviconDomainMap: Record<string, string> = {
+  'web.whatsapp.com': 'whatsapp.com',
+  'wa.me': 'whatsapp.com',
+  'api.whatsapp.com': 'whatsapp.com',
+};
+
 function faviconFor(url: string, size = 32) {
   const domain = safeHostname(url);
-  return `https://www.google.com/s2/favicons?domain=${domain}&sz=${size}`;
+  const mappedDomain = faviconDomainMap[domain] || domain;
+  return `https://www.google.com/s2/favicons?domain=${mappedDomain}&sz=${size}`;
 }
 
 function normalizeUrl(value: string) {
@@ -128,14 +136,14 @@ export function ActiveDashboardProvider({ children }: { children: ReactNode }) {
         categoryId: l.category_id,
         title: l.title,
         url: l.url,
-        iconUrl: l.icon_url,
+        iconUrl: faviconFor(l.url, 32),
         order: l.sort_order,
       })),
       quickAccess: (qaRes.data ?? []).map((q) => ({
         id: q.id,
         title: q.title,
         url: q.url,
-        iconUrl: q.icon_url,
+        iconUrl: faviconFor(q.url, 64),
       })),
     };
 

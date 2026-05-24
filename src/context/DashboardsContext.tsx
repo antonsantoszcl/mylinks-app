@@ -5,8 +5,14 @@ import { getSupabaseClient } from '@/lib/supabase';
 import { Dashboard } from '@/lib/types';
 
 // ── Default seed data for new users ────────────────────────────────────────
+const faviconDomainMap: Record<string, string> = {
+  'web.whatsapp.com': 'whatsapp.com',
+  'wa.me': 'whatsapp.com',
+  'api.whatsapp.com': 'whatsapp.com',
+};
 function faviconUrl(domain: string) {
-  return `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
+  const mapped = faviconDomainMap[domain] || domain;
+  return `https://www.google.com/s2/favicons?domain=${mapped}&sz=32`;
 }
 
 const DEFAULT_QUICK_ACCESS: Array<{ title: string; url: string; domain: string }> = [
