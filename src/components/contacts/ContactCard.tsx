@@ -142,7 +142,7 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
               <MessagesSquare className="w-5 h-5 text-slate-400" />
             )}
           </span>
-          <span className="text-sm md:text-[12px] font-semibold text-slate-700 md:text-slate-600 truncate flex-1">
+          <span className="text-sm md:text-[12px] font-semibold font-manrope text-slate-700 md:text-slate-600 truncate flex-1">
             {contact.name}
           </span>
         </div>

@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Manrope } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
+const manrope = Manrope({ subsets: ["latin"], weight: ["600"], variable: "--font-manrope" });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.alllinks.app"),
@@ -127,7 +128,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} ${manrope.variable}`}>
         <Script
           id="json-ld"
           type="application/ld+json"

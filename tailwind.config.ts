@@ -24,6 +24,9 @@ const config: Config = {
           900: '#234580',
         }
       },
+      fontFamily: {
+        manrope: ['var(--font-manrope)', 'sans-serif'],
+      },
     },
   },
   plugins: [],
