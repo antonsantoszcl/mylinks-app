@@ -469,7 +469,7 @@ function ContactSectionCard({
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
-      className="rounded-[10px] md:rounded-lg flex flex-col group category-card hover:-translate-y-0.5"
+      className="rounded-[10px] md:rounded-[10px] flex flex-col group category-card hover:-translate-y-0.5"
       style={{
         border: '1px solid #E5E7EB',
         backgroundColor: isDragOver ? 'rgba(235, 242, 255, 0.6)' : '#FFFFFF',
@@ -500,7 +500,7 @@ function ContactSectionCard({
         onDragHandleMouseDown={draggable && !isFrequents ? (_e) => { dragFromHandle.current = true; } : undefined}
       />
 
-      <div className="mx-2 rounded-[10px] md:rounded-lg flex-1 overflow-y-auto custom-scrollbar p-2.5 card-body-inner">
+      <div className="mx-2 rounded-[10px] md:rounded-[10px] flex-1 overflow-y-auto custom-scrollbar p-2.5 card-body-inner">
         {contacts.length > 0 ? (
           <>
             {contacts.map((c) => (

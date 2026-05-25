@@ -5,7 +5,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
-const manrope = Manrope({ subsets: ["latin"], weight: ["600"], variable: "--font-manrope" });
+const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.alllinks.app"),
