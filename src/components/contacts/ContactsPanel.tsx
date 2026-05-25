@@ -14,12 +14,10 @@ import { useActiveDashboard } from '@/context/ActiveDashboardContext';
 import { ContactCard } from './ContactCard';
 import { ContactForm } from './ContactForm';
 import { Contact } from '@/lib/types';
-import { QuickAccessRow } from '@/components/dashboard/QuickAccessRow';
 import { getNotoEmojiUrl } from '@/lib/emojiUtils';
 import {
   GripVertical,
   Inbox,
-  LayoutGrid,
   Mail,
   Pencil,
   Plus,
@@ -859,8 +857,6 @@ export function ContactsPanel() {
   const userEmail = user?.email || '';
   const {
     data,
-    addQuickAccess,
-    removeQuickAccess,
   } = useActiveDashboard();
   const [addContactFor, setAddContactFor] = useState<string | null>(null);
 
@@ -980,20 +976,7 @@ export function ContactsPanel() {
 
   return (
     <div className="max-w-full space-y-6 pb-8">
-      <QuickAccessRow
-        links={data?.quickAccess ?? []}
-        onAdd={addQuickAccess}
-        onRemove={removeQuickAccess}
-      />
-
       <section>
-        <div className="flex items-center gap-1.5 mb-5">
-          <div className="bg-primary-100/80 p-1 rounded-md">
-            <LayoutGrid className="w-3.5 h-3.5 text-primary-600" />
-          </div>
-          <h2 className="text-[15px] md:text-sm font-bold text-slate-700 tracking-tight">Seções</h2>
-        </div>
-
         <ContactGrid>
           {gridItems}
         </ContactGrid>

@@ -8,7 +8,7 @@ import { QuickAccessRow } from '@/components/dashboard/QuickAccessRow';
 import { CategoryGrid } from '@/components/dashboard/CategoryGrid';
 import { RecentAccessRow } from '@/components/dashboard/RecentAccessRow';
 import { ContactsPanel } from '@/components/contacts/ContactsPanel';
-import { Hand } from 'lucide-react';
+import { Hand, LayoutGrid } from 'lucide-react';
 import { TopNavControls } from '@/components/layout/TopNav';
 import { RecentAccess } from '@/lib/types';
 
@@ -186,17 +186,7 @@ export function ActiveDashboardView() {
     </>
   );
 
-  // ── Contacts view ──────────────────────────────────────────────────────────
-  if (isContacts) {
-    return (
-      <div className="max-w-full space-y-6 pb-8">
-        {headerBlock}
-        <ContactsPanel />
-      </div>
-    );
-  }
-
-  // ── Links view (default) ───────────────────────────────────────────────────
+  // ── Unified return: header + quick access always static ─────────────────────
   return (
     <div className="max-w-full space-y-6 pb-8">
       {headerBlock}
@@ -207,25 +197,38 @@ export function ActiveDashboardView() {
         onRemove={removeQuickAccess}
       />
 
-      <CategoryGrid
-        categories={orderedCategories}
-        links={data.links}
-        onRenameCategory={renameCategory}
-        onAddLink={addLinkToCategory}
-        onDeleteLink={removeLink}
-        onUpdateLink={updateLink}
-        onAddCategory={addCategory}
-        onDeleteCategory={removeCategory}
-        onReorderCategories={reorderCategories}
-        onReorderLinks={reorderLinks}
-        onMoveLink={moveLink}
-        dashboards={dashboards}
-        currentDashboardId={activeDashboardId ?? ''}
-        onMoveCategoryToPanel={moveCategoryToPanel}
-        onUpdateCategoryIcon={updateCategoryIcon}
-      />
+      <div className="flex items-center gap-1.5 mb-5">
+        <div className="bg-primary-100/80 p-1 rounded-md">
+          <LayoutGrid className="w-3.5 h-3.5 text-primary-600" />
+        </div>
+        <h2 className="text-[15px] md:text-sm font-bold text-slate-700 tracking-tight">Seções</h2>
+      </div>
 
-      <RecentAccessRow items={recentAccess} />
+      {isContacts ? (
+        <ContactsPanel />
+      ) : (
+        <>
+          <CategoryGrid
+            categories={orderedCategories}
+            links={data.links}
+            onRenameCategory={renameCategory}
+            onAddLink={addLinkToCategory}
+            onDeleteLink={removeLink}
+            onUpdateLink={updateLink}
+            onAddCategory={addCategory}
+            onDeleteCategory={removeCategory}
+            onReorderCategories={reorderCategories}
+            onReorderLinks={reorderLinks}
+            onMoveLink={moveLink}
+            dashboards={dashboards}
+            currentDashboardId={activeDashboardId ?? ''}
+            onMoveCategoryToPanel={moveCategoryToPanel}
+            onUpdateCategoryIcon={updateCategoryIcon}
+          />
+
+          <RecentAccessRow items={recentAccess} />
+        </>
+      )}
     </div>
   );
 }

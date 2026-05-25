@@ -3,7 +3,7 @@
 import { Category, Dashboard, Link as LinkType } from '@/lib/types';
 import { getNotoEmojiUrl } from '@/lib/emojiUtils';
 import { SortableCategoryCard } from './SortableCategoryCard';
-import { LayoutGrid, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { FormEvent, useState, useRef, useEffect, useCallback } from 'react';
 import {
   DndContext,
@@ -208,12 +208,6 @@ export function CategoryGrid({
 
   return (
     <section>
-      <div className="flex items-center gap-1.5 mb-5">
-        <div className="bg-primary-100/80 p-1 rounded-md">
-          <LayoutGrid className="w-3.5 h-3.5 text-primary-600" />
-        </div>
-        <h2 className="text-[15px] md:text-sm font-bold text-slate-700 tracking-tight">Seções</h2>
-      </div>
 
       <DndContext
         id="category-grid-dnd"
