@@ -39,7 +39,7 @@ export function MobileLayout({ children }: { children: React.ReactNode }) {
         <div className="hidden md:block">
           <TopNav />
         </div>
-        <main className="flex-1 md:overflow-y-auto p-3 md:pt-2">{children}</main>
+        <main className="flex-1 md:overflow-y-scroll p-3 md:pt-2">{children}</main>
       </div>
     </div>
   );

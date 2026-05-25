@@ -7,10 +7,6 @@
   --foreground: #0f172a;
 }
 
-html {
-  overflow-y: scroll;
-}
-
 body {
   background-color: var(--background);
   background-image: radial-gradient(ellipse at 60% 20%, rgba(255,255,255,0.55) 0%, transparent 70%);
