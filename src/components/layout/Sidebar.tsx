@@ -567,8 +567,10 @@ function SidebarContent({
 
   const handleDrop = (targetId: string) => (e: React.DragEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     const sourceId = dragIdRef.current;
     dragIdRef.current = null;
+    setDraggingId(null);
     setDragOverId(null);
     if (!sourceId || sourceId === targetId) return;
 
@@ -576,8 +578,23 @@ function SidebarContent({
     const defaultPanel = dashboards.find((d) => d.isDefault);
 
     const sourceIdx = nonDefaults.findIndex((d) => d.id === sourceId);
-    const targetIdx = nonDefaults.findIndex((d) => d.id === targetId);
-    if (sourceIdx === -1 || targetIdx === -1) return;
+    const rawTargetIdx = nonDefaults.findIndex((d) => d.id === targetId);
+    if (sourceIdx === -1 || rawTargetIdx === -1) return;
+
+    // Determine if dropping above or below the target's midpoint
+    const el = (e.currentTarget as HTMLElement).closest('[data-dashid]') as HTMLElement | null;
+    let targetIdx = rawTargetIdx;
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      if (e.clientY > midY && rawTargetIdx < nonDefaults.length - 1) {
+        targetIdx = rawTargetIdx + 1;
+      }
+    }
+
+    // Adjust for removal of source
+    if (sourceIdx < targetIdx) targetIdx--;
+    if (targetIdx === sourceIdx) return;
 
     const reordered = [...nonDefaults];
     const [moved] = reordered.splice(sourceIdx, 1);
@@ -644,8 +661,8 @@ function SidebarContent({
     if (!container) return;
     const mouseY = e.clientY;
 
-    // Find all non-default panel elements and determine insertion point
-    const items = Array.from(container.querySelectorAll('[data-dashid]'))
+    // Find all non-default panel elements (direct children only) and determine insertion point
+    const items = Array.from(container.querySelectorAll(':scope > [data-dashid]'))
       .filter((el) => {
         const id = el.getAttribute('data-dashid');
         return id && !dashboards.find((d) => d.id === id && d.isDefault);
