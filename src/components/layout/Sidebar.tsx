@@ -531,7 +531,6 @@ function SidebarContent({
     setDragOverId(null);
 
     // If sourceId is still set, no drop handler caught it (cursor left the area)
-    // Use last known dragOverId or mouse Y to determine target position
     if (!sourceId) return;
     const container = panelListRef.current;
     if (!container) return;
@@ -543,13 +542,15 @@ function SidebarContent({
 
     const rect = container.getBoundingClientRect();
     const mouseY = e.clientY;
+
+    // Only handle if cursor is outside the container bounds
+    if (mouseY > rect.top && mouseY < rect.bottom) return;
+
     let targetIdx: number;
     if (mouseY <= rect.top) {
-      targetIdx = 0; // above list → first position
-    } else if (mouseY >= rect.bottom) {
-      targetIdx = nonDefaults.length - 1; // below list → last position
+      targetIdx = 0;
     } else {
-      return; // within bounds, a drop handler should have caught it
+      targetIdx = nonDefaults.length - 1;
     }
     if (targetIdx === sourceIdx) return;
 
@@ -623,7 +624,7 @@ function SidebarContent({
   };
 
   // Container-level drop: if the user drops anywhere in the panel list area
-  // that wasn't caught by a specific panel, clamp to first or last position
+  // that wasn't caught by a specific panel item, determine position by mouseY
   const panelListRef = useRef<HTMLDivElement>(null);
   const handleContainerDrop = (e: React.DragEvent) => {
     e.preventDefault();
@@ -638,13 +639,30 @@ function SidebarContent({
     const sourceIdx = nonDefaults.findIndex((d) => d.id === sourceId);
     if (sourceIdx === -1) return;
 
-    // Determine position based on mouse Y relative to list midpoint
+    // Determine target position based on mouseY relative to each item's midpoint
     const container = panelListRef.current;
     if (!container) return;
-    const rect = container.getBoundingClientRect();
     const mouseY = e.clientY;
-    const midY = rect.top + rect.height / 2;
-    const targetIdx = mouseY < midY ? 0 : nonDefaults.length - 1;
+
+    // Find all non-default panel elements and determine insertion point
+    const items = Array.from(container.querySelectorAll('[data-dashid]'))
+      .filter((el) => {
+        const id = el.getAttribute('data-dashid');
+        return id && !dashboards.find((d) => d.id === id && d.isDefault);
+      });
+
+    let targetIdx = nonDefaults.length - 1; // default: last
+    for (let i = 0; i < items.length; i++) {
+      const rect = items[i].getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      if (mouseY < midY) {
+        targetIdx = i;
+        break;
+      }
+    }
+
+    // Adjust targetIdx if source is before target (since source will be removed first)
+    if (sourceIdx < targetIdx) targetIdx--;
     if (targetIdx === sourceIdx) return;
 
     const reordered = [...nonDefaults];
