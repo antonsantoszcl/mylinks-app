@@ -1,10 +1,10 @@
-import { Sidebar } from "@/components/layout/Sidebar";
-import { TopNav } from "@/components/layout/TopNav";
 import { ProfileProvider } from "@/context/ProfileContext";
 import { PublicDataProvider } from "@/context/PublicDataContext";
 import { DashboardsProvider } from "@/context/DashboardsContext";
 import { ActiveDashboardProvider } from "@/context/ActiveDashboardContext";
 import { ContactsProvider } from "@/context/ContactsContext";
+import { InstrucoesProvider } from "@/context/InstrucoesContext";
+import { InstrucoesModals } from "@/components/layout/TopNav";
 import { AuthGuard } from "@/components/auth/AuthGuard";
 import { MobileLayout } from "@/components/layout/MobileLayout";
 
@@ -20,7 +20,10 @@ export default function PrivateLayout({
           <DashboardsProvider>
             <ContactsProvider>
               <ActiveDashboardProvider>
-                <MobileLayout>{children}</MobileLayout>
+                <InstrucoesProvider>
+                  <MobileLayout>{children}</MobileLayout>
+                  <InstrucoesModals />
+                </InstrucoesProvider>
               </ActiveDashboardProvider>
             </ContactsProvider>
           </DashboardsProvider>

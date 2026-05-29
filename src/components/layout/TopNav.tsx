@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useProfile, getInitials } from '@/context/ProfileContext';
 import { useAuth } from '@/context/AuthContext';
+import { useInstrucoes } from '@/context/InstrucoesContext';
 
 function VideoOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
   useEffect(() => {
@@ -69,7 +70,7 @@ const ICONS_LEGEND = [
 ];
 
 function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [videoOpen, setVideoOpen] = useState(false);
+  const { videoOpen, openVideo, closeVideo } = useInstrucoes();
 
   useEffect(() => {
     if (!open) return;
@@ -166,7 +167,7 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
                 <p className="text-xs text-slate-500 leading-relaxed">Veja como usar todos os recursos do painel em poucos minutos.</p>
               </div>
               <button
-                onClick={() => setVideoOpen(true)}
+                onClick={() => openVideo()}
                 className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold shadow-sm transition-colors"
               >
                 <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
@@ -203,7 +204,7 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
         </div>
       </div>
 
-      <VideoOverlay open={videoOpen} onClose={() => setVideoOpen(false)} />
+      <VideoOverlay open={videoOpen} onClose={closeVideo} />
     </div>
   );
 }
@@ -213,7 +214,7 @@ export function TopNavControls() {
   const router = useRouter();
   const { profile } = useProfile();
   const { logout } = useAuth();
-  const [instrucoesOpen, setInstrucoesOpen] = useState(false);
+  const { openInstrucoes } = useInstrucoes();
 
   const handleSignOut = async () => {
     await logout();
@@ -223,44 +224,46 @@ export function TopNavControls() {
   const initials = getInitials(profile.displayName);
 
   return (
-    <>
-      <div className="flex items-center gap-2 md:mr-3">
-        <button
-          onClick={() => setInstrucoesOpen(true)}
-          className="flex items-center px-3 py-2 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 hover:shadow-sm hover:bg-slate-50 transition-all bg-white min-h-[36px]"
-        >
-          INSTRUÇÕES
-        </button>
+    <div className="flex items-center gap-2 md:mr-3">
+      <button
+        onClick={openInstrucoes}
+        className="flex items-center px-3 py-2 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 hover:shadow-sm hover:bg-slate-50 transition-all bg-white min-h-[36px]"
+      >
+        INSTRUÇÕES
+      </button>
 
-        <button
-          onClick={handleSignOut}
-          className="flex items-center gap-1 text-xs font-semibold text-slate-700 hover:shadow-sm hover:bg-slate-50 transition-all px-3 py-2 rounded-lg border border-slate-200 bg-white min-h-[36px]"
-        >
-          <LogOut className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Sair</span>
-        </button>
+      <button
+        onClick={handleSignOut}
+        className="flex items-center gap-1 text-xs font-semibold text-slate-700 hover:shadow-sm hover:bg-slate-50 transition-all px-3 py-2 rounded-lg border border-slate-200 bg-white min-h-[36px]"
+      >
+        <LogOut className="w-3.5 h-3.5" />
+        <span className="hidden sm:inline">Sair</span>
+      </button>
 
-        <Link
-          href="/dashboard/settings"
-          className="w-8 h-8 sm:w-7 sm:h-7 rounded-full overflow-hidden ring-2 ring-slate-100 cursor-pointer hover:ring-primary-500 transition-all flex items-center justify-center bg-primary-100 shadow-sm"
-          title="Configuracoes de perfil"
-        >
-          {profile.avatarUrl ? (
-            <img
-              src={profile.avatarUrl}
-              alt={profile.displayName}
-              className="w-full h-full object-cover"
-              onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
-            />
-          ) : (
-            <span className="text-xs font-bold text-primary-600">{initials}</span>
-          )}
-        </Link>
-      </div>
-
-      <InstrucoesModal open={instrucoesOpen} onClose={() => setInstrucoesOpen(false)} />
-    </>
+      <Link
+        href="/dashboard/settings"
+        className="w-8 h-8 sm:w-7 sm:h-7 rounded-full overflow-hidden ring-2 ring-slate-100 cursor-pointer hover:ring-primary-500 transition-all flex items-center justify-center bg-primary-100 shadow-sm"
+        title="Configuracoes de perfil"
+      >
+        {profile.avatarUrl ? (
+          <img
+            src={profile.avatarUrl}
+            alt={profile.displayName}
+            className="w-full h-full object-cover"
+            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+          />
+        ) : (
+          <span className="text-xs font-bold text-primary-600">{initials}</span>
+        )}
+      </Link>
+    </div>
   );
+}
+
+/** Global Instruções modals — render once at layout level, survives orientation changes */
+export function InstrucoesModals() {
+  const { instrucoesOpen, closeInstrucoes } = useInstrucoes();
+  return <InstrucoesModal open={instrucoesOpen} onClose={closeInstrucoes} />;
 }
 
 export function TopNav() {
