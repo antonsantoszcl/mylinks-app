@@ -640,8 +640,7 @@ function SidebarContent({
     e.dataTransfer.dropEffect = 'move';
   };
 
-  // Container-level drop: if the user drops anywhere in the panel list area
-  // that wasn't caught by a specific panel item, determine position by mouseY
+  // Container-level drop: determine position by mouseY relative to each non-default item
   const panelListRef = useRef<HTMLDivElement>(null);
   const handleContainerDrop = (e: React.DragEvent) => {
     e.preventDefault();
@@ -656,7 +655,6 @@ function SidebarContent({
     const sourceIdx = nonDefaults.findIndex((d) => d.id === sourceId);
     if (sourceIdx === -1) return;
 
-    // Determine target position based on mouseY relative to each item's midpoint
     const container = panelListRef.current;
     if (!container) return;
     const mouseY = e.clientY;
@@ -668,7 +666,8 @@ function SidebarContent({
         return id && !dashboards.find((d) => d.id === id && d.isDefault);
       });
 
-    let targetIdx = nonDefaults.length - 1; // default: last
+    // Calculate target index: find the first item whose midpoint is below the cursor
+    let targetIdx = nonDefaults.length; // default: after all items
     for (let i = 0; i < items.length; i++) {
       const rect = items[i].getBoundingClientRect();
       const midY = rect.top + rect.height / 2;
@@ -678,13 +677,17 @@ function SidebarContent({
       }
     }
 
-    // Adjust targetIdx if source is before target (since source will be removed first)
-    if (sourceIdx < targetIdx) targetIdx--;
-    if (targetIdx === sourceIdx) return;
+    // Adjust for removal of source (splice removes first, then inserts)
+    let insertIdx = targetIdx;
+    if (sourceIdx < insertIdx) insertIdx--;
+    if (insertIdx === sourceIdx) return;
+    // Clamp
+    if (insertIdx < 0) insertIdx = 0;
+    if (insertIdx >= nonDefaults.length) insertIdx = nonDefaults.length - 1;
 
     const reordered = [...nonDefaults];
     const [moved] = reordered.splice(sourceIdx, 1);
-    reordered.splice(targetIdx, 0, moved);
+    reordered.splice(insertIdx, 0, moved);
 
     const orderedIds = [
       ...(defaultPanel ? [defaultPanel.id] : []),
@@ -934,7 +937,7 @@ function SidebarContent({
                       onDragStart={!d.isDefault ? handleDragStart(d.id) : undefined}
                       onDragOver={!d.isDefault ? handleDragOver(d.id) : d.isDefault ? handleBoundaryDragOver : undefined}
                       onDragEnd={!d.isDefault ? handleDragEnd() : undefined}
-                      onDrop={!d.isDefault ? handleDrop(d.id) : handleBoundaryDrop('first')}
+                      onDrop={undefined}
                       onTouchStartHandle={!d.isDefault ? handleTouchStartHandle(d.id) : undefined}
                     />
                   </div>
