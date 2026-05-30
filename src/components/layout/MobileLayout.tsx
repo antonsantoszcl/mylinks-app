@@ -34,12 +34,12 @@ export function MobileLayout({ children }: { children: React.ReactNode }) {
       <Sidebar mobileOpen={mobileOpen} onMobileOpenChange={setMobileOpen} />
 
       {/* Main content column (desktop: fixed-height scrollable; mobile: natural flow) */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 md:min-h-0">
         {/* TopNav on desktop: fixed top-right */}
         <div className="hidden md:block">
           <TopNav />
         </div>
-        <main className="flex-1 md:overflow-y-scroll p-3 md:pt-2">{children}</main>
+        <main className="flex-1 min-h-0 md:overflow-y-scroll p-3 md:pt-2">{children}</main>
       </div>
     </div>
   );

@@ -82,3 +82,8 @@ body {
     --card-accent-opacity-boost: 0.15;
   }
 }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

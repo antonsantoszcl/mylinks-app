@@ -127,6 +127,77 @@ export function ActiveDashboardView() {
   const dashboardTitle = activeDashboard?.title ?? '';
   const isContacts = activeDashboard?.isContacts ?? false;
 
+  // ── BRAZILIAN TRANSITION — Crossfade ────────────────────────────────────────
+  const CROSSFADE_MS = 1000;
+  const [crossfading, setCrossfading] = useState(false);
+  const [outgoingDashId, setOutgoingDashId] = useState<string | null>(null);
+  const [outgoingSnapshot, setOutgoingSnapshot] = useState<typeof data>(null);
+  const [outgoingFading, setOutgoingFading] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerHeight, setContainerHeight] = useState<number | null>(null);
+  const prevDashIdRef = useRef(activeDashboardId);
+  const prevDataRef = useRef(data);
+
+  // Detect panel change synchronously in render
+  const justChanged = activeDashboardId !== prevDashIdRef.current && !crossfading;
+  if (justChanged) {
+    if (containerRef.current) {
+      setContainerHeight(containerRef.current.offsetHeight);
+    }
+    setOutgoingSnapshot(prevDataRef.current);
+    setOutgoingDashId(prevDashIdRef.current);
+    setOutgoingFading(false);
+    setCrossfading(true);
+    prevDashIdRef.current = activeDashboardId;
+  }
+
+  // Start crossfade after paint
+  useEffect(() => {
+    if (!crossfading) return;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setOutgoingFading(true);
+      });
+    });
+  }, [crossfading]);
+
+  // End crossfade
+  useEffect(() => {
+    if (!crossfading) return;
+    const timer = setTimeout(() => {
+      setCrossfading(false);
+      setOutgoingDashId(null);
+      setOutgoingSnapshot(null);
+      setOutgoingFading(false);
+      setContainerHeight(null);
+    }, CROSSFADE_MS + 100);
+    return () => clearTimeout(timer);
+  }, [crossfading]);
+
+  // Keep prev data updated
+  useEffect(() => {
+    if (!crossfading && data) {
+      prevDataRef.current = data;
+    }
+  });
+
+  // Freeze title and quickAccess during crossfade
+  const displayedTitle = crossfading
+    ? (dashboards.find(d => d.id === outgoingDashId)?.title ?? '')
+    : dashboardTitle;
+  const displayedQuickAccess = crossfading
+    ? (outgoingSnapshot?.quickAccess ?? [])
+    : (data?.quickAccess ?? []);
+
+  // Outgoing panel data
+  const outgoingCategories = useMemo(
+    () => [...(outgoingSnapshot?.categories ?? [])].sort((a, b) => a.order - b.order),
+    [outgoingSnapshot]
+  );
+  const outgoingIsContacts = outgoingDashId
+    ? (dashboards.find((d) => d.id === outgoingDashId)?.isContacts ?? false)
+    : false;
+
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite';
 
@@ -135,7 +206,8 @@ export function ActiveDashboardView() {
     [data?.categories]
   );
 
-  if (isLoading || !data) return <Spinner />;
+  // Don't show spinner during crossfade
+  if ((isLoading || !data) && !crossfading) return <Spinner />;
 
   // ── Header (shared between links and contacts views) ──────────────────────
   const headerBlock = (
@@ -166,9 +238,9 @@ export function ActiveDashboardView() {
           <span className="text-sm font-semibold text-slate-600 whitespace-nowrap tracking-tight">
             {greeting}{profile.displayName ? `, ${profile.displayName.split(' ')[0]}` : ''}!
           </span>
-          {dashboardTitle && (
+          {displayedTitle && (
             <span className="ml-1 text-xs text-slate-400/80 bg-slate-100/70 px-2 py-0.5 rounded-full truncate max-w-[120px] font-normal">
-              {dashboardTitle}
+              {displayedTitle}
             </span>
           )}
         </div>
@@ -192,7 +264,7 @@ export function ActiveDashboardView() {
       {headerBlock}
 
       <QuickAccessRow
-        links={data.quickAccess}
+        links={displayedQuickAccess}
         onAdd={addQuickAccess}
         onRemove={removeQuickAccess}
       />
@@ -204,31 +276,82 @@ export function ActiveDashboardView() {
         <h2 className="text-[15px] md:text-sm font-bold text-slate-700 tracking-tight">Seções</h2>
       </div>
 
-      {isContacts ? (
-        <ContactsPanel />
-      ) : (
-        <>
-          <CategoryGrid
-            categories={orderedCategories}
-            links={data.links}
-            onRenameCategory={renameCategory}
-            onAddLink={addLinkToCategory}
-            onDeleteLink={removeLink}
-            onUpdateLink={updateLink}
-            onAddCategory={addCategory}
-            onDeleteCategory={removeCategory}
-            onReorderCategories={reorderCategories}
-            onReorderLinks={reorderLinks}
-            onMoveLink={moveLink}
-            dashboards={dashboards}
-            currentDashboardId={activeDashboardId ?? ''}
-            onMoveCategoryToPanel={moveCategoryToPanel}
-            onUpdateCategoryIcon={updateCategoryIcon}
-          />
+      {/* BRAZILIAN TRANSITION — crossfade container */}
+      <div
+        ref={containerRef}
+        className="relative"
+        style={crossfading && containerHeight ? { minHeight: containerHeight } : undefined}
+      >
+        {/* Outgoing overlay (old content fading out) */}
+        {crossfading && outgoingDashId && (
+          <div
+            className="absolute inset-x-0 top-0 z-10"
+            style={{
+              opacity: outgoingFading ? 0 : 1,
+              transition: outgoingFading ? `opacity ${CROSSFADE_MS}ms ease-in-out` : 'none',
+              pointerEvents: 'none',
+            }}
+          >
+            {outgoingIsContacts ? (
+              <ContactsPanel />
+            ) : (
+              <CategoryGrid
+                categories={outgoingCategories}
+                links={outgoingSnapshot?.links ?? []}
+                onRenameCategory={renameCategory}
+                onAddLink={addLinkToCategory}
+                onDeleteLink={removeLink}
+                onUpdateLink={updateLink}
+                onAddCategory={addCategory}
+                onDeleteCategory={removeCategory}
+                onReorderCategories={reorderCategories}
+                onReorderLinks={reorderLinks}
+                onMoveLink={moveLink}
+                dashboards={dashboards}
+                currentDashboardId={outgoingDashId}
+                onMoveCategoryToPanel={moveCategoryToPanel}
+                onUpdateCategoryIcon={updateCategoryIcon}
+              />
+            )}
+          </div>
+        )}
 
-          <RecentAccessRow items={recentAccess} />
-        </>
-      )}
+        {/* Incoming (new content fading in) */}
+        <div
+          key={activeDashboardId}
+          style={crossfading ? {
+            opacity: 0,
+            animation: `fadeIn ${CROSSFADE_MS}ms ease-in-out forwards`,
+            animationDelay: '32ms',
+          } : undefined}
+        >
+          {isContacts ? (
+            <ContactsPanel />
+          ) : (
+            <>
+              <CategoryGrid
+                categories={orderedCategories}
+                links={data?.links ?? []}
+                onRenameCategory={renameCategory}
+                onAddLink={addLinkToCategory}
+                onDeleteLink={removeLink}
+                onUpdateLink={updateLink}
+                onAddCategory={addCategory}
+                onDeleteCategory={removeCategory}
+                onReorderCategories={reorderCategories}
+                onReorderLinks={reorderLinks}
+                onMoveLink={moveLink}
+                dashboards={dashboards}
+                currentDashboardId={activeDashboardId ?? ''}
+                onMoveCategoryToPanel={moveCategoryToPanel}
+                onUpdateCategoryIcon={updateCategoryIcon}
+              />
+
+              <RecentAccessRow items={recentAccess} />
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
