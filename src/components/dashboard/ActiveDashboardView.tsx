@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo, useRef, useState, useEffect } from 'react';
+import { useMemo, useRef, useState, useEffect, useCallback } from 'react';
+import { Transition } from '@headlessui/react';
 import { useProfile } from '@/context/ProfileContext';
 import { useDashboards } from '@/context/DashboardsContext';
 import { useActiveDashboard } from '@/context/ActiveDashboardContext';
@@ -127,76 +128,71 @@ export function ActiveDashboardView() {
   const dashboardTitle = activeDashboard?.title ?? '';
   const isContacts = activeDashboard?.isContacts ?? false;
 
-  // ── BRAZILIAN TRANSITION — Crossfade ────────────────────────────────────────
-  const CROSSFADE_MS = 1000;
-  const [crossfading, setCrossfading] = useState(false);
-  const [outgoingDashId, setOutgoingDashId] = useState<string | null>(null);
-  const [outgoingSnapshot, setOutgoingSnapshot] = useState<typeof data>(null);
-  const [outgoingFading, setOutgoingFading] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [containerHeight, setContainerHeight] = useState<number | null>(null);
+  // ── BRAZILIAN TRANSITION — Cross Dissolve via @headlessui/react ──
   const prevDashIdRef = useRef(activeDashboardId);
   const prevDataRef = useRef(data);
+  const prevIsContactsRef = useRef(isContacts);
 
-  // Detect panel change synchronously in render
-  const justChanged = activeDashboardId !== prevDashIdRef.current && !crossfading;
-  if (justChanged) {
-    if (containerRef.current) {
-      setContainerHeight(containerRef.current.offsetHeight);
-    }
-    setOutgoingSnapshot(prevDataRef.current);
-    setOutgoingDashId(prevDashIdRef.current);
-    setOutgoingFading(false);
-    setCrossfading(true);
-    prevDashIdRef.current = activeDashboardId;
-  }
+  // Store previous panel state for the outgoing layer
+  const [outgoing, setOutgoing] = useState<{
+    dashId: string;
+    snapshot: typeof data;
+    isContacts: boolean;
+  } | null>(null);
 
-  // Start crossfade after paint
+  // Track which panels are "showing" for Transition
+  const [showCurrent, setShowCurrent] = useState(true);
+  const [showOutgoing, setShowOutgoing] = useState(false);
+
+  // Detect panel change
   useEffect(() => {
-    if (!crossfading) return;
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setOutgoingFading(true);
-      });
+    if (activeDashboardId === prevDashIdRef.current) return;
+
+    // Capture outgoing state
+    setOutgoing({
+      dashId: prevDashIdRef.current ?? '',
+      snapshot: prevDataRef.current,
+      isContacts: prevIsContactsRef.current,
     });
-  }, [crossfading]);
+    setShowOutgoing(true);
+    setShowCurrent(false);
 
-  // End crossfade
-  useEffect(() => {
-    if (!crossfading) return;
-    const timer = setTimeout(() => {
-      setCrossfading(false);
-      setOutgoingDashId(null);
-      setOutgoingSnapshot(null);
-      setOutgoingFading(false);
-      setContainerHeight(null);
-    }, CROSSFADE_MS + 100);
-    return () => clearTimeout(timer);
-  }, [crossfading]);
+    // Next frame: start cross dissolve
+    requestAnimationFrame(() => {
+      setShowOutgoing(false); // fade out old
+      setShowCurrent(true);   // fade in new
+    });
 
-  // Keep prev data updated
+    prevDashIdRef.current = activeDashboardId;
+    prevIsContactsRef.current = isContacts;
+  }, [activeDashboardId, isContacts]);
+
+  // Keep prev data updated when not transitioning
   useEffect(() => {
-    if (!crossfading && data) {
+    if (!outgoing && data) {
       prevDataRef.current = data;
     }
   });
 
-  // Freeze title and quickAccess during crossfade
-  const displayedTitle = crossfading
-    ? (dashboards.find(d => d.id === outgoingDashId)?.title ?? '')
-    : dashboardTitle;
-  const displayedQuickAccess = crossfading
-    ? (outgoingSnapshot?.quickAccess ?? [])
-    : (data?.quickAccess ?? []);
+  // Clean up outgoing after transition ends
+  const handleOutgoingTransitionEnd = useCallback(() => {
+    setOutgoing(null);
+  }, []);
 
   // Outgoing panel data
   const outgoingCategories = useMemo(
-    () => [...(outgoingSnapshot?.categories ?? [])].sort((a, b) => a.order - b.order),
-    [outgoingSnapshot]
+    () => [...(outgoing?.snapshot?.categories ?? [])].sort((a, b) => a.order - b.order),
+    [outgoing?.snapshot?.categories]
   );
-  const outgoingIsContacts = outgoingDashId
-    ? (dashboards.find((d) => d.id === outgoingDashId)?.isContacts ?? false)
-    : false;
+
+  // Freeze header data during crossfade
+  const crossfading = outgoing !== null;
+  const displayedTitle = crossfading
+    ? (dashboards.find(d => d.id === outgoing.dashId)?.title ?? '')
+    : dashboardTitle;
+  const displayedQuickAccess = crossfading
+    ? (outgoing.snapshot?.quickAccess ?? [])
+    : (data?.quickAccess ?? []);
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite';
@@ -276,28 +272,27 @@ export function ActiveDashboardView() {
         <h2 className="text-[15px] md:text-sm font-bold text-slate-700 tracking-tight">Seções</h2>
       </div>
 
-      {/* BRAZILIAN TRANSITION — crossfade container */}
-      <div
-        ref={containerRef}
-        className="relative"
-        style={crossfading && containerHeight ? { minHeight: containerHeight } : undefined}
-      >
-        {/* Outgoing overlay (old content fading out) */}
-        {crossfading && outgoingDashId && (
-          <div
-            className="absolute inset-x-0 top-0 z-10"
-            style={{
-              opacity: outgoingFading ? 0 : 1,
-              transition: outgoingFading ? `opacity ${CROSSFADE_MS}ms ease-in-out` : 'none',
-              pointerEvents: 'none',
-            }}
+      {/* BRAZILIAN TRANSITION — Cross Dissolve via grid stacking */}
+      <div className="grid grid-cols-1 grid-rows-1">
+
+        {/* Outgoing layer (fades out, then unmounts) */}
+        {outgoing && (
+          <Transition
+            as="div"
+            show={showOutgoing}
+            appear
+            leave="transition-opacity ease-in-out duration-1000"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+            afterLeave={handleOutgoingTransitionEnd}
+            className="col-start-1 row-start-1 pointer-events-none"
           >
-            {outgoingIsContacts ? (
+            {outgoing.isContacts ? (
               <ContactsPanel />
             ) : (
               <CategoryGrid
                 categories={outgoingCategories}
-                links={outgoingSnapshot?.links ?? []}
+                links={outgoing.snapshot?.links ?? []}
                 onRenameCategory={renameCategory}
                 onAddLink={addLinkToCategory}
                 onDeleteLink={removeLink}
@@ -308,22 +303,22 @@ export function ActiveDashboardView() {
                 onReorderLinks={reorderLinks}
                 onMoveLink={moveLink}
                 dashboards={dashboards}
-                currentDashboardId={outgoingDashId}
+                currentDashboardId={outgoing.dashId}
                 onMoveCategoryToPanel={moveCategoryToPanel}
                 onUpdateCategoryIcon={updateCategoryIcon}
               />
             )}
-          </div>
+          </Transition>
         )}
 
-        {/* Incoming (new content fading in) */}
-        <div
-          key={activeDashboardId}
-          style={crossfading ? {
-            opacity: 0,
-            animation: `fadeIn ${CROSSFADE_MS}ms ease-in-out forwards`,
-            animationDelay: '32ms',
-          } : undefined}
+        {/* Current layer (fades in) */}
+        <Transition
+          as="div"
+          show={showCurrent}
+          enter="transition-opacity ease-in-out duration-1000"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          className="col-start-1 row-start-1"
         >
           {isContacts ? (
             <ContactsPanel />
@@ -350,7 +345,8 @@ export function ActiveDashboardView() {
               <RecentAccessRow items={recentAccess} />
             </>
           )}
-        </div>
+        </Transition>
+
       </div>
     </div>
   );
