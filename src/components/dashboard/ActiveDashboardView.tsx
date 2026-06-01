@@ -1,7 +1,6 @@
 'use client';
 
-import { useMemo, useRef, useState, useEffect, useCallback } from 'react';
-import { Transition } from '@headlessui/react';
+import { useMemo, useRef, useState, useEffect } from 'react';
 import { useProfile } from '@/context/ProfileContext';
 import { useDashboards } from '@/context/DashboardsContext';
 import { useActiveDashboard } from '@/context/ActiveDashboardContext';
@@ -128,72 +127,6 @@ export function ActiveDashboardView() {
   const dashboardTitle = activeDashboard?.title ?? '';
   const isContacts = activeDashboard?.isContacts ?? false;
 
-  // ── BRAZILIAN TRANSITION — Cross Dissolve via @headlessui/react ──
-  const prevDashIdRef = useRef(activeDashboardId);
-  const prevDataRef = useRef(data);
-  const prevIsContactsRef = useRef(isContacts);
-
-  // Store previous panel state for the outgoing layer
-  const [outgoing, setOutgoing] = useState<{
-    dashId: string;
-    snapshot: typeof data;
-    isContacts: boolean;
-  } | null>(null);
-
-  // Track which panels are "showing" for Transition
-  const [showCurrent, setShowCurrent] = useState(true);
-  const [showOutgoing, setShowOutgoing] = useState(false);
-
-  // Detect panel change
-  useEffect(() => {
-    if (activeDashboardId === prevDashIdRef.current) return;
-
-    // Capture outgoing state
-    setOutgoing({
-      dashId: prevDashIdRef.current ?? '',
-      snapshot: prevDataRef.current,
-      isContacts: prevIsContactsRef.current,
-    });
-    setShowOutgoing(true);
-    setShowCurrent(false);
-
-    // Next frame: start cross dissolve
-    requestAnimationFrame(() => {
-      setShowOutgoing(false); // fade out old
-      setShowCurrent(true);   // fade in new
-    });
-
-    prevDashIdRef.current = activeDashboardId;
-    prevIsContactsRef.current = isContacts;
-  }, [activeDashboardId, isContacts]);
-
-  // Keep prev data updated when not transitioning
-  useEffect(() => {
-    if (!outgoing && data) {
-      prevDataRef.current = data;
-    }
-  });
-
-  // Clean up outgoing after transition ends
-  const handleOutgoingTransitionEnd = useCallback(() => {
-    setOutgoing(null);
-  }, []);
-
-  // Outgoing panel data
-  const outgoingCategories = useMemo(
-    () => [...(outgoing?.snapshot?.categories ?? [])].sort((a, b) => a.order - b.order),
-    [outgoing?.snapshot?.categories]
-  );
-
-  // Freeze header data during crossfade
-  const crossfading = outgoing !== null;
-  const displayedTitle = crossfading
-    ? (dashboards.find(d => d.id === outgoing.dashId)?.title ?? '')
-    : dashboardTitle;
-  const displayedQuickAccess = crossfading
-    ? (outgoing.snapshot?.quickAccess ?? [])
-    : (data?.quickAccess ?? []);
-
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite';
 
@@ -234,9 +167,9 @@ export function ActiveDashboardView() {
           <span className="text-sm font-semibold text-slate-600 whitespace-nowrap tracking-tight">
             {greeting}{profile.displayName ? `, ${profile.displayName.split(' ')[0]}` : ''}!
           </span>
-          {displayedTitle && (
+          {dashboardTitle && (
             <span className="ml-1 text-xs text-slate-400/80 bg-slate-100/70 px-2 py-0.5 rounded-full truncate max-w-[120px] font-normal">
-              {displayedTitle}
+              {dashboardTitle}
             </span>
           )}
         </div>
@@ -260,7 +193,7 @@ export function ActiveDashboardView() {
       {headerBlock}
 
       <QuickAccessRow
-        links={displayedQuickAccess}
+        links={data?.quickAccess ?? []}
         onAdd={addQuickAccess}
         onRemove={removeQuickAccess}
       />
@@ -272,82 +205,32 @@ export function ActiveDashboardView() {
         <h2 className="text-[15px] md:text-sm font-bold text-slate-700 tracking-tight">Seções</h2>
       </div>
 
-      {/* BRAZILIAN TRANSITION — Cross Dissolve via grid stacking */}
-      <div className="grid grid-cols-1 grid-rows-1">
+      {/* Panel content — direct swap, no transition */}
+      {isContacts ? (
+        <ContactsPanel />
+      ) : (
+        <>
+          <CategoryGrid
+            categories={orderedCategories}
+            links={data?.links ?? []}
+            onRenameCategory={renameCategory}
+            onAddLink={addLinkToCategory}
+            onDeleteLink={removeLink}
+            onUpdateLink={updateLink}
+            onAddCategory={addCategory}
+            onDeleteCategory={removeCategory}
+            onReorderCategories={reorderCategories}
+            onReorderLinks={reorderLinks}
+            onMoveLink={moveLink}
+            dashboards={dashboards}
+            currentDashboardId={activeDashboardId ?? ''}
+            onMoveCategoryToPanel={moveCategoryToPanel}
+            onUpdateCategoryIcon={updateCategoryIcon}
+          />
 
-        {/* Outgoing layer (fades out, then unmounts) */}
-        {outgoing && (
-          <Transition
-            as="div"
-            show={showOutgoing}
-            appear
-            leave="transition-opacity ease-in-out duration-1000"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-            afterLeave={handleOutgoingTransitionEnd}
-            className="col-start-1 row-start-1 pointer-events-none"
-          >
-            {outgoing.isContacts ? (
-              <ContactsPanel />
-            ) : (
-              <CategoryGrid
-                categories={outgoingCategories}
-                links={outgoing.snapshot?.links ?? []}
-                onRenameCategory={renameCategory}
-                onAddLink={addLinkToCategory}
-                onDeleteLink={removeLink}
-                onUpdateLink={updateLink}
-                onAddCategory={addCategory}
-                onDeleteCategory={removeCategory}
-                onReorderCategories={reorderCategories}
-                onReorderLinks={reorderLinks}
-                onMoveLink={moveLink}
-                dashboards={dashboards}
-                currentDashboardId={outgoing.dashId}
-                onMoveCategoryToPanel={moveCategoryToPanel}
-                onUpdateCategoryIcon={updateCategoryIcon}
-              />
-            )}
-          </Transition>
-        )}
-
-        {/* Current layer (fades in) */}
-        <Transition
-          as="div"
-          show={showCurrent}
-          enter="transition-opacity ease-in-out duration-1000"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          className="col-start-1 row-start-1"
-        >
-          {isContacts ? (
-            <ContactsPanel />
-          ) : (
-            <>
-              <CategoryGrid
-                categories={orderedCategories}
-                links={data?.links ?? []}
-                onRenameCategory={renameCategory}
-                onAddLink={addLinkToCategory}
-                onDeleteLink={removeLink}
-                onUpdateLink={updateLink}
-                onAddCategory={addCategory}
-                onDeleteCategory={removeCategory}
-                onReorderCategories={reorderCategories}
-                onReorderLinks={reorderLinks}
-                onMoveLink={moveLink}
-                dashboards={dashboards}
-                currentDashboardId={activeDashboardId ?? ''}
-                onMoveCategoryToPanel={moveCategoryToPanel}
-                onUpdateCategoryIcon={updateCategoryIcon}
-              />
-
-              <RecentAccessRow items={recentAccess} />
-            </>
-          )}
-        </Transition>
-
-      </div>
+          <RecentAccessRow items={recentAccess} />
+        </>
+      )}
     </div>
   );
 }
