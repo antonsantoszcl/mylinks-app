@@ -136,7 +136,7 @@ export function ActiveDashboardView() {
   );
 
   // Don't show spinner during crossfade
-  if ((isLoading || !data) && !crossfading) return <Spinner />;
+  if (isLoading || !data) return <Spinner />;
 
   // ── Header (shared between links and contacts views) ──────────────────────
   const headerBlock = (
