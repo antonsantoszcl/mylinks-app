@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { LogOut, X, Plus, Pencil, GripVertical, ArrowRightLeft, Trash2, Globe } from 'lucide-react';
+import { LogOut, X, Plus, Pencil, GripVertical, ArrowRightLeft, Trash2, Globe, FolderOutput } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useProfile, getInitials } from '@/context/ProfileContext';
@@ -65,7 +65,8 @@ const ICONS_LEGEND = [
   { icon: Plus,           label: 'Inclui',    desc: 'Adiciona novo link ou seção' },
   { icon: Pencil,         label: 'Edita',     desc: 'Altera nome ou URL' },
   { icon: GripVertical,   label: 'Arrasta',   desc: 'Reordena por arrastar e soltar' },
-  { icon: ArrowRightLeft, label: 'Transfere', desc: 'Move para outra seção ou painel' },
+  { icon: ArrowRightLeft, label: 'Transfere link de Seção', desc: 'Move link para outra seção' },
+  { icon: FolderOutput,   label: 'Transfere Seção de Painel', desc: 'Move seção para outro painel' },
   { icon: Trash2,         label: 'Deleta',    desc: 'Remove permanentemente' },
 ];
 
