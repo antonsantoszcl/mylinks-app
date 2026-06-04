@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { LogOut, X, Plus, Pencil, GripVertical, ArrowRightLeft, Trash2, Globe, FolderOutput } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -9,6 +9,9 @@ import { useAuth } from '@/context/AuthContext';
 import { useInstrucoes } from '@/context/InstrucoesContext';
 
 function VideoOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [ended, setEnded] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
   useEffect(() => {
     if (!open) return;
     const handleKey = (e: KeyboardEvent) => {
@@ -20,13 +23,21 @@ function VideoOverlay({ open, onClose }: { open: boolean; onClose: () => void })
 
   useEffect(() => {
     if (!open) {
-      const video = document.getElementById('instrucoes-overlay-video') as HTMLVideoElement | null;
-      if (video) {
-        video.pause();
-        video.currentTime = 0;
+      if (videoRef.current) {
+        videoRef.current.pause();
+        videoRef.current.currentTime = 0;
       }
+      setEnded(false);
     }
   }, [open]);
+
+  const handleReplay = () => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play();
+      setEnded(false);
+    }
+  };
 
   if (!open) return null;
 
@@ -48,14 +59,23 @@ function VideoOverlay({ open, onClose }: { open: boolean; onClose: () => void })
           <X className="w-5 h-5" />
         </button>
         <video
+          ref={videoRef}
           id="instrucoes-overlay-video"
           src="/videos/instrucoes.mp4"
           style={{ width: '100%', height: '100%', objectFit: 'contain' }}
           autoPlay
-          loop
           controls
           playsInline
+          onEnded={() => setEnded(true)}
         />
+        {ended && (
+          <button
+            onClick={handleReplay}
+            className="absolute bottom-6 left-1/2 -translate-x-1/2 px-5 py-2.5 rounded-lg bg-white/90 text-slate-800 font-medium shadow-lg hover:bg-white transition-colors"
+          >
+            Reassistir
+          </button>
+        )}
       </div>
     </div>
   );
