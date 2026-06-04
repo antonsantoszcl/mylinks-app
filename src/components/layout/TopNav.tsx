@@ -49,7 +49,7 @@ function VideoOverlay({ open, onClose }: { open: boolean; onClose: () => void })
         </button>
         <video
           id="instrucoes-overlay-video"
-          src="https://drive.google.com/uc?export=download&id=178AU8xoHXevBDbTLnYzxjXcsXRJpbb0C"
+          src="/videos/instrucoes.mp4"
           style={{ width: '100%', height: '100%', objectFit: 'contain' }}
           autoPlay
           loop
