@@ -104,6 +104,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     // Get first name from Google user_metadata if available
     const googleName = authUser?.user_metadata?.full_name || authUser?.user_metadata?.name || '';
     const firstName = googleName ? googleName.split(' ')[0] : '';
+    const emailPrefix = authUser?.email?.split('@')[0] || '';
 
     const p = profileRes.data;
     const socials = (socialRes.data ?? []) as Array<{
@@ -114,9 +115,13 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     }>;
 
     if (p) {
+      // Use Google first name if display_name is empty or matches email prefix (nickname)
+      const resolvedDisplayName = (!p.display_name || p.display_name === emailPrefix)
+        ? firstName
+        : p.display_name;
       setProfile({
         username: p.username || '',
-        displayName: p.display_name || firstName || defaultProfile.displayName,
+        displayName: resolvedDisplayName || defaultProfile.displayName,
         avatarUrl: p.avatar_url || '',
         tagline: p.tagline || defaultProfile.tagline,
         bio: p.bio || defaultProfile.bio,
