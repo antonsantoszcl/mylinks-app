@@ -426,7 +426,7 @@ export function CategoryCard({
   return (
     <>
       <article
-        className="rounded-[10px] md:rounded-[10px] flex flex-col group/card category-card hover:-translate-y-0.5"
+        className={`rounded-[10px] md:rounded-[10px] flex flex-col group/card category-card hover:-translate-y-0.5${showAddLink ? ' relative z-10' : ''}`}
         style={{
           border: '1px solid #E5E7EB',
           backgroundColor: '#FFFFFF',
