@@ -219,11 +219,35 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
 
   const insertDefaultDashboard = async (uid: string): Promise<Dashboard | null> => {
     const supabase = getSupabaseClient();
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('dashboards')
       .insert({ user_id: uid, title: 'Principal', is_default: true, sort_order: 0, icon_name: 'house' })
       .select()
       .single();
+
+    if (error) {
+      // Unique violation (23505): a default dashboard was already created concurrently
+      // (e.g. by the signup trigger or another parallel call). Fetch and use it instead
+      // of creating a duplicate.
+      if (error.code === '23505') {
+        const { data: existing } = await supabase
+          .from('dashboards')
+          .select('*')
+          .eq('user_id', uid)
+          .eq('is_default', true)
+          .single();
+        if (!existing) return null;
+        return {
+          id: existing.id as string,
+          title: existing.title as string,
+          isDefault: true,
+          isContacts: false,
+          sortOrder: existing.sort_order as number,
+          iconName: 'house',
+        };
+      }
+      return null;
+    }
     if (!data) return null;
 
     // Migrate orphan categories to the new default dashboard
@@ -245,11 +269,33 @@ export function DashboardsProvider({ children }: { children: ReactNode }) {
 
   const insertContactsDashboard = async (uid: string, sortOrder: number): Promise<Dashboard | null> => {
     const supabase = getSupabaseClient();
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('dashboards')
       .insert({ user_id: uid, title: 'Contatos', is_default: false, is_contacts: true, sort_order: sortOrder, icon_name: 'people' })
       .select()
       .single();
+
+    if (error) {
+      // Unique violation (23505): a Contacts panel was already created concurrently.
+      if (error.code === '23505') {
+        const { data: existing } = await supabase
+          .from('dashboards')
+          .select('*')
+          .eq('user_id', uid)
+          .eq('is_contacts', true)
+          .single();
+        if (!existing) return null;
+        return {
+          id: existing.id as string,
+          title: existing.title as string,
+          isDefault: false,
+          isContacts: true,
+          sortOrder: existing.sort_order as number,
+          iconName: 'people',
+        };
+      }
+      return null;
+    }
     if (!data) return null;
     return {
       id: data.id as string,
