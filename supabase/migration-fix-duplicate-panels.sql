@@ -8,7 +8,7 @@
 -- keep the one with the most linked categories (oldest as tie-breaker),
 -- move any categories from the duplicates onto the keeper, then remove
 -- the duplicate rows.
-do $$
+do $fix_default$
 declare
   rec       record;
   keeper_id uuid;
@@ -39,12 +39,12 @@ begin
      where user_id = rec.user_id and is_default = true and id <> keeper_id;
   end loop;
 end;
-$$;
+$fix_default$;
 
 -- STEP 2: For any user with more than one "Contatos" panel, keep the oldest
 -- and remove the rest (contacts data is keyed by user_id, not dashboard_id,
 -- so this is safe).
-do $$
+do $fix_contacts$
 declare
   rec       record;
   keeper_id uuid;
@@ -66,7 +66,7 @@ begin
      where user_id = rec.user_id and is_contacts = true and id <> keeper_id;
   end loop;
 end;
-$$;
+$fix_contacts$;
 
 -- STEP 3: Prevent this from ever happening again — enforce it at the
 -- database level so no client-side race condition can create duplicates.
@@ -78,7 +78,7 @@ create unique index if not exists dashboards_one_contacts_per_user
 
 -- STEP 4: Make the signup trigger idempotent too (belt-and-suspenders).
 create or replace function public.handle_new_user()
-returns trigger as $$
+returns trigger as $handle_new_user$
 declare
   base_username  text;
   final_username text;
@@ -114,4 +114,4 @@ begin
 
   return new;
 end;
-$$ language plpgsql security definer;
+$handle_new_user$ language plpgsql security definer;
