@@ -10,6 +10,7 @@ import {
   Check,
   X,
   GripVertical,
+  LayoutDashboard,
 } from 'lucide-react';
 import { getNotoEmojiUrl } from '@/lib/emojiUtils';
 import { createPortal } from 'react-dom';
@@ -906,9 +907,14 @@ function SidebarContent({
           {/* ── Paineis section ─────────────────────────── */}
           {!collapsed && !dashLoading && (
             <div className="mb-1" ref={panelListRef} onDragOver={handleBoundaryDragOver} onDrop={handleContainerDrop}>
-              <p className="px-2 pb-1 text-[10px] font-semibold text-slate-400/80 uppercase tracking-widest">
-                Paineis
-              </p>
+              <div className="flex items-center gap-1.5 px-2 pb-1.5">
+                <div className="bg-primary-100/80 p-1 rounded-md">
+                  <LayoutDashboard className="w-3.5 h-3.5 text-primary-600" />
+                </div>
+                <h2 className="text-[15px] md:text-sm font-bold text-slate-700 tracking-tight">
+                  Painéis
+                </h2>
+              </div>
               {dashboards.map((d) => {
                 const translateY = getTouchDragTranslate(d.id);
                 const isBeingDragged = draggingId === d.id;

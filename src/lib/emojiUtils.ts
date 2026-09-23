@@ -25,11 +25,18 @@ const NOTO_CODEPOINTS: Record<string, string> = {
   '⭐': '2b50',
 };
 
+// Pinned to a specific commit (instead of "@main") so the icon URLs never
+// break again if the upstream noto-emoji repo changes its folder structure
+// (which is exactly what happened and caused all panel/section icons to
+// disappear). This commit is the last one using the flat "svg/emoji_uXXXX.svg"
+// layout that this app relies on.
+const NOTO_EMOJI_REF = '43bac1a1272f31cedf0d74c2089fba6c7f952276';
+
 /** Returns the Noto Color Emoji CDN SVG URL for an emoji character. */
 export function getNotoEmojiUrl(emoji: string): string {
   const known = NOTO_CODEPOINTS[emoji];
   if (known) {
-    return `https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@main/svg/emoji_u${known}.svg`;
+    return `https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@${NOTO_EMOJI_REF}/svg/emoji_u${known}.svg`;
   }
   const codePoint = [...emoji]
     .map((char) => char.codePointAt(0)?.toString(16))
@@ -37,5 +44,5 @@ export function getNotoEmojiUrl(emoji: string): string {
     .join('_')
     .replace(/_fe0f$/, '')
     .replace(/_fe0f_/, '_');
-  return `https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@main/svg/emoji_u${codePoint}.svg`;
+  return `https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@${NOTO_EMOJI_REF}/svg/emoji_u${codePoint}.svg`;
 }
