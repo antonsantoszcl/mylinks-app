@@ -65,11 +65,8 @@ function getIsMobile(): boolean {
   return typeof window !== 'undefined' && window.innerWidth < 768;
 }
 
-function renderPanelEmoji(iconName: string, isMobile: boolean) {
+function renderPanelEmoji(iconName: string) {
   const emoji = getPanelEmoji(iconName);
-  if (isMobile) {
-    return <span className="text-base leading-none select-none">{emoji}</span>;
-  }
   return (
     <img
       src={getNotoEmojiUrl(emoji)}
@@ -293,7 +290,7 @@ function DashboardNavItem({
         }`}
       >
         <div className="flex-shrink-0">
-          {renderPanelEmoji(dashboard.isDefault ? 'house' : dashboard.iconName, isMobile)}
+          {renderPanelEmoji(dashboard.isDefault ? 'house' : dashboard.iconName)}
         </div>
       </button>
     );
@@ -325,7 +322,7 @@ function DashboardNavItem({
         >
           {/* Icon ref — used by picker position logic */}
           <div ref={iconRef} className="flex-shrink-0">
-            {renderPanelEmoji(dashboard.isDefault ? 'house' : dashboard.iconName, isMobile)}
+            {renderPanelEmoji(dashboard.isDefault ? 'house' : dashboard.iconName)}
           </div>
 
           {/* Title: click opens edit + picker (non-default only) */}
@@ -962,7 +959,7 @@ function SidebarContent({
                     className="flex-shrink-0 cursor-pointer"
                     onClick={() => setNewDashPickerOpen(v => !v)}
                   >
-                    {renderPanelEmoji(newDashIcon, isMobileContent)}
+                    {renderPanelEmoji(newDashIcon)}
                   </div>
                   <input
                     ref={newDashInputRef}
