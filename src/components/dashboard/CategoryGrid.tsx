@@ -1,7 +1,7 @@
 'use client';
 
 import { Category, Dashboard, Link as LinkType } from '@/lib/types';
-import { getNotoEmojiUrl } from '@/lib/emojiUtils';
+import { getAppleEmojiUrl } from '@/lib/emojiUtils';
 import { SortableCategoryCard } from './SortableCategoryCard';
 import { Plus } from 'lucide-react';
 import { FormEvent, useState, useRef, useEffect, useCallback } from 'react';
@@ -332,7 +332,7 @@ export function CategoryGrid({
                                     <span className="text-lg select-none">{emoji}</span>
                                   ) : (
                                     <img
-                                      src={getNotoEmojiUrl(emoji)}
+                                      src={getAppleEmojiUrl(emoji)}
                                       alt={name}
                                       className="w-5 h-5 select-none"
                                       draggable={false}

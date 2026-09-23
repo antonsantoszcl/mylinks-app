@@ -1,5 +1,5 @@
 import { Category, Dashboard, Link as LinkType } from '@/lib/types';
-import { getNotoEmojiUrl } from '@/lib/emojiUtils';
+import { getAppleEmojiUrl } from '@/lib/emojiUtils';
 import { SortableLinkItem } from './SortableLinkItem';
 import { Plus, GripVertical, FolderOutput, Trash2, Inbox } from 'lucide-react';
 import { createPortal } from 'react-dom';
@@ -130,7 +130,7 @@ function getTwemojiUrl(emoji: string): string {
 
 // Primary emoji URL for desktop: Noto Color Emoji SVG.
 function getEmojiUrl(emoji: string): string {
-  return getNotoEmojiUrl(emoji);
+  return getAppleEmojiUrl(emoji);
 }
 
 // Detects mobile at render time (SSR-safe). Re-checked on resize via useEffect.

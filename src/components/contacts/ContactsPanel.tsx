@@ -14,7 +14,7 @@ import { useActiveDashboard } from '@/context/ActiveDashboardContext';
 import { ContactCard } from './ContactCard';
 import { ContactForm } from './ContactForm';
 import { Contact } from '@/lib/types';
-import { getNotoEmojiUrl } from '@/lib/emojiUtils';
+import { getAppleEmojiUrl } from '@/lib/emojiUtils';
 import {
   GripVertical,
   Inbox,
@@ -91,7 +91,7 @@ function getTwemojiUrl(emoji: string): string {
 }
 
 function getEmojiUrl(emoji: string): string {
-  return getNotoEmojiUrl(emoji);
+  return getAppleEmojiUrl(emoji);
 }
 
 // ── Section card header with inline rename + emoji picker ─────────────────────
