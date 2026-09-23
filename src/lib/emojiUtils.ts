@@ -1,16 +1,9 @@
-// Apple emoji artwork extracted from the system font, packaged and maintained
-// by the open-source "emoji-datasource-apple" project (used by popular emoji
-// pickers such as emoji-mart). Served here from a pinned npm package version
-// on jsDelivr, so — unlike GitHub "@main"/"@latest" refs — this URL can never
-// break from an upstream folder restructuring.
-const APPLE_EMOJI_PKG = 'emoji-datasource-apple@16.0.0';
-
-const APPLE_CODEPOINTS: Record<string, string> = {
+const NOTO_CODEPOINTS: Record<string, string> = {
   '📂': '1f4c2',
   '📌': '1f4cc',
   '✅': '2705',
   '💼': '1f4bc',
-  '⚙️': '2699-fe0f',
+  '⚙️': '2699',
   '💻': '1f4bb',
   '🤖': '1f916',
   '⚡': '26a1',
@@ -28,19 +21,28 @@ const APPLE_CODEPOINTS: Record<string, string> = {
   '🎬': '1f3ac',
   '🎮': '1f3ae',
   '📺': '1f4fa',
-  '❤️': '2764-fe0f',
+  '❤️': '2764',
   '⭐': '2b50',
 };
 
-/** Returns the Apple Color Emoji CDN PNG URL for an emoji character. */
-export function getAppleEmojiUrl(emoji: string): string {
-  const known = APPLE_CODEPOINTS[emoji];
+// Pinned to a specific commit (instead of "@main") so the icon URLs never
+// break again if the upstream noto-emoji repo changes its folder structure
+// (which is exactly what happened and caused all panel/section icons to
+// disappear). This commit is the last one using the flat "svg/emoji_uXXXX.svg"
+// layout that this app relies on.
+const NOTO_EMOJI_REF = '43bac1a1272f31cedf0d74c2089fba6c7f952276';
+
+/** Returns the Noto Color Emoji CDN SVG URL for an emoji character. */
+export function getNotoEmojiUrl(emoji: string): string {
+  const known = NOTO_CODEPOINTS[emoji];
   if (known) {
-    return `https://cdn.jsdelivr.net/npm/${APPLE_EMOJI_PKG}/img/apple/64/${known}.png`;
+    return `https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@${NOTO_EMOJI_REF}/svg/emoji_u${known}.svg`;
   }
   const codePoint = [...emoji]
     .map((char) => char.codePointAt(0)?.toString(16))
     .filter(Boolean)
-    .join('-');
-  return `https://cdn.jsdelivr.net/npm/${APPLE_EMOJI_PKG}/img/apple/64/${codePoint}.png`;
+    .join('_')
+    .replace(/_fe0f$/, '')
+    .replace(/_fe0f_/, '_');
+  return `https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji@${NOTO_EMOJI_REF}/svg/emoji_u${codePoint}.svg`;
 }

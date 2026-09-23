@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { Search, Mail } from 'lucide-react';
-import { getAppleEmojiUrl } from '@/lib/emojiUtils';
+import { getNotoEmojiUrl } from '@/lib/emojiUtils';
 
 interface DemoLink {
   title: string;
@@ -97,7 +97,7 @@ function DemoCategoryCard({ category }: { category: DemoCategory }) {
       {/* Card header */}
       <header className="flex items-center gap-2 px-3 py-2.5">
         <Image
-          src={getAppleEmojiUrl(emoji)}
+          src={getNotoEmojiUrl(emoji)}
           alt=""
           width={16}
           height={16}
@@ -227,7 +227,7 @@ function DemoContactCard({ section }: { section: DemoContactSection }) {
     >
       <header className="flex items-center gap-2 px-3 py-2.5">
         <Image
-          src={getAppleEmojiUrl('👥')}
+          src={getNotoEmojiUrl('👥')}
           alt=""
           width={16}
           height={16}

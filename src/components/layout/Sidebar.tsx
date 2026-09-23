@@ -12,7 +12,7 @@ import {
   GripVertical,
   LayoutDashboard,
 } from 'lucide-react';
-import { getAppleEmojiUrl } from '@/lib/emojiUtils';
+import { getNotoEmojiUrl } from '@/lib/emojiUtils';
 import { createPortal } from 'react-dom';
 import { useProfile, getInitials } from '@/context/ProfileContext';
 import { useDashboards } from '@/context/DashboardsContext';
@@ -72,7 +72,7 @@ function renderPanelEmoji(iconName: string, isMobile: boolean) {
   }
   return (
     <img
-      src={getAppleEmojiUrl(emoji)}
+      src={getNotoEmojiUrl(emoji)}
       alt={emoji}
       className="w-4 h-4 flex-shrink-0"
       draggable={false}
@@ -269,7 +269,7 @@ function DashboardNavItem({
                   {isMobile ? (
                     <span className="text-base select-none">{emoji}</span>
                   ) : (
-                    <img src={getAppleEmojiUrl(emoji)} alt={name} className="w-5 h-5 select-none" draggable={false} />
+                    <img src={getNotoEmojiUrl(emoji)} alt={name} className="w-5 h-5 select-none" draggable={false} />
                   )}
                 </button>
               );
@@ -1052,7 +1052,7 @@ function SidebarContent({
                   {isMobileContent ? (
                     <span className="text-lg select-none">{emoji}</span>
                   ) : (
-                    <img src={getAppleEmojiUrl(emoji)} alt={name} className="w-5 h-5 select-none" draggable={false} />
+                    <img src={getNotoEmojiUrl(emoji)} alt={name} className="w-5 h-5 select-none" draggable={false} />
                   )}
                 </button>
               );
