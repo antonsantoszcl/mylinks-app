@@ -262,11 +262,15 @@ function DashboardNavItem({
                   onMouseUp={(e) => { e.preventDefault(); e.stopPropagation(); pickerActiveRef.current = false; onChangeIcon(dashboard.id, name); setPickerOpen(false); }}
                   onTouchStart={(e) => { e.stopPropagation(); pickerActiveRef.current = true; }}
                   onTouchEnd={(e) => { e.preventDefault(); e.stopPropagation(); pickerActiveRef.current = false; onChangeIcon(dashboard.id, name); setPickerOpen(false); }}
-                  className={`w-8 h-8 flex items-center justify-center rounded transition-colors text-base ${
+                  className={`w-8 h-8 flex items-center justify-center rounded transition-colors ${
                     isSelected ? 'bg-primary-100 ring-1 ring-primary-400' : ''
                   }`}
                 >
-                  {emoji}
+                  {isMobile ? (
+                    <span className="text-base select-none">{emoji}</span>
+                  ) : (
+                    <img src={getAppleEmojiUrl(emoji)} alt={name} className="w-5 h-5 select-none" draggable={false} />
+                  )}
                 </button>
               );
             })}
