@@ -189,7 +189,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
     <>
       <div
         ref={linkRowRef}
-        className="group/link flex items-center justify-between py-[5px] pl-1.5 pr-0 rounded-lg hover:bg-white/70 transition-all cursor-pointer"
+        className="group/link flex items-center justify-between py-[4px] pl-1.5 pr-0 rounded-lg hover:bg-white/70 transition-all cursor-pointer"
         onDoubleClick={handleDoubleClick}
       >
         <a
