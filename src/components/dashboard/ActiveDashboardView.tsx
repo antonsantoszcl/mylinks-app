@@ -160,7 +160,7 @@ export function ActiveDashboardView() {
       </div>
 
       {/* ── DESKTOP: unified single row ── */}
-      <header className="hidden md:flex items-center pt-0.5">
+      <header className="hidden md:flex items-center -mt-1.5">
         {/* Left: greeting — flex-1 to balance with right side */}
         <div className="flex-1 flex items-center gap-1.5">
           <Hand className="w-4 h-4 text-primary-500 shrink-0" />
