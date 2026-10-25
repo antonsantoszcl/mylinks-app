@@ -189,7 +189,7 @@ export function ActiveDashboardView() {
 
   // ── Unified return: header + quick access always static ─────────────────────
   return (
-    <div className="max-w-full space-y-4 pb-8">
+    <div className="max-w-full space-y-6 pb-8">
       {headerBlock}
 
       <QuickAccessRow
