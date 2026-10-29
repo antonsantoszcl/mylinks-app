@@ -11,16 +11,21 @@ import {
   X,
   GripVertical,
   LayoutDashboard,
+  RotateCcw,
 } from 'lucide-react';
 import { getNotoEmojiUrl } from '@/lib/emojiUtils';
 import { createPortal } from 'react-dom';
 import { useProfile, getInitials } from '@/context/ProfileContext';
 import { useDashboards } from '@/context/DashboardsContext';
 import { useActiveDashboard } from '@/context/ActiveDashboardContext';
+import { useAuth } from '@/context/AuthContext';
 import { useEffect, useRef, useState } from 'react';
 import { Dashboard } from '@/lib/types';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { useLocale } from '@/context/LocaleContext';
+import { getSupabaseClient } from '@/lib/supabase';
+import { resetDemoAccount } from '@/lib/demoReset';
+import { DEMO_EMAIL } from '@/lib/demoConfig';
 
 const SIDEBAR_KEY = 'mylinks.sidebar.collapsed';
 
@@ -442,10 +447,14 @@ function SidebarContent({
 }) {
   const { t } = useLocale();
   const { profile } = useProfile();
+  const { user } = useAuth();
   const { dashboards, isLoading: dashLoading, createDashboard, renameDashboard, deleteDashboard, updateDashboardIcon, reorderDashboards } =
     useDashboards();
   const { activeDashboardId, setActiveDashboard } = useActiveDashboard();
   const initials = getInitials(profile.displayName);
+  const isDemoUser = user?.email === DEMO_EMAIL;
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [resetting, setResetting] = useState(false);
   const [showNewDash, setShowNewDash] = useState(false);
   const [newDashName, setNewDashName] = useState('');
   const [newDashIcon, setNewDashIcon] = useState('star');
@@ -859,6 +868,19 @@ function SidebarContent({
 
   const pendingDashTitle = dashboards.find((d) => d.id === pendingDeleteDash)?.title ?? '';
 
+  const handleResetDemo = async () => {
+    if (!user) return;
+    setResetting(true);
+    try {
+      const supabase = getSupabaseClient();
+      await resetDemoAccount(supabase, user.id);
+      window.location.reload();
+    } catch {
+      setResetting(false);
+      setShowResetConfirm(false);
+    }
+  };
+
   return (
     <>
       <aside className="flex flex-col h-full">
@@ -1029,6 +1051,17 @@ function SidebarContent({
           ))}
         </nav>
 
+        {/* Discreet demo reset button — only visible for the public demo account */}
+        {isDemoUser && !collapsed && (
+          <button
+            onClick={() => setShowResetConfirm(true)}
+            className="flex items-center gap-1.5 px-3 py-2 text-[11px] text-slate-400 hover:text-slate-600 transition-colors"
+            title={t('sidebar.resetDemo')}
+          >
+            <RotateCcw className="w-3 h-3" />
+            {t('sidebar.resetDemo')}
+          </button>
+        )}
 
       </aside>
 
@@ -1073,6 +1106,15 @@ function SidebarContent({
         message={t('sidebar.deletePanelMsg', { name: pendingDashTitle })}
         onCancel={() => setPendingDeleteDash(null)}
         onConfirm={confirmDeleteDashboard}
+      />
+
+      <ConfirmModal
+        open={showResetConfirm}
+        title={t('sidebar.resetDemoConfirmTitle')}
+        message={t('sidebar.resetDemoConfirmMsg')}
+        confirmLabel={resetting ? '...' : t('sidebar.resetDemoConfirmButton')}
+        onCancel={() => setShowResetConfirm(false)}
+        onConfirm={handleResetDemo}
       />
     </>
   );

@@ -1,0 +1,907 @@
+{
+  "userId": "0283d9d1-1304-45d7-bd20-526798ef7962",
+  "capturedAt": "2026-10-29T23:28:29.004Z",
+  "tables": {
+    "dashboards": [
+      {
+        "id": "84dd9429-f296-4fec-a1cc-e3d83edd22f5",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Finance",
+        "is_default": false,
+        "sort_order": 2,
+        "created_at": "2026-10-29T11:50:56.510737+00:00",
+        "icon_name": "money",
+        "is_contacts": false
+      },
+      {
+        "id": "6355e22e-ed18-48a7-a911-4fa27efeb428",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Contatos",
+        "is_default": false,
+        "sort_order": 4,
+        "created_at": "2026-10-29T11:32:48.246203+00:00",
+        "icon_name": "people",
+        "is_contacts": true
+      },
+      {
+        "id": "401eed91-18f5-4494-aad6-885a967c3796",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Principal",
+        "is_default": true,
+        "sort_order": 0,
+        "created_at": "2026-10-29T11:32:43.970395+00:00",
+        "icon_name": "star",
+        "is_contacts": false
+      },
+      {
+        "id": "fd308da3-8cde-43ae-a88c-00a52342386c",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Work Tools",
+        "is_default": false,
+        "sort_order": 1,
+        "created_at": "2026-10-29T11:50:34.810919+00:00",
+        "icon_name": "gear",
+        "is_contacts": false
+      },
+      {
+        "id": "073ce128-9890-4358-87cd-2197505b5271",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Music",
+        "is_default": false,
+        "sort_order": 3,
+        "created_at": "2026-10-29T11:53:05.054853+00:00",
+        "icon_name": "music",
+        "is_contacts": false
+      }
+    ],
+    "categories": [
+      {
+        "id": "21b1755f-22df-41d2-8851-bb9dcf0429a6",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "social",
+        "icon_name": "people",
+        "sort_order": 2,
+        "created_at": "2026-10-29T11:57:59.756085+00:00",
+        "dashboard_id": "401eed91-18f5-4494-aad6-885a967c3796"
+      },
+      {
+        "id": "2c1939c2-6f90-46c1-9341-3463b91854ae",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "shopping",
+        "icon_name": "cart",
+        "sort_order": 4,
+        "created_at": "2026-10-29T11:58:52.101099+00:00",
+        "dashboard_id": "401eed91-18f5-4494-aad6-885a967c3796"
+      },
+      {
+        "id": "9b2e79a0-b72c-4e1c-822d-eb6e8ea51bee",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "productivity",
+        "icon_name": "notes",
+        "sort_order": 1,
+        "created_at": "2026-10-29T12:00:20.707289+00:00",
+        "dashboard_id": "fd308da3-8cde-43ae-a88c-00a52342386c"
+      },
+      {
+        "id": "ea563bad-a782-4c98-a611-ddcff47b6f87",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "meetings",
+        "icon_name": "people",
+        "sort_order": 2,
+        "created_at": "2026-10-29T12:01:16.877372+00:00",
+        "dashboard_id": "fd308da3-8cde-43ae-a88c-00a52342386c"
+      },
+      {
+        "id": "3ca3cb13-46d8-4ea2-9bce-751321b90aae",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "ai/ research",
+        "icon_name": "robot",
+        "sort_order": 3,
+        "created_at": "2026-10-29T12:01:34.49382+00:00",
+        "dashboard_id": "fd308da3-8cde-43ae-a88c-00a52342386c"
+      },
+      {
+        "id": "920a13bc-7456-4506-a909-edc6053973cd",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "projects",
+        "icon_name": "pin",
+        "sort_order": 4,
+        "created_at": "2026-10-29T12:02:09.205731+00:00",
+        "dashboard_id": "fd308da3-8cde-43ae-a88c-00a52342386c"
+      },
+      {
+        "id": "c464c0f7-dd7c-4a02-8eaa-17783f80c86c",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "my music",
+        "icon_name": "tasks",
+        "sort_order": 1,
+        "created_at": "2026-10-29T12:06:10.653849+00:00",
+        "dashboard_id": "073ce128-9890-4358-87cd-2197505b5271"
+      },
+      {
+        "id": "d018932e-1c10-4453-a4b6-530945bb95de",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "radios",
+        "icon_name": "music",
+        "sort_order": 2,
+        "created_at": "2026-10-29T12:06:31.487974+00:00",
+        "dashboard_id": "073ce128-9890-4358-87cd-2197505b5271"
+      },
+      {
+        "id": "16af05d0-e4ff-401e-821a-f91fccf8828f",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "playlists",
+        "icon_name": "music",
+        "sort_order": 3,
+        "created_at": "2026-10-29T12:07:09.634292+00:00",
+        "dashboard_id": "073ce128-9890-4358-87cd-2197505b5271"
+      },
+      {
+        "id": "b9450ff2-d92e-442e-9c1a-9a8ce2ca4c98",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "music learning",
+        "icon_name": "graduation",
+        "sort_order": 4,
+        "created_at": "2026-10-29T12:07:23.28766+00:00",
+        "dashboard_id": "073ce128-9890-4358-87cd-2197505b5271"
+      },
+      {
+        "id": "b63dae9d-4571-4e57-b129-6a30094d164e",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "markets",
+        "icon_name": "chart",
+        "sort_order": 2,
+        "created_at": "2026-10-29T12:03:24.283467+00:00",
+        "dashboard_id": "84dd9429-f296-4fec-a1cc-e3d83edd22f5"
+      },
+      {
+        "id": "1f9321a7-fadc-444f-b8cb-c302416cb496",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "news",
+        "icon_name": "globe",
+        "sort_order": 1,
+        "created_at": "2026-10-29T12:04:55.985124+00:00",
+        "dashboard_id": "84dd9429-f296-4fec-a1cc-e3d83edd22f5"
+      },
+      {
+        "id": "d57abadb-f040-4ab0-8503-f2fdbd3babe0",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "investing",
+        "icon_name": "money",
+        "sort_order": 3,
+        "created_at": "2026-10-29T12:03:38.593735+00:00",
+        "dashboard_id": "84dd9429-f296-4fec-a1cc-e3d83edd22f5"
+      },
+      {
+        "id": "26397824-da41-4cf8-9ed5-2b12c510d1ea",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "personal finance",
+        "icon_name": "folder",
+        "sort_order": 4,
+        "created_at": "2026-10-29T12:04:34.079717+00:00",
+        "dashboard_id": "84dd9429-f296-4fec-a1cc-e3d83edd22f5"
+      },
+      {
+        "id": "0379f142-ed8b-45c7-94bc-b232e79455ec",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "news",
+        "icon_name": "globe",
+        "sort_order": 3,
+        "created_at": "2026-10-29T11:58:31.944024+00:00",
+        "dashboard_id": "401eed91-18f5-4494-aad6-885a967c3796"
+      },
+      {
+        "id": "0444c983-ebb8-40a0-ae32-3a4245beab83",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "essentials",
+        "icon_name": "tasks",
+        "sort_order": 1,
+        "created_at": "2026-10-29T11:56:37.230564+00:00",
+        "dashboard_id": "401eed91-18f5-4494-aad6-885a967c3796"
+      }
+    ],
+    "links": [
+      {
+        "id": "1adf74c8-ead7-490b-953f-1ad41559990d",
+        "category_id": "21b1755f-22df-41d2-8851-bb9dcf0429a6",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Discord",
+        "url": "https://discord.com/app",
+        "icon_url": "https://www.google.com/s2/favicons?domain=discord.com&sz=32",
+        "sort_order": 3,
+        "created_at": "2026-10-29T12:17:29.652026+00:00"
+      },
+      {
+        "id": "0d15f5b5-f7e1-4dd9-921a-3051ee43f6e7",
+        "category_id": "2c1939c2-6f90-46c1-9341-3463b91854ae",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Walmart",
+        "url": "https://www.walmart.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.walmart.com&sz=32",
+        "sort_order": 2,
+        "created_at": "2026-10-29T12:21:30.774334+00:00"
+      },
+      {
+        "id": "5601cd64-689d-4508-9791-3d845408c6f1",
+        "category_id": "ea563bad-a782-4c98-a611-ddcff47b6f87",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Slack",
+        "url": "https://slack.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=slack.com&sz=32",
+        "sort_order": 1,
+        "created_at": "2026-10-29T12:26:32.795532+00:00"
+      },
+      {
+        "id": "70abb909-3208-4604-b27c-24e21806ae31",
+        "category_id": "0444c983-ebb8-40a0-ae32-3a4245beab83",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Calendar",
+        "url": "https://calendar.google.com/calendar/u/0/r",
+        "icon_url": "https://www.google.com/s2/favicons?domain=calendar.google.com&sz=32",
+        "sort_order": 1,
+        "created_at": "2026-10-29T12:11:21.235255+00:00"
+      },
+      {
+        "id": "0a9e8c10-fd9e-4a15-931c-98027f50fe6f",
+        "category_id": "21b1755f-22df-41d2-8851-bb9dcf0429a6",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Linkedin",
+        "url": "https://www.linkedin.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.linkedin.com&sz=32",
+        "sort_order": 4,
+        "created_at": "2026-10-29T12:18:18.881844+00:00"
+      },
+      {
+        "id": "9db5bc72-79e6-491a-bc23-2d54d0cff8c9",
+        "category_id": "2c1939c2-6f90-46c1-9341-3463b91854ae",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Target",
+        "url": "https://www.target.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.target.com&sz=32",
+        "sort_order": 3,
+        "created_at": "2026-10-29T12:22:51.263951+00:00"
+      },
+      {
+        "id": "3376bcc4-e7af-456e-a320-f4c19a155a69",
+        "category_id": "ea563bad-a782-4c98-a611-ddcff47b6f87",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Meet",
+        "url": "https://meet.google.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=meet.google.com&sz=32",
+        "sort_order": 2,
+        "created_at": "2026-10-29T12:27:17.243524+00:00"
+      },
+      {
+        "id": "d50f12cd-33bd-49cf-b5c9-17c86f15b5bd",
+        "category_id": "3ca3cb13-46d8-4ea2-9bce-751321b90aae",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Google Scholar",
+        "url": "https://scholar.google.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=scholar.google.com&sz=32",
+        "sort_order": 4,
+        "created_at": "2026-10-29T12:31:57.110705+00:00"
+      },
+      {
+        "id": "07a5db2e-2919-4e67-a600-dc1d7244d40b",
+        "category_id": "c464c0f7-dd7c-4a02-8eaa-17783f80c86c",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Youtube Music",
+        "url": "https://music.youtube.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=music.youtube.com&sz=32",
+        "sort_order": 2,
+        "created_at": "2026-10-29T12:46:38.656865+00:00"
+      },
+      {
+        "id": "38f616a4-cd4c-4535-8539-d2df50ebc87b",
+        "category_id": "d018932e-1c10-4453-a4b6-530945bb95de",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "KEXP",
+        "url": "https://www.kexp.org/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.kexp.org&sz=32",
+        "sort_order": 1,
+        "created_at": "2026-10-29T12:49:30.445393+00:00"
+      },
+      {
+        "id": "0ef30b6c-db41-42d0-8c86-998d2f1948b3",
+        "category_id": "16af05d0-e4ff-401e-821a-f91fccf8828f",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Youtube",
+        "url": "https://www.youtube.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.youtube.com&sz=32",
+        "sort_order": 1,
+        "created_at": "2026-10-29T12:52:15.919129+00:00"
+      },
+      {
+        "id": "e1ae5bec-8826-48a3-b92b-11aeaf2f171e",
+        "category_id": "b9450ff2-d92e-442e-9c1a-9a8ce2ca4c98",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Ultimate Guitar",
+        "url": "https://www.ultimate-guitar.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.ultimate-guitar.com&sz=32",
+        "sort_order": 1,
+        "created_at": "2026-10-29T12:54:36.615843+00:00"
+      },
+      {
+        "id": "b7d7382b-fa8b-4e99-991e-19ffff3d6152",
+        "category_id": "b63dae9d-4571-4e57-b129-6a30094d164e",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Trading View",
+        "url": "https://www.tradingview.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.tradingview.com&sz=32",
+        "sort_order": 2,
+        "created_at": "2026-10-29T12:36:01.706745+00:00"
+      },
+      {
+        "id": "480cebc5-6c85-475e-b455-c7ec86d59745",
+        "category_id": "b63dae9d-4571-4e57-b129-6a30094d164e",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Stock Analysis",
+        "url": "https://stockanalysis.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=stockanalysis.com&sz=32",
+        "sort_order": 5,
+        "created_at": "2026-10-29T12:39:02.367004+00:00"
+      },
+      {
+        "id": "ecf6adea-bf7b-45a0-91aa-fa3529bd02bc",
+        "category_id": "0444c983-ebb8-40a0-ae32-3a4245beab83",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Maps",
+        "url": "https://www.google.com/maps/@-22.8458496,-45.2225602,14z?entry=ttu&g_ep=EgoyMDI2MTAyMC4wIKXMDSoASAFQAw%3D%3D",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.google.com&sz=32",
+        "sort_order": 2,
+        "created_at": "2026-10-29T12:12:01.231962+00:00"
+      },
+      {
+        "id": "48cf5de5-4f09-4d21-9e00-1edf51fe9c05",
+        "category_id": "0379f142-ed8b-45c7-94bc-b232e79455ec",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "AP News",
+        "url": "https://apnews.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=apnews.com&sz=32",
+        "sort_order": 1,
+        "created_at": "2026-10-29T12:18:57.800806+00:00"
+      },
+      {
+        "id": "4bc6202b-1ed5-4e8d-ad73-a28a824086b6",
+        "category_id": "9b2e79a0-b72c-4e1c-822d-eb6e8ea51bee",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Google Docs",
+        "url": "https://docs.google.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=docs.google.com&sz=32",
+        "sort_order": 1,
+        "created_at": "2026-10-29T12:23:54.127263+00:00"
+      },
+      {
+        "id": "42f30a5f-ebf4-4922-aceb-85139edc6b8c",
+        "category_id": "ea563bad-a782-4c98-a611-ddcff47b6f87",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Zoom",
+        "url": "https://zoom.us/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=zoom.us&sz=32",
+        "sort_order": 3,
+        "created_at": "2026-10-29T12:28:20.729295+00:00"
+      },
+      {
+        "id": "e3c93d89-3f47-412b-9289-a5cd3c39c0f6",
+        "category_id": "920a13bc-7456-4506-a909-edc6053973cd",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Trello",
+        "url": "https://trello.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=trello.com&sz=32",
+        "sort_order": 1,
+        "created_at": "2026-10-29T12:33:38.585329+00:00"
+      },
+      {
+        "id": "88733255-1dda-405d-9d81-5a9354fc2c35",
+        "category_id": "26397824-da41-4cf8-9ed5-2b12c510d1ea",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "NerdWallet",
+        "url": "https://www.nerdwallet.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.nerdwallet.com&sz=32",
+        "sort_order": 1,
+        "created_at": "2026-10-29T12:41:31.833699+00:00"
+      },
+      {
+        "id": "ae963fc4-7dae-4d86-baa5-0697a2dbd98e",
+        "category_id": "1f9321a7-fadc-444f-b8cb-c302416cb496",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "CNBC",
+        "url": "https://www.cnbc.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.cnbc.com&sz=32",
+        "sort_order": 3,
+        "created_at": "2026-10-29T12:43:27.892207+00:00"
+      },
+      {
+        "id": "4387e0ca-329c-48b3-8615-64ae6b124452",
+        "category_id": "0444c983-ebb8-40a0-ae32-3a4245beab83",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Drive",
+        "url": "https://drive.google.com/drive/my-drive",
+        "icon_url": "https://www.google.com/s2/favicons?domain=drive.google.com&sz=32",
+        "sort_order": 3,
+        "created_at": "2026-10-29T12:12:53.38725+00:00"
+      },
+      {
+        "id": "eea4db5f-838e-4bae-bc78-56c72a355273",
+        "category_id": "0379f142-ed8b-45c7-94bc-b232e79455ec",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "BBC",
+        "url": "https://www.bbc.com/news",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.bbc.com&sz=32",
+        "sort_order": 2,
+        "created_at": "2026-10-29T12:19:22.794055+00:00"
+      },
+      {
+        "id": "eea743e2-6ca2-41f3-a5ae-0136d0e9ec2a",
+        "category_id": "9b2e79a0-b72c-4e1c-822d-eb6e8ea51bee",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Google Sheets",
+        "url": "https://sheets.google.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=sheets.google.com&sz=32",
+        "sort_order": 2,
+        "created_at": "2026-10-29T12:24:21.6851+00:00"
+      },
+      {
+        "id": "115f8970-81c7-4e2f-bf45-862af7f83564",
+        "category_id": "ea563bad-a782-4c98-a611-ddcff47b6f87",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Calendly",
+        "url": "https://calendly.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=calendly.com&sz=32",
+        "sort_order": 4,
+        "created_at": "2026-10-29T12:29:08.780291+00:00"
+      },
+      {
+        "id": "4c8ca6e3-bafa-423d-a809-ffe951825613",
+        "category_id": "d57abadb-f040-4ab0-8503-f2fdbd3babe0",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Fidelity",
+        "url": "https://www.fidelity.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.fidelity.com&sz=32",
+        "sort_order": 1,
+        "created_at": "2026-10-29T12:39:29.996735+00:00"
+      },
+      {
+        "id": "8a92d623-8f98-4b59-abce-31edea3c7614",
+        "category_id": "26397824-da41-4cf8-9ed5-2b12c510d1ea",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Credit Karma",
+        "url": "https://www.creditkarma.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.creditkarma.com&sz=32",
+        "sort_order": 2,
+        "created_at": "2026-10-29T12:41:58.386648+00:00"
+      },
+      {
+        "id": "54a3fe05-190e-4d29-9bdf-e3e3638d016d",
+        "category_id": "c464c0f7-dd7c-4a02-8eaa-17783f80c86c",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Apple Music",
+        "url": "https://music.apple.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=music.apple.com&sz=32",
+        "sort_order": 3,
+        "created_at": "2026-10-29T12:47:09.585826+00:00"
+      },
+      {
+        "id": "ad2d43ee-5314-4902-80c6-6ba7684210d7",
+        "category_id": "1f9321a7-fadc-444f-b8cb-c302416cb496",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Reuters Markets",
+        "url": "https://www.reuters.com/markets/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.reuters.com&sz=32",
+        "sort_order": 2,
+        "created_at": "2026-10-29T12:44:06.112787+00:00"
+      },
+      {
+        "id": "8d1993de-c998-4f69-bd51-41840d067a53",
+        "category_id": "0444c983-ebb8-40a0-ae32-3a4245beab83",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Weather",
+        "url": "https://weather.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=weather.com&sz=32",
+        "sort_order": 4,
+        "created_at": "2026-10-29T12:14:24.132584+00:00"
+      },
+      {
+        "id": "c562d7af-c8b3-4ce1-8239-38ec9f36ba7f",
+        "category_id": "0379f142-ed8b-45c7-94bc-b232e79455ec",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Hacker News",
+        "url": "https://news.ycombinator.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=news.ycombinator.com&sz=32",
+        "sort_order": 3,
+        "created_at": "2026-10-29T12:19:52.096816+00:00"
+      },
+      {
+        "id": "e63c3593-362f-4278-918f-64d4131310cc",
+        "category_id": "9b2e79a0-b72c-4e1c-822d-eb6e8ea51bee",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Google Slides",
+        "url": "https://slides.google.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=slides.google.com&sz=32",
+        "sort_order": 3,
+        "created_at": "2026-10-29T12:24:53.696775+00:00"
+      },
+      {
+        "id": "3b64b91b-5c91-426a-970c-17cfc97858c5",
+        "category_id": "3ca3cb13-46d8-4ea2-9bce-751321b90aae",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "ChatGPT",
+        "url": "https://chatgpt.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=chatgpt.com&sz=32",
+        "sort_order": 1,
+        "created_at": "2026-10-29T12:29:48.244653+00:00"
+      },
+      {
+        "id": "9467b562-496a-4fdc-8887-211a0f8ec453",
+        "category_id": "920a13bc-7456-4506-a909-edc6053973cd",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "GitHub",
+        "url": "https://github.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=github.com&sz=32",
+        "sort_order": 2,
+        "created_at": "2026-10-29T12:34:07.106346+00:00"
+      },
+      {
+        "id": "b9dfa825-2eca-4f09-a35a-e01fc5d08581",
+        "category_id": "d018932e-1c10-4453-a4b6-530945bb95de",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "SomaFM",
+        "url": "https://somafm.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=somafm.com&sz=32",
+        "sort_order": 2,
+        "created_at": "2026-10-29T12:50:00.36149+00:00"
+      },
+      {
+        "id": "62995e62-dff9-41e7-a216-034e56d1e2db",
+        "category_id": "16af05d0-e4ff-401e-821a-f91fccf8828f",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Discover Weekly",
+        "url": "https://open.spotify.com/genre/0JQ5DAqbMKFEC4WFtoNRpw",
+        "icon_url": "https://www.google.com/s2/favicons?domain=open.spotify.com&sz=32",
+        "sort_order": 2,
+        "created_at": "2026-10-29T12:53:08.550506+00:00"
+      },
+      {
+        "id": "a4677b57-e877-4ac0-a361-df54009a986d",
+        "category_id": "b9450ff2-d92e-442e-9c1a-9a8ce2ca4c98",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "MusicTheory.net",
+        "url": "https://www.musictheory.net/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.musictheory.net&sz=32",
+        "sort_order": 2,
+        "created_at": "2026-10-29T12:55:05.535249+00:00"
+      },
+      {
+        "id": "c9b9e3cf-2d1d-4b47-a275-5562b43596fd",
+        "category_id": "b63dae9d-4571-4e57-b129-6a30094d164e",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Yahoo Finance",
+        "url": "https://finance.yahoo.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=finance.yahoo.com&sz=32",
+        "sort_order": 1,
+        "created_at": "2026-10-29T12:36:25.664458+00:00"
+      },
+      {
+        "id": "9968ebda-cdf7-45a8-9815-3126691c60f7",
+        "category_id": "21b1755f-22df-41d2-8851-bb9dcf0429a6",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Reddit",
+        "url": "https://www.reddit.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.reddit.com&sz=32",
+        "sort_order": 1,
+        "created_at": "2026-10-29T12:15:36.006045+00:00"
+      },
+      {
+        "id": "4d69eee5-ef90-453a-9b76-cedc6f063cec",
+        "category_id": "0379f142-ed8b-45c7-94bc-b232e79455ec",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "The Verge",
+        "url": "https://www.theverge.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.theverge.com&sz=32",
+        "sort_order": 4,
+        "created_at": "2026-10-29T12:20:30.306815+00:00"
+      },
+      {
+        "id": "164e2e33-d080-4437-80e1-31decbedfc1b",
+        "category_id": "9b2e79a0-b72c-4e1c-822d-eb6e8ea51bee",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Notion",
+        "url": "https://www.notion.so/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.notion.so&sz=32",
+        "sort_order": 4,
+        "created_at": "2026-10-29T12:25:26.489856+00:00"
+      },
+      {
+        "id": "5d5ef20f-c141-4b85-b4dd-c61d81175a9d",
+        "category_id": "3ca3cb13-46d8-4ea2-9bce-751321b90aae",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Claude",
+        "url": "https://claude.ai/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=claude.ai&sz=32",
+        "sort_order": 2,
+        "created_at": "2026-10-29T12:30:06.727229+00:00"
+      },
+      {
+        "id": "be7db663-6985-405e-96f8-19b3784297cc",
+        "category_id": "920a13bc-7456-4506-a909-edc6053973cd",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Figma",
+        "url": "https://www.figma.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.figma.com&sz=32",
+        "sort_order": 3,
+        "created_at": "2026-10-29T12:34:38.514399+00:00"
+      },
+      {
+        "id": "8b2b0815-5194-4dab-8af1-3a9737845c50",
+        "category_id": "b63dae9d-4571-4e57-b129-6a30094d164e",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "MarketWatch",
+        "url": "https://www.marketwatch.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.marketwatch.com&sz=32",
+        "sort_order": 4,
+        "created_at": "2026-10-29T12:36:59.230288+00:00"
+      },
+      {
+        "id": "fa9c7b2f-2514-4e9f-8ca8-166e06855e60",
+        "category_id": "d57abadb-f040-4ab0-8503-f2fdbd3babe0",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Charles Schwab",
+        "url": "https://www.schwab.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.schwab.com&sz=32",
+        "sort_order": 2,
+        "created_at": "2026-10-29T12:40:05.748423+00:00"
+      },
+      {
+        "id": "3b224bc2-cc63-4fad-ae61-c19fb32d4792",
+        "category_id": "26397824-da41-4cf8-9ed5-2b12c510d1ea",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Bankrate",
+        "url": "https://www.bankrate.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.bankrate.com&sz=32",
+        "sort_order": 3,
+        "created_at": "2026-10-29T12:42:28.294644+00:00"
+      },
+      {
+        "id": "cff48644-8651-4119-8587-47baaca78609",
+        "category_id": "1f9321a7-fadc-444f-b8cb-c302416cb496",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Bloomberg",
+        "url": "https://www.bloomberg.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.bloomberg.com&sz=32",
+        "sort_order": 1,
+        "created_at": "2026-10-29T12:45:02.436925+00:00"
+      },
+      {
+        "id": "8c0f9d7d-aebb-452e-80ab-be2acda02140",
+        "category_id": "c464c0f7-dd7c-4a02-8eaa-17783f80c86c",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Bandcamp",
+        "url": "https://bandcamp.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=bandcamp.com&sz=32",
+        "sort_order": 5,
+        "created_at": "2026-10-29T12:47:35.312221+00:00"
+      },
+      {
+        "id": "199528c6-398b-4972-9150-60192a1a8207",
+        "category_id": "d018932e-1c10-4453-a4b6-530945bb95de",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "NPR Music",
+        "url": "https://www.npr.org/music/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.npr.org&sz=32",
+        "sort_order": 3,
+        "created_at": "2026-10-29T12:51:04.08387+00:00"
+      },
+      {
+        "id": "319b885a-8b62-4874-b6ac-9ee9f23966c4",
+        "category_id": "16af05d0-e4ff-401e-821a-f91fccf8828f",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "AllMusic",
+        "url": "https://www.allmusic.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.allmusic.com&sz=32",
+        "sort_order": 3,
+        "created_at": "2026-10-29T12:53:32.479606+00:00"
+      },
+      {
+        "id": "c7a3a933-c541-4650-a825-ac85d4d9c746",
+        "category_id": "b9450ff2-d92e-442e-9c1a-9a8ce2ca4c98",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "GuitarPro",
+        "url": "https://www.guitar-pro.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.guitar-pro.com&sz=32",
+        "sort_order": 3,
+        "created_at": "2026-10-29T12:55:42.11145+00:00"
+      },
+      {
+        "id": "3bb8805b-ee45-4a31-ab48-155bcc973ea2",
+        "category_id": "b63dae9d-4571-4e57-b129-6a30094d164e",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Finviz",
+        "url": "https://finviz.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=finviz.com&sz=32",
+        "sort_order": 3,
+        "created_at": "2026-10-29T12:38:25.272787+00:00"
+      },
+      {
+        "id": "a0eaf37e-3621-4c5d-9d63-ff13a85c2faf",
+        "category_id": "21b1755f-22df-41d2-8851-bb9dcf0429a6",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "instagram",
+        "url": "https://www.instagram.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.instagram.com&sz=32",
+        "sort_order": 2,
+        "created_at": "2026-10-29T12:16:25.214653+00:00"
+      },
+      {
+        "id": "0a88f02c-06c0-468d-b059-0b95e5f783f2",
+        "category_id": "2c1939c2-6f90-46c1-9341-3463b91854ae",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Amazon",
+        "url": "https://www.amazon.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.amazon.com&sz=32",
+        "sort_order": 1,
+        "created_at": "2026-10-29T12:21:01.239646+00:00"
+      },
+      {
+        "id": "9592b7ab-5a82-4582-ba0b-73ef7c3e084c",
+        "category_id": "9b2e79a0-b72c-4e1c-822d-eb6e8ea51bee",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Todoist",
+        "url": "https://todoist.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=todoist.com&sz=32",
+        "sort_order": 5,
+        "created_at": "2026-10-29T12:26:06.613093+00:00"
+      },
+      {
+        "id": "598c8938-4ede-40e3-94ba-096c50512410",
+        "category_id": "3ca3cb13-46d8-4ea2-9bce-751321b90aae",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Perplexity",
+        "url": "https://www.perplexity.ai/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.perplexity.ai&sz=32",
+        "sort_order": 3,
+        "created_at": "2026-10-29T12:31:17.116168+00:00"
+      },
+      {
+        "id": "e50855c4-c5e0-4f6a-ab12-5469044180f3",
+        "category_id": "920a13bc-7456-4506-a909-edc6053973cd",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Canva",
+        "url": "https://www.canva.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.canva.com&sz=32",
+        "sort_order": 4,
+        "created_at": "2026-10-29T12:35:08.759552+00:00"
+      },
+      {
+        "id": "bf2ad6b1-f108-4030-a3a7-b7df7101409b",
+        "category_id": "d57abadb-f040-4ab0-8503-f2fdbd3babe0",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Vanguard",
+        "url": "https://investor.vanguard.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=investor.vanguard.com&sz=32",
+        "sort_order": 3,
+        "created_at": "2026-10-29T12:40:31.561846+00:00"
+      },
+      {
+        "id": "2e4716a0-a4b5-41d4-bc0b-2f4211a64aad",
+        "category_id": "26397824-da41-4cf8-9ed5-2b12c510d1ea",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Calculator.net",
+        "url": "https://www.calculator.net/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=www.calculator.net&sz=32",
+        "sort_order": 4,
+        "created_at": "2026-10-29T12:42:56.356784+00:00"
+      },
+      {
+        "id": "aedcc681-c3c5-4bd4-bee5-041195cd018f",
+        "category_id": "c464c0f7-dd7c-4a02-8eaa-17783f80c86c",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "SoundCloud",
+        "url": "https://soundcloud.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=soundcloud.com&sz=32",
+        "sort_order": 4,
+        "created_at": "2026-10-29T12:48:28.880783+00:00"
+      },
+      {
+        "id": "a2b8b805-6684-47f2-a53a-b4c3dc95028a",
+        "category_id": "c464c0f7-dd7c-4a02-8eaa-17783f80c86c",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Spotify",
+        "url": "https://open.spotify.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=open.spotify.com&sz=32",
+        "sort_order": 1,
+        "created_at": "2026-10-29T12:46:13.683555+00:00"
+      },
+      {
+        "id": "f7359c16-a95d-4b76-8b85-32594a55f5e1",
+        "category_id": "d018932e-1c10-4453-a4b6-530945bb95de",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Radio Paradise",
+        "url": "https://radioparadise.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=radioparadise.com&sz=32",
+        "sort_order": 4,
+        "created_at": "2026-10-29T12:51:42.695848+00:00"
+      },
+      {
+        "id": "06180259-3a47-4dce-b09c-2b0fbad32f56",
+        "category_id": "16af05d0-e4ff-401e-821a-f91fccf8828f",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Rate Your Music",
+        "url": "https://rateyourmusic.com/",
+        "icon_url": "https://www.google.com/s2/favicons?domain=rateyourmusic.com&sz=32",
+        "sort_order": 4,
+        "created_at": "2026-10-29T12:53:58.710541+00:00"
+      }
+    ],
+    "quick_access": [
+      {
+        "id": "5ffc3ad0-07fc-4ae7-83d1-c3a9b5052617",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "ChatGPT",
+        "url": "https://chat.openai.com",
+        "icon_url": "https://www.google.com/s2/favicons?domain=chat.openai.com&sz=32",
+        "sort_order": 1,
+        "created_at": "2026-10-29T11:32:45.88051+00:00"
+      },
+      {
+        "id": "ae338bf4-5e0a-4b5d-87f0-3d0ac8f57313",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Gmail",
+        "url": "https://gmail.com",
+        "icon_url": "https://www.google.com/s2/favicons?domain=gmail.com&sz=32",
+        "sort_order": 2,
+        "created_at": "2026-10-29T11:32:45.88051+00:00"
+      },
+      {
+        "id": "c34b5402-2d9f-4f29-90c6-8ea8db7fdff1",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "Tradutor",
+        "url": "https://translate.google.com",
+        "icon_url": "https://www.google.com/s2/favicons?domain=translate.google.com&sz=32",
+        "sort_order": 3,
+        "created_at": "2026-10-29T11:32:45.88051+00:00"
+      }
+    ],
+    "contact_sections": [
+      {
+        "id": "b06dc9a5-9a08-42cd-ba62-53c4020f25b2",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "FAMILY",
+        "sort_order": 0,
+        "created_at": "2026-10-29T12:08:01.575682+00:00",
+        "icon_name": "heart"
+      },
+      {
+        "id": "27c7e9c6-5b13-4204-b43d-cd1af6146bfa",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "FRIENDS",
+        "sort_order": 1,
+        "created_at": "2026-10-29T12:08:27.324132+00:00",
+        "icon_name": "star"
+      },
+      {
+        "id": "909fdd7b-ccf8-4663-8e93-d6063f8b5261",
+        "user_id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+        "title": "work",
+        "sort_order": 2,
+        "created_at": "2026-10-29T12:08:51.729934+00:00",
+        "icon_name": "gear"
+      }
+    ],
+    "contacts": [],
+    "public_links": [],
+    "social_links": []
+  },
+  "profile": {
+    "id": "0283d9d1-1304-45d7-bd20-526798ef7962",
+    "username": "example_alllinks",
+    "display_name": "Alex Morgan",
+    "avatar_url": "",
+    "tagline": "",
+    "bio": "",
+    "contact_email": "",
+    "contact_phone": "",
+    "areas_of_interest": [],
+    "tools": [],
+    "created_at": "2026-10-29T11:32:43.970395+00:00"
+  }
+}

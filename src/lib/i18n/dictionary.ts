@@ -69,6 +69,10 @@ export const dictionary = {
     'sidebar.newPanel': 'Novo Painel',
     'sidebar.deletePanelTitle': 'Excluir Painel',
     'sidebar.deletePanelMsg': 'Excluir o painel "{name}"? As seções dentro dele também serão removidas.',
+    'sidebar.resetDemo': 'Resetar Demo',
+    'sidebar.resetDemoConfirmTitle': 'Resetar conta demo',
+    'sidebar.resetDemoConfirmMsg': 'Isso vai restaurar todos os painéis, seções e links para o estado original da demonstração, desfazendo qualquer alteração feita por qualquer visitante.',
+    'sidebar.resetDemoConfirmButton': 'Resetar',
 
     // ActiveDashboardView
     'dashboard.goodMorning': 'Bom dia',
@@ -289,6 +293,10 @@ export const dictionary = {
     'sidebar.newPanel': 'New Panel',
     'sidebar.deletePanelTitle': 'Delete Panel',
     'sidebar.deletePanelMsg': 'Delete the panel "{name}"? The sections inside it will also be removed.',
+    'sidebar.resetDemo': 'Reset Demo',
+    'sidebar.resetDemoConfirmTitle': 'Reset demo account',
+    'sidebar.resetDemoConfirmMsg': 'This will restore all panels, sections and links to the original demo state, undoing any changes made by any visitor.',
+    'sidebar.resetDemoConfirmButton': 'Reset',
 
     // ActiveDashboardView
     'dashboard.goodMorning': 'Good morning',

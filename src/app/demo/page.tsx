@@ -4,9 +4,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getSupabaseClient } from '@/lib/supabase';
 import { useLocale } from '@/context/LocaleContext';
+import { DEMO_EMAIL, DEMO_PASSWORD } from '@/lib/demoConfig';
 
-const DEMO_EMAIL = 'example.alllinks@gmail.com';
-const DEMO_PASSWORD = 'all2027!';
 const SIDEBAR_KEY = 'mylinks.sidebar.collapsed';
 
 export default function DemoEntryPage() {
