@@ -36,18 +36,27 @@ type Snapshot = {
 export async function resetDemoAccount(supabase: SupabaseClient, userId: string): Promise<void> {
   const snapshot = demoSnapshot as Snapshot;
 
+  // Safety check: never run this restore against an account that doesn't
+  // match the snapshot's original owner.
+  if (snapshot.userId !== userId) {
+    throw new Error('Snapshot user mismatch: refusing to reset this account.');
+  }
+
   if (snapshot.profile) {
     const { id, created_at, ...profileFields } = snapshot.profile as Record<string, unknown>;
-    await supabase.from('profiles').update(profileFields).eq('id', userId);
+    const { error } = await supabase.from('profiles').update(profileFields).eq('id', userId);
+    if (error) throw new Error(`Failed to restore profile: ${error.message}`);
   }
 
   for (const table of DELETE_ORDER) {
-    await supabase.from(table).delete().eq('user_id', userId);
+    const { error } = await supabase.from(table).delete().eq('user_id', userId);
+    if (error) throw new Error(`Failed to clear "${table}": ${error.message}`);
   }
 
   for (const table of INSERT_ORDER) {
     const rows = snapshot.tables[table];
     if (!rows || rows.length === 0) continue;
-    await supabase.from(table).insert(rows);
+    const { error } = await supabase.from(table).insert(rows);
+    if (error) throw new Error(`Failed to restore "${table}": ${error.message}`);
   }
 }

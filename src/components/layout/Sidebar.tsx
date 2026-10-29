@@ -455,6 +455,7 @@ function SidebarContent({
   const isDemoUser = user?.email === DEMO_EMAIL;
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [resetting, setResetting] = useState(false);
+  const [resetError, setResetError] = useState<string | null>(null);
   const [showNewDash, setShowNewDash] = useState(false);
   const [newDashName, setNewDashName] = useState('');
   const [newDashIcon, setNewDashIcon] = useState('star');
@@ -871,13 +872,14 @@ function SidebarContent({
   const handleResetDemo = async () => {
     if (!user) return;
     setResetting(true);
+    setResetError(null);
     try {
       const supabase = getSupabaseClient();
       await resetDemoAccount(supabase, user.id);
       window.location.reload();
-    } catch {
+    } catch (err) {
       setResetting(false);
-      setShowResetConfirm(false);
+      setResetError(err instanceof Error ? err.message : 'Reset failed. Please try again.');
     }
   };
 
@@ -1111,9 +1113,9 @@ function SidebarContent({
       <ConfirmModal
         open={showResetConfirm}
         title={t('sidebar.resetDemoConfirmTitle')}
-        message={t('sidebar.resetDemoConfirmMsg')}
+        message={resetError ? `⚠ ${resetError}` : t('sidebar.resetDemoConfirmMsg')}
         confirmLabel={resetting ? '...' : t('sidebar.resetDemoConfirmButton')}
-        onCancel={() => setShowResetConfirm(false)}
+        onCancel={() => { setShowResetConfirm(false); setResetError(null); }}
         onConfirm={handleResetDemo}
       />
     </>
