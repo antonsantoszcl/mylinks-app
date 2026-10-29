@@ -127,8 +127,12 @@ export function ActiveDashboardView() {
   const [recentAccess] = useState<RecentAccess[]>([]);
 
   const activeDashboard = dashboards.find((d) => d.id === activeDashboardId);
-  const dashboardTitle = activeDashboard?.title ?? '';
   const isContacts = activeDashboard?.isContacts ?? false;
+  const dashboardTitle = activeDashboard?.isDefault
+    ? t('sidebar.mainPanel')
+    : isContacts
+    ? t('sidebar.contactsPanel')
+    : activeDashboard?.title ?? '';
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? t('dashboard.goodMorning') : hour < 18 ? t('dashboard.goodAfternoon') : t('dashboard.goodEvening');

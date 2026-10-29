@@ -1,6 +1,7 @@
 import { QuickAccessLink } from '@/lib/types';
 import Link from 'next/link';
 import { X } from 'lucide-react';
+import { useLocale } from '@/context/LocaleContext';
 
 interface QuickAccessCardProps {
   link: QuickAccessLink;
@@ -8,6 +9,8 @@ interface QuickAccessCardProps {
 }
 
 export function QuickAccessCard({ link, onRemove }: QuickAccessCardProps) {
+  const { t } = useLocale();
+  const displayTitle = link.title === 'Tradutor' ? t('quickAccess.translator') : link.title;
   return (
     <div className="relative flex-shrink-0 group">
       <button
@@ -24,10 +27,10 @@ export function QuickAccessCard({ link, onRemove }: QuickAccessCardProps) {
         className="bg-white border border-slate-200 rounded-lg px-3 py-2 flex items-center gap-2 hover:shadow-sm hover:bg-slate-50 transition-all cursor-pointer"
       >
         <div className="w-6 h-6 md:w-5 md:h-5 bg-slate-100 rounded flex items-center justify-center overflow-hidden flex-shrink-0">
-          <img src={link.iconUrl} alt={link.title} className="w-5 h-5 md:w-4 md:h-4 object-contain" />
+          <img src={link.iconUrl} alt={displayTitle} className="w-5 h-5 md:w-4 md:h-4 object-contain" />
         </div>
         <span className="text-sm md:text-[12.5px] font-semibold text-slate-700 md:text-slate-600 whitespace-nowrap">
-          {link.title}
+          {displayTitle}
         </span>
       </Link>
     </div>

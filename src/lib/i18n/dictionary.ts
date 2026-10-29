@@ -109,6 +109,7 @@ export const dictionary = {
 
     // QuickAccessRow
     'quickAccess.title': 'Acesso rápido',
+    'quickAccess.translator': 'Tradutor',
     'quickAccess.add': 'Adicionar',
     'quickAccess.titlePlaceholder': 'Titulo',
     'quickAccess.urlPlaceholder': 'URL',
@@ -328,6 +329,7 @@ export const dictionary = {
 
     // QuickAccessRow
     'quickAccess.title': 'Quick Access',
+    'quickAccess.translator': 'Translator',
     'quickAccess.add': 'Add',
     'quickAccess.titlePlaceholder': 'Title',
     'quickAccess.urlPlaceholder': 'URL',

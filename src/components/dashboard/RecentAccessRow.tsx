@@ -18,7 +18,9 @@ export function RecentAccessRow({ items }: RecentAccessRowProps) {
       </div>
 
       <div className="flex flex-wrap gap-1.5">
-        {items.map((item) => (
+        {items.map((item) => {
+          const displayTitle = item.title === 'Tradutor' ? t('quickAccess.translator') : item.title;
+          return (
           <Link
             key={item.id}
             href={item.url}
@@ -27,12 +29,13 @@ export function RecentAccessRow({ items }: RecentAccessRowProps) {
             className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 hover:shadow-sm hover:border-primary-300 transition-all group"
           >
             <div className="w-4 h-4 rounded flex items-center justify-center flex-shrink-0">
-              <img src={item.iconUrl} alt={item.title} className="w-4 h-4 object-contain" />
+              <img src={item.iconUrl} alt={displayTitle} className="w-4 h-4 object-contain" />
             </div>
-            <span className="text-xs font-medium text-slate-700 group-hover:text-primary-700 transition-colors">{item.title}</span>
+            <span className="text-xs font-medium text-slate-700 group-hover:text-primary-700 transition-colors">{displayTitle}</span>
             <span className="text-xs text-slate-400">{item.accessedAtLabel}</span>
           </Link>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
