@@ -1,0 +1,39 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { getSupabaseClient } from '@/lib/supabase';
+
+const DEMO_EMAIL = 'example.alllinks@gmail.com';
+const DEMO_PASSWORD = 'all2027!';
+
+export default function DemoEntryPage() {
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const run = async () => {
+      const supabase = getSupabaseClient();
+      const { error } = await supabase.auth.signInWithPassword({
+        email: DEMO_EMAIL,
+        password: DEMO_PASSWORD,
+      });
+      if (error) {
+        setError('Não foi possível entrar na conta de demonstração. Tente novamente em alguns instantes.');
+        return;
+      }
+      router.replace('/dashboard');
+    };
+    run();
+  }, [router]);
+
+  return (
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      {error ? (
+        <p className="text-sm text-slate-500 max-w-xs text-center px-4">{error}</p>
+      ) : (
+        <div className="w-5 h-5 rounded-full border-2 border-primary-500 border-t-transparent animate-spin" />
+      )}
+    </div>
+  );
+}
