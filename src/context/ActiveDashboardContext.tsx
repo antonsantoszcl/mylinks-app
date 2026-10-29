@@ -25,9 +25,12 @@ const faviconDomainMap: Record<string, string> = {
 // Domains whose favicon via Google's s2 service is a generic tiny "G" icon;
 // override with Google's own product logo asset for visual consistency.
 const faviconOverrideMap: Record<string, string> = {
-  'calendar.google.com': 'https://fonts.gstatic.com/s/i/productlogos/calendar_2020q4/v8/web-96dp/logo_calendar_2020q4_color_2x_web_96dp.png',
-  'drive.google.com': 'https://fonts.gstatic.com/s/i/productlogos/drive_2020q4/v8/web-96dp/logo_drive_2020q4_color_2x_web_96dp.png',
-  'maps.google.com': 'https://fonts.gstatic.com/s/i/productlogos/maps_2020q4/v8/web-96dp/logo_maps_2020q4_color_2x_web_96dp.png',
+  'calendar.google.com': 'https://fonts.gstatic.com/s/i/productlogos/calendar_2020q4/v6/web-64dp/logo_calendar_2020q4_color_1x_web_64dp.png',
+  'drive.google.com': 'https://fonts.gstatic.com/s/i/productlogos/drive_2020q4/v6/web-64dp/logo_drive_2020q4_color_1x_web_64dp.png',
+  'maps.google.com': 'https://fonts.gstatic.com/s/i/productlogos/maps_2020q4/v6/web-64dp/logo_maps_2020q4_color_1x_web_64dp.png',
+  'docs.google.com': 'https://fonts.gstatic.com/s/i/productlogos/docs_2020q4/v6/web-64dp/logo_docs_2020q4_color_1x_web_64dp.png',
+  'sheets.google.com': 'https://fonts.gstatic.com/s/i/productlogos/sheets_2020q4/v6/web-64dp/logo_sheets_2020q4_color_1x_web_64dp.png',
+  'slides.google.com': 'https://fonts.gstatic.com/s/i/productlogos/slides_2020q4/v6/web-64dp/logo_slides_2020q4_color_1x_web_64dp.png',
 };
 
 // Domains that should map to their parent for favicon lookup
