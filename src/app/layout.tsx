@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Manrope } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
+import { LocaleProvider } from "@/context/LocaleContext";
 import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -148,7 +149,9 @@ export default function RootLayout({
           gtag('js', new Date());
           gtag('config', 'G-CDQ92N01C3');
         `}</Script>
-        <AuthProvider>{children}</AuthProvider>
+        <LocaleProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </LocaleProvider>
       </body>
     </html>
   );

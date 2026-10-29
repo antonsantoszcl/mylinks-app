@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Pencil, Copy, Check } from 'lucide-react';
 import { Contact } from '@/lib/types';
+import { useLocale } from '@/context/LocaleContext';
 
 // ── Channel icons (inline SVGs for precision) ─────────────────────────────────
 
@@ -149,6 +150,7 @@ interface MiniCardProps {
 }
 
 export function MiniCard({ contact, userEmail, anchorRect, onClose, onEdit }: MiniCardProps) {
+  const { t } = useLocale();
   const channels = buildChannels(contact);
   const popupRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
@@ -225,8 +227,8 @@ export function MiniCard({ contact, userEmail, anchorRect, onClose, onEdit }: Mi
               type="button"
               onClick={() => { onEdit(); onClose(); }}
               className="flex-shrink-0 p-1 rounded-md text-slate-400 hover:text-primary-500 hover:bg-slate-100 transition-colors"
-              title="Editar contato"
-              aria-label="Editar contato"
+              title={t('contacts.editContact')}
+              aria-label={t('contacts.editContact')}
             >
               <Pencil className="w-3.5 h-3.5" />
             </button>
@@ -253,7 +255,7 @@ export function MiniCard({ contact, userEmail, anchorRect, onClose, onEdit }: Mi
                   setTimeout(() => setCopied(false), 2000);
                 }}
                 className="px-2.5 py-2 text-slate-300 hover:text-primary-500 transition-colors"
-                title="Copiar email"
+                title={t('contacts.copyEmail')}
               >
                 {copied ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
               </button>

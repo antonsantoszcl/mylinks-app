@@ -11,6 +11,7 @@ import { ContactsPanel } from '@/components/contacts/ContactsPanel';
 import { Hand, LayoutGrid } from 'lucide-react';
 import { TopNavControls } from '@/components/layout/TopNav';
 import { RecentAccess } from '@/lib/types';
+import { useLocale } from '@/context/LocaleContext';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -23,6 +24,7 @@ function Spinner() {
 }
 
 function GoogleSearchBar() {
+  const { t } = useLocale();
   const [query, setQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -73,7 +75,7 @@ function GoogleSearchBar() {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Pesquisar no Google..."
+          placeholder={t('dashboard.searchPlaceholder')}
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
@@ -99,6 +101,7 @@ function GoogleSearchBar() {
 // ── Main view ─────────────────────────────────────────────────────────────────
 
 export function ActiveDashboardView() {
+  const { t } = useLocale();
   const { profile } = useProfile();
   const { dashboards } = useDashboards();
   const {
@@ -128,7 +131,7 @@ export function ActiveDashboardView() {
   const isContacts = activeDashboard?.isContacts ?? false;
 
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite';
+  const greeting = hour < 12 ? t('dashboard.goodMorning') : hour < 18 ? t('dashboard.goodAfternoon') : t('dashboard.goodEvening');
 
   const orderedCategories = useMemo(
     () => [...(data?.categories ?? [])].sort((a, b) => a.order - b.order),
@@ -202,7 +205,7 @@ export function ActiveDashboardView() {
         <div className="bg-primary-100/80 p-1 rounded-md">
           <LayoutGrid className="w-3.5 h-3.5 text-primary-600" />
         </div>
-        <h2 className="text-[15px] md:text-sm font-bold text-slate-700 tracking-tight">Seções</h2>
+        <h2 className="text-[15px] md:text-sm font-bold text-slate-700 tracking-tight">{t('dashboard.sections')}</h2>
       </div>
 
       {/* Panel content — direct swap, no transition */}

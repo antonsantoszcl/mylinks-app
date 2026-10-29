@@ -2,6 +2,7 @@ import { QuickAccessLink } from '@/lib/types';
 import { QuickAccessCard } from './QuickAccessCard';
 import { Plus, Zap, ChevronRight } from 'lucide-react';
 import { FormEvent, useState, useRef, useEffect } from 'react';
+import { useLocale } from '@/context/LocaleContext';
 
 interface QuickAccessRowProps {
   links: QuickAccessLink[];
@@ -10,6 +11,7 @@ interface QuickAccessRowProps {
 }
 
 export function QuickAccessRow({ links, onAdd, onRemove }: QuickAccessRowProps) {
+  const { t } = useLocale();
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
@@ -47,7 +49,7 @@ export function QuickAccessRow({ links, onAdd, onRemove }: QuickAccessRowProps) 
     <section>
       <div className="flex items-center gap-1.5 mb-3">
         <Zap className="w-3.5 h-3.5 text-primary-500" />
-        <h2 className="text-[15px] md:text-sm font-bold text-slate-700">Acesso rapido</h2>
+        <h2 className="text-[15px] md:text-sm font-bold text-slate-700">{t('quickAccess.title')}</h2>
       </div>
 
       <div className="relative">
@@ -65,21 +67,21 @@ export function QuickAccessRow({ links, onAdd, onRemove }: QuickAccessRowProps) 
               className="flex items-center gap-1 px-2.5 py-1.5 bg-white border border-dashed border-slate-300 rounded-lg text-slate-500 hover:text-primary-600 hover:border-primary-300 transition-all text-xs font-medium flex-shrink-0 min-h-[44px]"
             >
               <Plus className="w-3 h-3" />
-              Adicionar
+              {t('quickAccess.add')}
             </button>
           ) : (
             <form onSubmit={submit} className="flex flex-wrap items-center gap-1.5 bg-white border border-slate-200 rounded-lg p-1.5 shadow-sm w-full sm:w-auto">
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Titulo"
+                placeholder={t('quickAccess.titlePlaceholder')}
                 className="rounded border border-slate-200 px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-primary-300 flex-1 min-w-[80px] min-h-[36px]"
                 autoFocus
               />
               <input
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                placeholder="URL"
+                placeholder={t('quickAccess.urlPlaceholder')}
                 className="rounded border border-slate-200 px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-primary-300 flex-1 min-w-[100px] min-h-[36px]"
               />
               <button

@@ -1,4 +1,5 @@
 import { Category, Dashboard, Link as LinkType } from '@/lib/types';
+import { useLocale } from '@/context/LocaleContext';
 import { getNotoEmojiUrl } from '@/lib/emojiUtils';
 import { SortableLinkItem } from './SortableLinkItem';
 import { Plus, GripVertical, FolderOutput, Trash2, Inbox } from 'lucide-react';
@@ -177,6 +178,7 @@ export function CategoryCard({
   currentDashboardId,
   onMoveCategoryToPanel,
 }: CategoryCardProps) {
+  const { t } = useLocale();
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleDraft, setTitleDraft] = useState(category.title);
   const [showAddLink, setShowAddLink] = useState(false);
@@ -532,8 +534,8 @@ export function CategoryCard({
                 <button
                   ref={movePanelBtnRef}
                   className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-slate-400 hover:text-primary-500 rounded transition-colors"
-                  aria-label="Mover seção para outro painel"
-                  title="Mover para outro painel"
+                  aria-label={t('categoryCard.moveSectionAria')}
+                  title={t('categoryCard.moveToPanel')}
                   data-no-dnd="true"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -572,13 +574,13 @@ export function CategoryCard({
               <input
                 value={linkTitle}
                 onChange={(e) => setLinkTitle(e.target.value)}
-                placeholder="Titulo do link"
+                placeholder={t('categoryCard.linkTitlePlaceholder')}
                 className="w-full rounded border border-slate-200 px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-primary-300 bg-white min-h-[36px]"
               />
               <input
                 value={linkUrl}
                 onChange={(e) => setLinkUrl(e.target.value)}
-                placeholder="https://exemplo.com"
+                placeholder={t('categoryCard.urlPlaceholder')}
                 className="w-full rounded border border-slate-200 px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-primary-300 bg-white min-h-[36px]"
               />
               <div className="flex justify-end gap-1.5">
@@ -587,13 +589,13 @@ export function CategoryCard({
                   onClick={() => setShowAddLink(false)}
                   className="px-2 py-1.5 text-xs rounded bg-slate-200 text-slate-600 hover:bg-slate-300 min-h-[36px]"
                 >
-                  Cancelar
+                  {t('categoryCard.cancel')}
                 </button>
                 <button
                   type="submit"
                   className="px-2 py-1.5 text-xs rounded bg-primary-600 text-white hover:bg-primary-700 min-h-[36px]"
                 >
-                  Adicionar
+                  {t('categoryCard.add')}
                 </button>
               </div>
             </form>
@@ -623,7 +625,7 @@ export function CategoryCard({
           ) : (
             <div className="flex flex-col items-center justify-center h-16 text-slate-400 gap-1">
               <Inbox className="w-5 h-5 opacity-20" />
-              <p className="text-xs">Nenhum link</p>
+              <p className="text-xs">{t('categoryCard.noLinks')}</p>
             </div>
           )}
         </div>
@@ -639,7 +641,7 @@ export function CategoryCard({
               onClick={() => setShowAddLink(true)}
             >
               <Plus className="w-3 h-3" />
-              Adicionar link
+              {t('categoryCard.addLink')}
             </button>
           </div>
         )}
@@ -655,7 +657,7 @@ export function CategoryCard({
           data-no-dnd="true"
           onClick={(e) => e.stopPropagation()}
         >
-          <p className="px-3 py-1 text-[10px] font-semibold text-slate-400 uppercase">Transferir para</p>
+          <p className="px-3 py-1 text-[10px] font-semibold text-slate-400 uppercase">{t('categoryCard.transferTo')}</p>
           {otherDashboards.map((dash) => (
             <button
               key={dash.id}
@@ -675,8 +677,8 @@ export function CategoryCard({
 
       <ConfirmModal
         open={showDeleteModal}
-        title="Excluir seção"
-        message="Excluir seção e todos os links?"
+        title={t('categoryCard.deleteSectionTitle')}
+        message={t('categoryCard.deleteSectionMsg')}
         onCancel={() => setShowDeleteModal(false)}
         onConfirm={() => {
           setShowDeleteModal(false);

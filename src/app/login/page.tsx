@@ -7,6 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 import { getSupabaseClient } from '@/lib/supabase';
 import { signInWithGoogle } from '@/lib/googleSignIn';
 import { Link2 } from 'lucide-react';
+import { useLocale } from '@/context/LocaleContext';
 
 function GoogleIcon() {
   return (
@@ -22,6 +23,7 @@ function GoogleIcon() {
 export default function LoginPage() {
   const { login } = useAuth();
   const router = useRouter();
+  const { t } = useLocale();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -32,7 +34,7 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
     if (!email || !password) {
-      setError('Preencha todos os campos.');
+      setError(t('login.errorFields'));
       return;
     }
     setLoading(true);
@@ -67,7 +69,7 @@ export default function LoginPage() {
         });
       }
     } catch {
-      setError('Erro ao entrar com o Google. Tente novamente.');
+      setError(t('login.errorGoogle'));
       setOauthLoading(null);
     }
   };
@@ -83,7 +85,7 @@ export default function LoginPage() {
             </div>
             <h1 className="text-xl font-bold text-slate-900">alllinks.app</h1>
           </Link>
-          <p className="text-sm text-slate-500 mt-1">Entre na sua conta</p>
+          <p className="text-sm text-slate-500 mt-1">{t('login.subtitle')}</p>
         </div>
 
         {/* Card */}
@@ -97,14 +99,14 @@ export default function LoginPage() {
               className="w-full flex items-center justify-center gap-2.5 border border-slate-200 rounded-lg px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors disabled:opacity-60"
             >
               <GoogleIcon />
-              {oauthLoading === 'google' ? 'Aguardando...' : 'Entrar com Google'}
+              {oauthLoading === 'google' ? t('login.waiting') : t('login.googleButton')}
             </button>
           </div>
 
           {/* Divider */}
           <div className="flex items-center gap-3 mb-5">
             <div className="flex-1 h-px bg-slate-100" />
-            <span className="text-xs text-slate-400 font-medium">ou</span>
+            <span className="text-xs text-slate-400 font-medium">{t('login.or')}</span>
             <div className="flex-1 h-px bg-slate-100" />
           </div>
 
@@ -115,7 +117,7 @@ export default function LoginPage() {
               </div>
             )}
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1.5">Email</label>
+              <label className="block text-xs font-medium text-slate-700 mb-1.5">{t('login.email')}</label>
               <input
                 type="email"
                 value={email}
@@ -127,12 +129,12 @@ export default function LoginPage() {
             </div>
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-medium text-slate-700">Senha</label>
+                <label className="block text-xs font-medium text-slate-700">{t('login.password')}</label>
                 <button
                   type="button"
                   className="text-xs text-primary-600 hover:text-primary-700 transition-colors"
                 >
-                  Esqueceu a senha?
+                  {t('login.forgotPassword')}
                 </button>
               </div>
               <input
@@ -149,15 +151,15 @@ export default function LoginPage() {
               disabled={loading || !!oauthLoading}
               className="w-full bg-primary-600 text-white font-semibold py-2.5 rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-60 text-sm mt-1"
             >
-              {loading ? 'Entrando...' : 'Entrar'}
+              {loading ? t('login.submitting') : t('login.submit')}
             </button>
           </form>
         </div>
 
         <p className="text-center text-xs text-slate-500 mt-4">
-          Não tem conta?{' '}
+          {t('login.noAccount')}{' '}
           <Link href="/register" className="text-primary-600 font-medium hover:text-primary-700 transition-colors">
-            Cadastre-se
+            {t('login.signUp')}
           </Link>
         </p>
       </div>

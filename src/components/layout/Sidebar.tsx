@@ -20,6 +20,7 @@ import { useActiveDashboard } from '@/context/ActiveDashboardContext';
 import { useEffect, useRef, useState } from 'react';
 import { Dashboard } from '@/lib/types';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { useLocale } from '@/context/LocaleContext';
 
 const SIDEBAR_KEY = 'mylinks.sidebar.collapsed';
 
@@ -110,6 +111,7 @@ function DashboardNavItem({
   onDrop?: (e: React.DragEvent) => void;
   onTouchStartHandle?: (e: React.TouchEvent) => void;
 }) {
+  const { t } = useLocale();
   const [editing, setEditing] = useState(false);
   const [editValue, setEditValue] = useState(dashboard.title);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -360,7 +362,7 @@ function DashboardNavItem({
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={(e) => { e.stopPropagation(); commitRename(); }}
                 className="p-0.5 text-primary-600 hover:text-primary-700"
-                title="Salvar"
+                title={t('sidebar.save')}
               >
                 <Check className="w-3 h-3" />
               </button>
@@ -368,7 +370,7 @@ function DashboardNavItem({
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={(e) => { e.stopPropagation(); cancelRename(); }}
                 className="p-0.5 text-slate-400 hover:text-slate-600"
-                title="Cancelar"
+                title={t('sidebar.cancel')}
               >
                 <X className="w-3 h-3" />
               </button>
@@ -384,7 +386,7 @@ function DashboardNavItem({
               <button
                 onClick={(e) => { e.stopPropagation(); setEditing(true); setPickerOpen(true); }}
                 className="min-w-[32px] min-h-[32px] md:min-w-[24px] md:min-h-[24px] flex items-center justify-center p-1 rounded text-slate-400 hover:text-primary-500 hover:bg-primary-50 transition-colors"
-                title="Editar"
+                title={t('sidebar.edit')}
               >
                 <Pencil className="w-4 h-4 md:w-3.5 md:h-3.5" />
               </button>
@@ -396,7 +398,7 @@ function DashboardNavItem({
             <div
               className="min-w-[32px] min-h-[32px] md:min-w-[24px] md:min-h-[24px] flex items-center justify-center p-1 cursor-grab active:cursor-grabbing text-slate-300"
               style={{ touchAction: 'none' }}
-              title="Arrastar"
+              title={t('sidebar.drag')}
               onTouchStart={onTouchStartHandle}
             >
               <GripVertical className="w-4 h-4 md:w-3.5 md:h-3.5" />
@@ -407,7 +409,7 @@ function DashboardNavItem({
               <button
                 onClick={(e) => { e.stopPropagation(); onDelete(dashboard.id); }}
                 className="min-w-[32px] min-h-[32px] md:min-w-[24px] md:min-h-[24px] flex items-center justify-center p-1 rounded text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
-                title="Excluir"
+                title={t('sidebar.delete')}
               >
                 <Trash2 className="w-4 h-4 md:w-3.5 md:h-3.5" />
               </button>
@@ -433,6 +435,7 @@ function SidebarContent({
   onToggle: () => void;
   onClose?: () => void;
 }) {
+  const { t } = useLocale();
   const { profile } = useProfile();
   const { dashboards, isLoading: dashLoading, createDashboard, renameDashboard, deleteDashboard, updateDashboardIcon, reorderDashboards } =
     useDashboards();
@@ -876,7 +879,7 @@ function SidebarContent({
             <button
               onClick={onToggle}
               className="hidden md:flex p-1 rounded-md text-slate-400 hover:text-[#2F5FD0] hover:bg-slate-100 transition-colors"
-              aria-label="Collapse sidebar"
+              aria-label={t('sidebar.collapse')}
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -886,7 +889,7 @@ function SidebarContent({
             <button
               onClick={onClose}
               className="md:hidden p-1 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
-              aria-label="Fechar menu"
+              aria-label={t('sidebar.closeMenu')}
             >
               <X className="w-4 h-4" />
             </button>
@@ -898,7 +901,7 @@ function SidebarContent({
           <button
             onClick={onToggle}
             className="hidden md:flex mt-1 mx-auto p-1 rounded-md text-slate-400 hover:text-[#2F5FD0] hover:bg-slate-100 transition-colors"
-            aria-label="Expand sidebar"
+            aria-label={t('sidebar.expand')}
           >
             <ChevronRight className="w-4 h-4" />
           </button>
@@ -913,7 +916,7 @@ function SidebarContent({
                   <LayoutDashboard className="w-3.5 h-3.5 text-primary-600" />
                 </div>
                 <h2 className="text-[15px] md:text-sm font-bold text-slate-700 tracking-tight">
-                  Painéis
+                  {t('sidebar.panels')}
                 </h2>
               </div>
               {dashboards.map((d) => {
@@ -965,7 +968,7 @@ function SidebarContent({
                     ref={newDashInputRef}
                     value={newDashName}
                     onChange={(e) => setNewDashName(e.target.value)}
-                    placeholder="Nome do painel"
+                    placeholder={t('sidebar.panelNamePlaceholder')}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') handleCreateDashboard();
                       if (e.key === 'Escape') {
@@ -978,14 +981,14 @@ function SidebarContent({
                   <button
                     onClick={handleCreateDashboard}
                     className="p-0.5 text-primary-600 hover:text-primary-700"
-                    title="Criar"
+                    title={t('sidebar.create')}
                   >
                     <Check className="w-3 h-3" />
                   </button>
                   <button
                     onClick={() => { setShowNewDash(false); setNewDashName(''); }}
                     className="p-0.5 text-slate-400 hover:text-slate-600"
-                    title="Cancelar"
+                    title={t('sidebar.cancel')}
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -998,7 +1001,7 @@ function SidebarContent({
                   className="flex items-center gap-2 px-2 py-1.5 w-full text-[13px] text-slate-700 hover:text-[#2F5FD0] hover:bg-slate-50 rounded-lg transition-colors"
                 >
                   <Plus className="w-3.5 h-3.5" />
-                  Novo Painel
+                  {t('sidebar.newPanel')}
                 </button>
               )}
 
@@ -1061,8 +1064,8 @@ function SidebarContent({
 
       <ConfirmModal
         open={pendingDeleteDash !== null}
-        title="Excluir Painel"
-        message={`Excluir o painel "${pendingDashTitle}"? As seções dentro dele tambem serao removidas.`}
+        title={t('sidebar.deletePanelTitle')}
+        message={t('sidebar.deletePanelMsg', { name: pendingDashTitle })}
         onCancel={() => setPendingDeleteDash(null)}
         onConfirm={confirmDeleteDashboard}
       />

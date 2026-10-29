@@ -9,6 +9,7 @@ import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { useContacts } from '@/context/ContactsContext';
 import { useAuth } from '@/context/AuthContext';
 import { MessagesSquare, Pencil, Trash2, ArrowLeftRight } from 'lucide-react';
+import { useLocale } from '@/context/LocaleContext';
 
 interface ContactCardProps {
   contact: Contact;
@@ -16,6 +17,7 @@ interface ContactCardProps {
 }
 
 export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
+  const { t } = useLocale();
   const [showMini, setShowMini] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -150,7 +152,7 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
         <div className="flex items-center gap-0 md:gap-0.5 flex-shrink-0 -mr-2">
           <button
             className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-[#d4dce8] md:text-slate-300 hover:text-primary-500 rounded opacity-100 md:opacity-0 md:group-hover/contact:opacity-100 transition-opacity"
-            title="Editar contato"
+            title={t('contacts.editContact')}
             onClick={(e) => { e.stopPropagation(); setShowEdit(true); }}
           >
             <Pencil className="w-5 h-5 md:w-3 md:h-3" />
@@ -160,7 +162,7 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
             <button
               ref={moveButtonRef}
               className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-[#d4dce8] md:text-slate-300 hover:text-primary-500 rounded opacity-100 md:opacity-0 md:group-hover/contact:opacity-100 transition-opacity"
-              title="Mover para outra seção"
+              title={t('contacts.moveToSection')}
               onClick={toggleMoveMenu}
             >
               <ArrowLeftRight className="w-5 h-5 md:w-3 md:h-3" />
@@ -169,7 +171,7 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
 
           <button
             className="flex items-center justify-center min-w-[32px] min-h-[32px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-[#d4dce8] md:text-slate-300 hover:text-red-500 rounded opacity-100 md:opacity-0 md:group-hover/contact:opacity-100 transition-opacity"
-            title="Excluir contato"
+            title={t('contacts.deleteContact')}
             onClick={handleDelete}
           >
             <Trash2 className="w-5 h-5 md:w-3 md:h-3" />
@@ -184,7 +186,7 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
           className="bg-white rounded-lg border border-slate-200 shadow-lg min-w-[160px] py-1"
           onClick={(e) => e.stopPropagation()}
         >
-          <p className="px-3 py-1 text-[10px] font-semibold text-slate-400 uppercase">Mover para</p>
+          <p className="px-3 py-1 text-[10px] font-semibold text-slate-400 uppercase">{t('contacts.moveTo')}</p>
           {otherSections.map((s) => (
             <button
               key={s.id}
@@ -218,8 +220,8 @@ export function ContactCard({ contact, isInFrequentes }: ContactCardProps) {
 
       <ConfirmModal
         open={showDeleteModal}
-        title="Excluir contato"
-        message={`Remover o contato "${contact.name}"?`}
+        title={t('contacts.deleteContact')}
+        message={t('contacts.deleteContactMsg', { name: contact.name })}
         onCancel={() => setShowDeleteModal(false)}
         onConfirm={() => {
           setShowDeleteModal(false);

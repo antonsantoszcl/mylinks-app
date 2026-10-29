@@ -26,6 +26,7 @@ import {
 import { useAuth } from '@/context/AuthContext';
 import { getEmailComposeUrl } from './MiniCard';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { useLocale } from '@/context/LocaleContext';
 
 // ── Color palette — mirrors CATEGORY_COLORS from CategoryCard ─────────────────
 const SECTION_COLORS = [
@@ -123,6 +124,7 @@ function SectionCardHeader({
   onAddContact,
   onDragHandleMouseDown,
 }: SectionCardHeaderProps) {
+  const { t } = useLocale();
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(title);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -211,7 +213,7 @@ function SectionCardHeader({
       .map((c) => c.email)
       .filter((e): e is string => !!e && e.trim() !== '');
     if (emails.length === 0) {
-      alert('Nenhum contato nesta seção possui email cadastrado.');
+      alert(t('contacts.noEmailAlert'));
       return;
     }
     const bccList = emails.join(',');
@@ -343,8 +345,8 @@ function SectionCardHeader({
           {/* @ Email group button */}
           <button
             className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:text-primary-500 hover:bg-primary-50 rounded transition-colors"
-            aria-label="Enviar email para todos da seção"
-            title="Enviar email para todos da seção"
+            aria-label={t('contacts.sendGroupEmail')}
+            title={t('contacts.sendGroupEmail')}
             onClick={handleSendGroupEmail}
           >
             <Mail className="w-5 h-5 md:w-3.5 md:h-3.5" />
@@ -352,7 +354,7 @@ function SectionCardHeader({
           {onAddContact && (
             <button
               className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:bg-white/60 rounded transition-colors"
-              aria-label="Adicionar contato"
+              aria-label={t('contacts.addContact')}
               onClick={onAddContact}
             >
               <Plus className="w-5 h-5 md:w-3.5 md:h-3.5" />
@@ -362,7 +364,7 @@ function SectionCardHeader({
             <button
               className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:text-primary-500 hover:bg-primary-50 rounded transition-colors md:hidden"
               onClick={() => setEditing(true)}
-              aria-label="Editar seção"
+              aria-label={t('contacts.editSectionAria')}
             >
               <Pencil className="w-5 h-5" />
             </button>
@@ -370,7 +372,7 @@ function SectionCardHeader({
           {!isFrequents && onDragHandleMouseDown && (
             <div
               className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-300 transition-colors cursor-grab active:cursor-grabbing rounded"
-              aria-label="Arrastar seção"
+              aria-label={t('contacts.dragSectionAria')}
               style={{ touchAction: 'none' }}
               onMouseDown={onDragHandleMouseDown}
             >
@@ -381,7 +383,7 @@ function SectionCardHeader({
             <button
               className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
               onClick={() => setShowDeleteModal(true)}
-              aria-label="Excluir seção"
+              aria-label={t('contacts.deleteSectionAria')}
             >
               <Trash2 className="w-5 h-5 md:w-3 md:h-3" />
             </button>
@@ -392,8 +394,8 @@ function SectionCardHeader({
       {onDelete && (
         <ConfirmModal
           open={showDeleteModal}
-          title="Excluir seção"
-          message={`Remover a seção "${title}" e todos os contatos dentro dela?`}
+          title={t('contacts.deleteSection')}
+          message={t('contacts.deleteSectionMsg', { name: title })}
           onCancel={() => setShowDeleteModal(false)}
           onConfirm={() => {
             setShowDeleteModal(false);
@@ -448,6 +450,7 @@ function ContactSectionCard({
   onDrop,
   draggable,
 }: ContactSectionCardProps) {
+  const { t } = useLocale();
   const [isMobile, setIsMobile] = useState(getIsMobile);
   const color = isFrequents ? FREQUENT_COLOR : SECTION_COLORS[colorIndex % SECTION_COLORS.length];
   const dragFromHandle = useRef(false);
@@ -511,7 +514,7 @@ function ContactSectionCard({
           <div className="flex flex-col items-center justify-center h-16 text-slate-400 gap-1">
             <Inbox className="w-5 h-5 opacity-20" />
             <p className="text-xs">
-              {isFrequents ? 'Nenhum contato frequente' : 'Nenhum contato'}
+              {isFrequents ? t('contacts.noFrequent') : t('contacts.noContact')}
             </p>
           </div>
         )}
@@ -519,7 +522,7 @@ function ContactSectionCard({
 
       {isFrequents ? (
         <div className="mx-2 mb-2 mt-1 px-3 py-2 text-center">
-          <p className="text-[12px] md:text-[10px] text-slate-500 md:text-[#78716C] italic whitespace-nowrap">Assinale frequente ao incluir um contato</p>
+          <p className="text-[12px] md:text-[10px] text-slate-500 md:text-[#78716C] italic whitespace-nowrap">{t('contacts.markFrequentNote')}</p>
         </div>
       ) : onAddContact && (
         <div className="mx-2 mb-2 mt-1 px-2 py-1.5 rounded-b-xl">
@@ -530,7 +533,7 @@ function ContactSectionCard({
             onClick={onAddContact}
           >
             <Plus className="w-3 h-3" />
-            Adicionar contato
+            {t('contacts.addContact')}
           </button>
         </div>
       )}
@@ -545,6 +548,7 @@ interface AddSectionCardProps {
 }
 
 function AddSectionCard({ onCreate }: AddSectionCardProps) {
+  const { t } = useLocale();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
   const [selectedIcon, setSelectedIcon] = useState('star');
@@ -682,18 +686,18 @@ function AddSectionCard({ onCreate }: AddSectionCardProps) {
             <div className="w-8 h-8 rounded-lg bg-primary-50 text-primary-600 flex items-center justify-center">
               <Plus className="w-4 h-4" />
             </div>
-            <span className="text-xs font-semibold">Nova seção</span>
+            <span className="text-xs font-semibold">{t('categoryGrid.newSection')}</span>
           </button>
         ) : (
           <form onSubmit={submit} className="space-y-2">
-            <h3 className="text-xs font-bold text-slate-800">Nova seção</h3>
+            <h3 className="text-xs font-bold text-slate-800">{t('categoryGrid.newSection')}</h3>
             {/* Icon selector + title input */}
             <div className="flex items-center gap-2">
               <div
                 ref={iconRef}
                 className="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center cursor-pointer hover:bg-slate-100 transition-colors flex-shrink-0"
                 onClick={() => setPickerOpen((v) => !v)}
-                title="Escolher ícone"
+                title={t('contacts.chooseIcon')}
               >
                 {isMobile ? (
                   <span className="text-base select-none leading-none">{emoji}</span>
@@ -713,7 +717,7 @@ function AddSectionCard({ onCreate }: AddSectionCardProps) {
               <input
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
-                placeholder="Nome da seção"
+                placeholder={t('contacts.sectionNamePlaceholder')}
                 className="flex-1 rounded-lg border border-slate-200 px-2 py-1.5 text-xs outline-none focus:ring-2 focus:ring-primary-300 uppercase"
                 autoFocus
               />
@@ -724,13 +728,13 @@ function AddSectionCard({ onCreate }: AddSectionCardProps) {
                 onClick={handleClose}
                 className="px-2 py-1 text-xs rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 min-h-[44px] md:min-h-0"
               >
-                Cancelar
+                {t('contacts.cancel')}
               </button>
               <button
                 type="submit"
                 className="px-2 py-1 text-xs rounded-lg bg-primary-600 text-white hover:bg-primary-700 min-h-[44px] md:min-h-0"
               >
-                Criar
+                {t('contacts.create')}
               </button>
             </div>
           </form>
@@ -843,6 +847,7 @@ function ContactGrid({ children }: ContactGridProps) {
 // ── Main panel ────────────────────────────────────────────────────────────────
 
 export function ContactsPanel() {
+  const { t } = useLocale();
   const {
     sections,
     contacts,
@@ -928,7 +933,7 @@ export function ContactsPanel() {
   const frequentesCard = (
     <ContactSectionCard
       key="frequentes"
-      title="Contatos Frequentes"
+      title={t('contacts.frequent')}
       iconName="star"
       contacts={frequentContacts}
       colorIndex={0}

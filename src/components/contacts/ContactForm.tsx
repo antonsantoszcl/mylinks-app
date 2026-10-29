@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { useContacts } from '@/context/ContactsContext';
 import { Contact } from '@/lib/types';
+import { useLocale } from '@/context/LocaleContext';
 
 interface ContactFormProps {
   sectionId: string;
@@ -22,6 +23,7 @@ interface FormFields {
 }
 
 export function ContactForm({ sectionId, contact, onClose }: ContactFormProps) {
+  const { t } = useLocale();
   const { createContact, updateContact, deleteContact } = useContacts();
   const isEdit = !!contact;
 
@@ -64,7 +66,7 @@ export function ContactForm({ sectionId, contact, onClose }: ContactFormProps) {
 
   const validate = () => {
     if (!fields.name.trim()) {
-      setError('O nome é obrigatório.');
+      setError(t('contactForm.nameRequired'));
       nameRef.current?.focus();
       return false;
     }
@@ -74,7 +76,7 @@ export function ContactForm({ sectionId, contact, onClose }: ContactFormProps) {
       fields.email.trim() ||
       fields.linkedin.trim();
     if (!hasChannel) {
-      setError('Preencha pelo menos um canal de contato.');
+      setError(t('contactForm.channelRequired'));
       return false;
     }
     return true;
@@ -102,7 +104,7 @@ export function ContactForm({ sectionId, contact, onClose }: ContactFormProps) {
 
   const handleDelete = async () => {
     if (!contact) return;
-    const ok = window.confirm(`Excluir "${contact.name}"? Esta ação não pode ser desfeita.`);
+    const ok = window.confirm(t('contactForm.confirmDelete', { name: contact.name }));
     if (!ok) return;
     await deleteContact(contact.id);
     onClose();
@@ -133,13 +135,13 @@ export function ContactForm({ sectionId, contact, onClose }: ContactFormProps) {
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
           <h2 id="contact-form-title" className="text-sm font-semibold text-slate-800">
-            {isEdit ? 'Editar Contato' : 'Novo Contato'}
+            {isEdit ? t('contactForm.editTitle') : t('contactForm.newTitle')}
           </h2>
           <button
             type="button"
             onClick={onClose}
             className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
-            aria-label="Fechar"
+            aria-label={t('contactForm.close')}
           >
             <X className="w-4 h-4" />
           </button>
@@ -150,14 +152,14 @@ export function ContactForm({ sectionId, contact, onClose }: ContactFormProps) {
           {/* Name */}
           <div className="flex flex-col">
             <label className="text-xs font-medium text-slate-600 mb-1">
-              Nome <span className="text-red-400">*</span>
+              {t('contactForm.name')} <span className="text-red-400">*</span>
             </label>
             <input
               ref={nameRef}
               type="text"
               value={fields.name}
               onChange={set('name')}
-              placeholder="Nome do contato"
+              placeholder={t('contactForm.namePlaceholder')}
               className="
                 rounded-lg border border-slate-200 px-3 py-2 text-sm
                 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none
@@ -169,13 +171,13 @@ export function ContactForm({ sectionId, contact, onClose }: ContactFormProps) {
           {/* WhatsApp */}
           <div className="flex flex-col">
             <label className="text-xs font-medium text-slate-600 mb-1">
-              WhatsApp <span className="text-slate-400 font-normal">(opcional)</span>
+              WhatsApp <span className="text-slate-400 font-normal">({t('contactForm.optional')})</span>
             </label>
             <input
               type="text"
               value={fields.whatsapp}
               onChange={set('whatsapp')}
-              placeholder="5511999999999"
+              placeholder={t('contactForm.phonePlaceholder')}
               className="
                 rounded-lg border border-slate-200 px-3 py-2 text-sm
                 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none
@@ -187,13 +189,13 @@ export function ContactForm({ sectionId, contact, onClose }: ContactFormProps) {
           {/* Instagram */}
           <div className="flex flex-col">
             <label className="text-xs font-medium text-slate-600 mb-1">
-              Instagram <span className="text-slate-400 font-normal">(opcional)</span>
+              Instagram <span className="text-slate-400 font-normal">({t('contactForm.optional')})</span>
             </label>
             <input
               type="text"
               value={fields.instagram}
               onChange={set('instagram')}
-              placeholder="usuario (sem @)"
+              placeholder={t('contactForm.instagramPlaceholder')}
               className="
                 rounded-lg border border-slate-200 px-3 py-2 text-sm
                 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none
@@ -205,13 +207,13 @@ export function ContactForm({ sectionId, contact, onClose }: ContactFormProps) {
           {/* Email */}
           <div className="flex flex-col">
             <label className="text-xs font-medium text-slate-600 mb-1">
-              Email <span className="text-slate-400 font-normal">(opcional)</span>
+              Email <span className="text-slate-400 font-normal">({t('contactForm.optional')})</span>
             </label>
             <input
               type="text"
               value={fields.email}
               onChange={set('email')}
-              placeholder="email@exemplo.com"
+              placeholder={t('contactForm.emailPlaceholder')}
               className="
                 rounded-lg border border-slate-200 px-3 py-2 text-sm
                 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none
@@ -223,13 +225,13 @@ export function ContactForm({ sectionId, contact, onClose }: ContactFormProps) {
           {/* LinkedIn */}
           <div className="flex flex-col">
             <label className="text-xs font-medium text-slate-600 mb-1">
-              LinkedIn <span className="text-slate-400 font-normal">(opcional)</span>
+              LinkedIn <span className="text-slate-400 font-normal">({t('contactForm.optional')})</span>
             </label>
             <input
               type="text"
               value={fields.linkedin}
               onChange={set('linkedin')}
-              placeholder="slug-do-perfil"
+              placeholder={t('contactForm.linkedinPlaceholder')}
               className="
                 rounded-lg border border-slate-200 px-3 py-2 text-sm
                 focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none
@@ -246,7 +248,7 @@ export function ContactForm({ sectionId, contact, onClose }: ContactFormProps) {
               onChange={set('isFrequent')}
               className="w-4 h-4 rounded border-slate-300 text-primary-500 accent-primary-500 cursor-pointer"
             />
-            <span className="text-xs font-medium text-slate-600">Contato Frequente</span>
+            <span className="text-xs font-medium text-slate-600">{t('contactForm.frequentLabel')}</span>
           </label>
 
           {/* Error */}
@@ -269,7 +271,7 @@ export function ContactForm({ sectionId, contact, onClose }: ContactFormProps) {
                   transition-colors
                 "
               >
-                Excluir
+                {t('contactForm.delete')}
               </button>
             )}
           </div>
@@ -285,7 +287,7 @@ export function ContactForm({ sectionId, contact, onClose }: ContactFormProps) {
                 transition-colors
               "
             >
-              Cancelar
+              {t('contactForm.cancel')}
             </button>
             <button
               type="button"
@@ -298,7 +300,7 @@ export function ContactForm({ sectionId, contact, onClose }: ContactFormProps) {
                 transition-colors disabled:opacity-60
               "
             >
-              {saving ? 'Salvando…' : 'Salvar'}
+              {saving ? t('contactForm.saving') : t('contactForm.save')}
             </button>
           </div>
         </div>

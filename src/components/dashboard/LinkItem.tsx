@@ -5,6 +5,7 @@ import { ArrowRightLeft, GripVertical, Pencil, Trash2 } from 'lucide-react';
 import { DraggableAttributes } from '@dnd-kit/core';
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { useLocale } from '@/context/LocaleContext';
 
 interface LinkItemProps {
   link: LinkType;
@@ -18,6 +19,7 @@ interface LinkItemProps {
 }
 
 export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHandleAttributes, categories, currentCategoryId, onMove }: LinkItemProps) {
+  const { t } = useLocale();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(link.title);
@@ -147,7 +149,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
             ref={titleInputRef}
             value={editTitle}
             onChange={(e) => setEditTitle(e.target.value)}
-            placeholder="Título"
+            placeholder={t('linkItem.titlePlaceholder')}
             onKeyDown={(e) => {
               if (e.key === 'Enter') saveEdit();
               if (e.key === 'Escape') cancelEdit();
@@ -157,7 +159,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
           <input
             value={editUrl}
             onChange={(e) => setEditUrl(e.target.value)}
-            placeholder="https://exemplo.com"
+            placeholder={t('linkItem.urlPlaceholder')}
             onKeyDown={(e) => {
               if (e.key === 'Enter') saveEdit();
               if (e.key === 'Escape') cancelEdit();
@@ -170,14 +172,14 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
               onClick={cancelEdit}
               className="px-2 py-1 text-xs rounded bg-slate-100 text-slate-600 hover:bg-slate-200 min-h-[32px]"
             >
-              Cancelar
+              {t('linkItem.cancel')}
             </button>
             <button
               type="button"
               onClick={saveEdit}
               className="px-2 py-1 text-xs rounded bg-primary-600 text-white hover:bg-primary-700 min-h-[32px]"
             >
-              Salvar
+              {t('linkItem.save')}
             </button>
           </div>
         </div>
@@ -212,7 +214,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
         <div className="flex items-center gap-0 md:gap-0.5 flex-shrink-0 -mr-2">
           <button
             className="hidden md:flex items-center justify-center md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 md:text-slate-300 hover:text-primary-500 rounded md:opacity-0 md:group-hover/link:opacity-100 transition-opacity"
-            title="Editar link"
+            title={t('linkItem.editLink')}
             onClick={(e) => { e.stopPropagation(); openEdit(); }}
             data-no-dnd="true"
           >
@@ -235,7 +237,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
             <div data-no-dnd="true">
               <button
                 className="flex items-center justify-center min-w-[28px] min-h-[28px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-[#d4dce8] md:text-slate-300 hover:text-primary-500 rounded opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity"
-                title="Mover para outra seção"
+                title={t('linkItem.moveToSection')}
                 ref={moveButtonRef}
                 onClick={(e) => { e.stopPropagation(); setShowMoveMenu((v) => !v); }}
                 data-no-dnd="true"
@@ -249,7 +251,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
                   style={{ position: 'fixed', top: dropdownPos.top, right: dropdownPos.right, zIndex: 9999 }}
                   className="bg-white rounded-lg border border-slate-200 shadow-lg w-[160px] max-h-[200px] overflow-y-auto py-1"
                 >
-                  <p className="px-3 py-1 text-[10px] font-semibold text-slate-400 uppercase">Mover para</p>
+                  <p className="px-3 py-1 text-[10px] font-semibold text-slate-400 uppercase">{t('linkItem.moveTo')}</p>
                   {otherCategories.map((cat) => (
                     <button
                       key={cat.id}
@@ -271,7 +273,7 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
 
           <button
             className="flex items-center justify-center min-w-[32px] min-h-[32px] md:min-w-0 md:min-h-0 md:w-auto md:h-auto md:p-1 text-[#d4dce8] md:text-slate-300 hover:text-red-500 rounded opacity-100 md:opacity-0 md:group-hover/link:opacity-100 transition-opacity"
-            title="Excluir link"
+            title={t('linkItem.deleteLink')}
             onClick={() => setShowDeleteModal(true)}
           >
             <Trash2 className="w-5 h-5 md:w-3 md:h-3" />
@@ -281,8 +283,8 @@ export function LinkItem({ link, onDelete, onUpdate, dragHandleListeners, dragHa
 
       <ConfirmModal
         open={showDeleteModal}
-        title="Excluir link"
-        message={`Remover o link "${link.title}"?`}
+        title={t('linkItem.deleteLink')}
+        message={t('linkItem.deleteLinkMsg', { title: link.title })}
         onCancel={() => setShowDeleteModal(false)}
         onConfirm={() => {
           setShowDeleteModal(false);

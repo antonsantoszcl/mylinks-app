@@ -7,8 +7,10 @@ import Link from 'next/link';
 import { useProfile, getInitials } from '@/context/ProfileContext';
 import { useAuth } from '@/context/AuthContext';
 import { useInstrucoes } from '@/context/InstrucoesContext';
+import { useLocale } from '@/context/LocaleContext';
 
 function VideoOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const { t } = useLocale();
   const [ended, setEnded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -54,7 +56,7 @@ function VideoOverlay({ open, onClose }: { open: boolean; onClose: () => void })
         <button
           onClick={onClose}
           className="absolute top-2 right-2 z-10 p-1.5 rounded-lg bg-black/50 text-white hover:bg-black/80 transition-colors"
-          aria-label="Fechar vídeo"
+          aria-label={t('topnav.closeVideo')}
         >
           <X className="w-5 h-5" />
         </button>
@@ -73,7 +75,7 @@ function VideoOverlay({ open, onClose }: { open: boolean; onClose: () => void })
             onClick={handleReplay}
             className="absolute bottom-6 left-1/2 -translate-x-1/2 px-5 py-2.5 rounded-lg bg-white/90 text-slate-800 font-medium shadow-lg hover:bg-white transition-colors"
           >
-            Reassistir
+            {t('topnav.replay')}
           </button>
         )}
       </div>
@@ -81,17 +83,21 @@ function VideoOverlay({ open, onClose }: { open: boolean; onClose: () => void })
   );
 }
 
-const ICONS_LEGEND = [
-  { icon: Plus,           label: 'Inclui',    desc: 'Adiciona novo link ou seção' },
-  { icon: Pencil,         label: 'Edita',     desc: 'Altera nome ou URL' },
-  { icon: GripVertical,   label: 'Arrasta',   desc: 'Reordena por arrastar e soltar' },
-  { icon: ArrowRightLeft, label: 'Transfere link de Seção', desc: 'Move link para outra seção' },
-  { icon: FolderOutput,   label: 'Transfere Seção de Painel', desc: 'Move seção para outro painel' },
-  { icon: Trash2,         label: 'Deleta',    desc: 'Remove permanentemente' },
-];
+function getIconsLegend(t: (key: import('@/lib/i18n/dictionary').DictKey) => string) {
+  return [
+    { icon: Plus,           label: t('topnav.iconInclude'),     desc: t('topnav.iconIncludeDesc') },
+    { icon: Pencil,         label: t('topnav.iconEdit'),        desc: t('topnav.iconEditDesc') },
+    { icon: GripVertical,   label: t('topnav.iconDrag'),        desc: t('topnav.iconDragDesc') },
+    { icon: ArrowRightLeft, label: t('topnav.iconMoveLink'),    desc: t('topnav.iconMoveLinkDesc') },
+    { icon: FolderOutput,   label: t('topnav.iconMoveSection'), desc: t('topnav.iconMoveSectionDesc') },
+    { icon: Trash2,         label: t('topnav.iconDelete'),      desc: t('topnav.iconDeleteDesc') },
+  ];
+}
 
 function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { videoOpen, openVideo, closeVideo } = useInstrucoes();
+  const { t } = useLocale();
+  const iconsLegend = getIconsLegend(t);
 
   useEffect(() => {
     if (!open) return;
@@ -121,13 +127,13 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
             </div>
             <div>
               <h1 className="text-base font-bold text-slate-800 leading-tight tracking-tight">alllinks.app</h1>
-              <p className="text-xs text-slate-400 leading-tight mt-0.5">Instruções de uso</p>
+              <p className="text-xs text-slate-400 leading-tight mt-0.5">{t('topnav.instructionsTitle')}</p>
             </div>
           </div>
           <button
             onClick={onClose}
             className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
-            aria-label="Fechar"
+            aria-label={t('topnav.close')}
           >
             <X className="w-4 h-4" />
           </button>
@@ -139,32 +145,32 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
           {/* Column 1: intro text */}
           <div className="space-y-2">
             <p className="text-sm text-slate-600 leading-relaxed">
-              Essa página destina-se a facilitar sua navegação reunindo num ambiente organizado e funcional todos os links e contatos importantes no seu dia a dia.
+              {t('topnav.intro1')}
             </p>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Painéis contêm seções. E seções contêm links.
+              {t('topnav.intro2')}
             </p>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Dito isso, você pode incluir, excluir, alterar, mover ou deletar qualquer link, seção ou painel de maneira a transformar esse aplicativo na página de navegação que você sempre imaginou.
+              {t('topnav.intro3')}
             </p>
             <p className="text-sm text-slate-600 leading-relaxed">
-              O Painel Contatos oferece comunicação instantânea com todas as pessoas próximas através de vários meios.
+              {t('topnav.intro4')}
             </p>
             <p className="text-sm text-slate-600 leading-relaxed">
-              O Painel Principal inicialmente apresentado como exemplo é uma compilação dos sites mais populares do Brasil.
+              {t('topnav.intro5')}
             </p>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Pode ser mantido, ou alterado do jeito que você bem entender.
+              {t('topnav.intro6')}
             </p>
           </div>
 
           {/* Column 2: icons legend */}
           <div className="space-y-2">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-              Painéis, Seções e Links — Ícones
+              {t('topnav.iconsLegendTitle')}
             </p>
             <div className="space-y-1.5">
-              {ICONS_LEGEND.map(({ icon: Icon, label }) => (
+              {iconsLegend.map(({ icon: Icon, label }) => (
                 <div key={label} className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-100">
                   <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-600 flex-shrink-0">
                     <Icon className="w-3.5 h-3.5" />
@@ -184,8 +190,8 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
                 </svg>
               </div>
               <div className="space-y-1">
-                <p className="text-sm font-semibold text-slate-700">Vídeo explicativo</p>
-                <p className="text-xs text-slate-500 leading-relaxed">Veja como usar todos os recursos do painel em poucos minutos.</p>
+                <p className="text-sm font-semibold text-slate-700">{t('topnav.videoTitle')}</p>
+                <p className="text-xs text-slate-500 leading-relaxed">{t('topnav.videoDesc')}</p>
               </div>
               <button
                 onClick={() => openVideo()}
@@ -194,7 +200,7 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
                 <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z"/>
                 </svg>
-                Assistir agora
+                {t('topnav.watchNow')}
               </button>
             </div>
 
@@ -206,8 +212,8 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
                 </svg>
               </span>
               <p className="text-sm text-slate-600 leading-relaxed">
-                <span className="font-semibold text-slate-700">E pronto!</span> É só usar — seu painel está sempre sincronizado e disponível em{' '}
-                <span className="font-medium text-primary-600">qualquer dispositivo</span>.
+                <span className="font-semibold text-slate-700">{t('topnav.readyTitle')}</span> {t('topnav.readyDesc1')}{' '}
+                <span className="font-medium text-primary-600">{t('topnav.readyDesc2')}</span>.
               </p>
             </div>
           </div>
@@ -220,7 +226,7 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
             onClick={onClose}
             className="w-full py-2.5 rounded-xl bg-slate-100 text-sm font-semibold text-slate-600 hover:bg-slate-200 transition-colors"
           >
-            Fechar
+            {t('topnav.close')}
           </button>
         </div>
       </div>
@@ -236,6 +242,7 @@ export function TopNavControls() {
   const { profile } = useProfile();
   const { logout } = useAuth();
   const { openInstrucoes } = useInstrucoes();
+  const { t } = useLocale();
 
   const handleSignOut = async () => {
     await logout();
@@ -250,7 +257,7 @@ export function TopNavControls() {
         onClick={openInstrucoes}
         className="flex items-center px-3 py-2 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 hover:shadow-sm hover:bg-slate-50 transition-all bg-white min-h-[36px]"
       >
-        INSTRUÇÕES
+        {t('topnav.instructions')}
       </button>
 
       <button
@@ -258,13 +265,13 @@ export function TopNavControls() {
         className="flex items-center gap-1 text-xs font-semibold text-slate-700 hover:shadow-sm hover:bg-slate-50 transition-all px-3 py-2 rounded-lg border border-slate-200 bg-white min-h-[36px]"
       >
         <LogOut className="w-3.5 h-3.5" />
-        <span className="hidden sm:inline">Sair</span>
+        <span className="hidden sm:inline">{t('topnav.signOut')}</span>
       </button>
 
       <Link
         href="/dashboard/settings"
         className="w-8 h-8 sm:w-7 sm:h-7 rounded-full overflow-hidden ring-2 ring-slate-100 cursor-pointer hover:ring-primary-500 transition-all flex items-center justify-center bg-primary-100 shadow-sm"
-        title="Configuracoes de perfil"
+        title={t('settings.profileSettings')}
       >
         {profile.avatarUrl ? (
           <img

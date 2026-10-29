@@ -1,18 +1,20 @@
 import Link from 'next/link';
 import { RecentAccess } from '@/lib/types';
 import { History } from 'lucide-react';
+import { useLocale } from '@/context/LocaleContext';
 
 interface RecentAccessRowProps {
   items: RecentAccess[];
 }
 
 export function RecentAccessRow({ items }: RecentAccessRowProps) {
+  const { t } = useLocale();
   if (!items.length) return null;
   return (
     <section>
       <div className="flex items-center gap-1.5 mb-1.5">
         <History className="w-3.5 h-3.5 text-primary-500" />
-        <h2 className="text-xs font-bold text-slate-600">Ultimos acessados</h2>
+        <h2 className="text-xs font-bold text-slate-600">{t('recentAccess.title')}</h2>
       </div>
 
       <div className="flex flex-wrap gap-1.5">

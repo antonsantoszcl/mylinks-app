@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { useLocale } from '@/context/LocaleContext';
 
 interface ConfirmModalProps {
   open: boolean;
@@ -17,11 +18,14 @@ export function ConfirmModal({
   open,
   title,
   message,
-  cancelLabel = 'Cancelar',
-  confirmLabel = 'Excluir',
+  cancelLabel,
+  confirmLabel,
   onCancel,
   onConfirm,
 }: ConfirmModalProps) {
+  const { t } = useLocale();
+  const resolvedCancelLabel = cancelLabel ?? t('confirmModal.cancel');
+  const resolvedConfirmLabel = confirmLabel ?? t('confirmModal.delete');
   useEffect(() => {
     if (!open) return;
     const handleKey = (e: KeyboardEvent) => {
@@ -47,13 +51,13 @@ export function ConfirmModal({
             onClick={onCancel}
             className="px-4 py-2.5 text-xs font-medium rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors min-h-[44px]"
           >
-            {cancelLabel}
+            {resolvedCancelLabel}
           </button>
           <button
             onClick={onConfirm}
             className="px-4 py-2.5 text-xs font-medium rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors min-h-[44px]"
           >
-            {confirmLabel}
+            {resolvedConfirmLabel}
           </button>
         </div>
       </div>
