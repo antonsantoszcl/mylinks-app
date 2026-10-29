@@ -156,12 +156,6 @@ function InstrucoesModal({ open, onClose }: { open: boolean; onClose: () => void
             <p className="text-sm text-slate-600 leading-relaxed">
               {t('topnav.intro4')}
             </p>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              {t('topnav.intro5')}
-            </p>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              {t('topnav.intro6')}
-            </p>
           </div>
 
           {/* Column 2: icons legend */}
