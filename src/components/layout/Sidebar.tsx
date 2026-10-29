@@ -112,6 +112,11 @@ function DashboardNavItem({
   onTouchStartHandle?: (e: React.TouchEvent) => void;
 }) {
   const { t } = useLocale();
+  const displayTitle = dashboard.isDefault
+    ? t('sidebar.mainPanel')
+    : dashboard.isContacts
+    ? t('sidebar.contactsPanel')
+    : dashboard.title;
   const [editing, setEditing] = useState(false);
   const [editValue, setEditValue] = useState(dashboard.title);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -284,7 +289,7 @@ function DashboardNavItem({
     return (
       <button
         onClick={() => onSelect(dashboard.id)}
-        title={dashboard.title}
+        title={displayTitle}
         className={`flex items-center justify-center py-2 rounded-lg transition-colors w-full ${
           isActive
             ? 'bg-[#EDF1F7] text-slate-700 md:bg-[#f3f7fd] md:text-slate-700'
@@ -351,7 +356,7 @@ function DashboardNavItem({
             <span
               className="flex-1 text-[13px] font-medium truncate"
             >
-              {dashboard.title}
+              {displayTitle}
             </span>
           )}
 

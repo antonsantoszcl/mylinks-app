@@ -668,7 +668,7 @@ export function CategoryCard({
                 setShowMovePanelMenu(false);
               }}
             >
-              {dash.title}
+              {dash.isDefault ? t('sidebar.mainPanel') : dash.isContacts ? t('sidebar.contactsPanel') : dash.title}
             </button>
           ))}
         </div>,

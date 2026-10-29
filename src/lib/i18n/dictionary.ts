@@ -54,6 +54,8 @@ export const dictionary = {
 
     // Sidebar
     'sidebar.panels': 'Painéis',
+    'sidebar.mainPanel': 'Principal',
+    'sidebar.contactsPanel': 'Contatos',
     'sidebar.panelNamePlaceholder': 'Nome do painel',
     'sidebar.save': 'Salvar',
     'sidebar.cancel': 'Cancelar',
@@ -271,6 +273,8 @@ export const dictionary = {
 
     // Sidebar
     'sidebar.panels': 'Panels',
+    'sidebar.mainPanel': 'Main',
+    'sidebar.contactsPanel': 'Contacts',
     'sidebar.panelNamePlaceholder': 'Panel name',
     'sidebar.save': 'Save',
     'sidebar.cancel': 'Cancel',
