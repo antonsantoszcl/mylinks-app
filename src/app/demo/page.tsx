@@ -3,29 +3,32 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getSupabaseClient } from '@/lib/supabase';
+import { useLocale } from '@/context/LocaleContext';
 
 const DEMO_EMAIL = 'example.alllinks@gmail.com';
 const DEMO_PASSWORD = 'all2027!';
 
 export default function DemoEntryPage() {
   const router = useRouter();
+  const { setLocale } = useLocale();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const run = async () => {
+      setLocale('en');
       const supabase = getSupabaseClient();
       const { error } = await supabase.auth.signInWithPassword({
         email: DEMO_EMAIL,
         password: DEMO_PASSWORD,
       });
       if (error) {
-        setError('Não foi possível entrar na conta de demonstração. Tente novamente em alguns instantes.');
+        setError('Could not sign in to the demo account. Please try again shortly.');
         return;
       }
       router.replace('/dashboard');
     };
     run();
-  }, [router]);
+  }, [router, setLocale]);
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center">
