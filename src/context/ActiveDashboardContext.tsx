@@ -22,6 +22,14 @@ const faviconDomainMap: Record<string, string> = {
   'api.whatsapp.com': 'whatsapp.com',
 };
 
+// Domains whose favicon via Google's s2 service is a generic tiny "G" icon;
+// override with Google's own product logo asset for visual consistency.
+const faviconOverrideMap: Record<string, string> = {
+  'calendar.google.com': 'https://fonts.gstatic.com/s/i/productlogos/calendar_2020q4/v8/web-96dp/logo_calendar_2020q4_color_2x_web_96dp.png',
+  'drive.google.com': 'https://fonts.gstatic.com/s/i/productlogos/drive_2020q4/v8/web-96dp/logo_drive_2020q4_color_2x_web_96dp.png',
+  'maps.google.com': 'https://fonts.gstatic.com/s/i/productlogos/maps_2020q4/v8/web-96dp/logo_maps_2020q4_color_2x_web_96dp.png',
+};
+
 // Domains that should map to their parent for favicon lookup
 const faviconDomainSuffixes: [string, string][] = [
   ['wixsite.com', 'wix.com'],
@@ -38,6 +46,7 @@ function resolveFaviconDomain(domain: string): string {
 
 function faviconFor(url: string, size = 32) {
   const domain = safeHostname(url);
+  if (faviconOverrideMap[domain]) return faviconOverrideMap[domain];
   const mappedDomain = resolveFaviconDomain(domain);
   return `https://www.google.com/s2/favicons?domain=${mappedDomain}&sz=${size}`;
 }
