@@ -7,6 +7,7 @@ import { useLocale } from '@/context/LocaleContext';
 
 const DEMO_EMAIL = 'example.alllinks@gmail.com';
 const DEMO_PASSWORD = 'all2027!';
+const SIDEBAR_KEY = 'mylinks.sidebar.collapsed';
 
 export default function DemoEntryPage() {
   const router = useRouter();
@@ -16,6 +17,9 @@ export default function DemoEntryPage() {
   useEffect(() => {
     const run = async () => {
       setLocale('en');
+      try {
+        localStorage.setItem(SIDEBAR_KEY, 'false');
+      } catch {}
       const supabase = getSupabaseClient();
       const { error } = await supabase.auth.signInWithPassword({
         email: DEMO_EMAIL,
