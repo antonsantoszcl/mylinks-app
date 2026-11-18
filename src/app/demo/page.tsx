@@ -25,6 +25,7 @@ export default function DemoEntryPage() {
         password: DEMO_PASSWORD,
       });
       if (error) {
+        setLocale('pt');
         setError('Could not sign in to the demo account. Please try again shortly.');
         return;
       }

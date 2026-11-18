@@ -1,15 +1,10 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 import { dictionary, DictKey, Locale } from '@/lib/i18n/dictionary';
-
-const COOKIE_NAME = 'nl_lang';
-
-function readCookieLocale(): Locale {
-  if (typeof document === 'undefined') return 'pt';
-  const match = document.cookie.match(new RegExp(`${COOKIE_NAME}=(pt|en)`));
-  return (match?.[1] as Locale) ?? 'pt';
-}
+import { useAuth } from '@/context/AuthContext';
+import { DEMO_EMAIL } from '@/lib/demoConfig';
 
 interface LocaleContextValue {
   locale: Locale;
@@ -24,14 +19,26 @@ const LocaleContext = createContext<LocaleContextValue>({
 });
 
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>('pt');
+  const [selectedLocale, setLocaleState] = useState<Locale>('pt');
+  const { user } = useAuth();
+  const pathname = usePathname();
+  const locale = user ? (user.email.toLowerCase() === DEMO_EMAIL.toLowerCase() ? 'en' : 'pt') : selectedLocale;
 
   useEffect(() => {
-    setLocaleState(readCookieLocale());
+    document.cookie = 'nl_lang=; path=/; max-age=0';
   }, []);
 
+  useEffect(() => {
+    if (user || (pathname !== '/en' && pathname !== '/login' && pathname !== '/demo')) {
+      setLocaleState('pt');
+    }
+  }, [user, pathname]);
+
+  useEffect(() => {
+    document.documentElement.lang = locale === 'pt' ? 'pt-BR' : 'en';
+  }, [locale]);
+
   const setLocale = useCallback((next: Locale) => {
-    document.cookie = `${COOKIE_NAME}=${next}; path=/; max-age=${60 * 60 * 24 * 365}`;
     setLocaleState(next);
   }, []);
 

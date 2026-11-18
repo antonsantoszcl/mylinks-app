@@ -128,7 +128,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <body className={`${inter.className} ${manrope.variable}`}>
         <Script
           id="json-ld"
@@ -149,9 +149,9 @@ export default function RootLayout({
           gtag('js', new Date());
           gtag('config', 'G-CDQ92N01C3');
         `}</Script>
-        <LocaleProvider>
-          <AuthProvider>{children}</AuthProvider>
-        </LocaleProvider>
+        <AuthProvider>
+          <LocaleProvider>{children}</LocaleProvider>
+        </AuthProvider>
       </body>
     </html>
   );
