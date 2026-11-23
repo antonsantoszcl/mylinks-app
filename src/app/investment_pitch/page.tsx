@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Link2, ChevronRight, ExternalLink } from 'lucide-react';
+import { Link2, ChevronRight } from 'lucide-react';
 
 const sections = [
   {
@@ -140,10 +140,10 @@ export default function InvestmentPitchPage() {
             <span className="font-bold text-sm text-slate-800">alllinks.app</span>
           </div>
           <Link
-            href="https://www.alllinks.app"
+            href="https://alllinks.app/demo"
             className="text-sm text-slate-600 hover:text-slate-900 transition-colors font-medium"
           >
-            Visit our website
+            Live Demo
           </Link>
         </div>
       </header>
@@ -258,13 +258,6 @@ export default function InvestmentPitchPage() {
             >
               Explore allLinks
               <ChevronRight className="w-4 h-4" />
-            </a>
-            <a
-              href="https://www.alllinks.app"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-slate-600 font-medium px-5 py-3.5 rounded-xl hover:bg-white transition-colors min-h-[44px]"
-            >
-              Visit our website
-              <ExternalLink className="w-4 h-4" />
             </a>
           </div>
         </div>
