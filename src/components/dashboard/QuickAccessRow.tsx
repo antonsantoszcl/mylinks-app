@@ -1,22 +1,54 @@
 import { QuickAccessLink } from '@/lib/types';
-import { QuickAccessCard } from './QuickAccessCard';
+import { SortableQuickAccessCard } from './SortableQuickAccessCard';
 import { Plus, Zap, ChevronRight } from 'lucide-react';
 import { FormEvent, useState, useRef, useEffect } from 'react';
 import { useLocale } from '@/context/LocaleContext';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  horizontalListSortingStrategy,
+} from '@dnd-kit/sortable';
 
 interface QuickAccessRowProps {
   links: QuickAccessLink[];
   onAdd: (title: string, url: string) => void;
   onRemove: (id: string) => void;
+  onReorder: (oldIndex: number, newIndex: number) => void;
 }
 
-export function QuickAccessRow({ links, onAdd, onRemove }: QuickAccessRowProps) {
+export function QuickAccessRow({ links, onAdd, onRemove, onReorder }: QuickAccessRowProps) {
   const { t } = useLocale();
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('');
   const [showChevron, setShowChevron] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const oldIndex = links.findIndex((l) => l.id === active.id);
+    const newIndex = links.findIndex((l) => l.id === over.id);
+    if (oldIndex !== -1 && newIndex !== -1) {
+      onReorder(oldIndex, newIndex);
+    }
+  };
 
   const submit = (event: FormEvent) => {
     event.preventDefault();
@@ -53,53 +85,64 @@ export function QuickAccessRow({ links, onAdd, onRemove }: QuickAccessRowProps) 
       </div>
 
       <div className="relative">
-        <div
-          ref={scrollRef}
-          className="quick-access-scroll flex gap-1.5 items-center overflow-x-auto pb-1 flex-nowrap sm:flex-wrap"
+        <DndContext
+          id="quick-access-dnd"
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
         >
-          {links.map((link) => (
-            <QuickAccessCard key={link.id} link={link} onRemove={onRemove} />
-          ))}
-
-          {!showForm ? (
-            <button
-              onClick={() => setShowForm(true)}
-              className="flex items-center gap-1 px-2.5 py-1.5 bg-white border border-dashed border-slate-300 rounded-lg text-slate-500 hover:text-primary-600 hover:border-primary-300 transition-all text-xs font-medium flex-shrink-0 min-h-[44px]"
+          <SortableContext items={links.map((l) => l.id)} strategy={horizontalListSortingStrategy}>
+            <div
+              ref={scrollRef}
+              className="quick-access-scroll flex gap-1.5 items-center overflow-x-auto pb-1 flex-nowrap sm:flex-wrap"
             >
-              <Plus className="w-3 h-3" />
-              {t('quickAccess.add')}
-            </button>
-          ) : (
-            <form onSubmit={submit} className="flex flex-wrap items-center gap-1.5 bg-white border border-slate-200 rounded-lg p-1.5 shadow-sm w-full sm:w-auto">
-              <input
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder={t('quickAccess.titlePlaceholder')}
-                className="rounded border border-slate-200 px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-primary-300 flex-1 min-w-[80px] min-h-[36px]"
-                autoFocus
-              />
-              <input
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                placeholder={t('quickAccess.urlPlaceholder')}
-                className="rounded border border-slate-200 px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-primary-300 flex-1 min-w-[100px] min-h-[36px]"
-              />
-              <button
-                type="button"
-                onClick={() => setShowForm(false)}
-                className="px-2 py-1.5 text-xs rounded bg-slate-100 text-slate-600 min-h-[36px]"
-              >
-                X
-              </button>
-              <button
-                type="submit"
-                className="px-2 py-1.5 text-xs rounded bg-primary-600 text-white min-h-[36px]"
-              >
-                OK
-              </button>
-            </form>
-          )}
-        </div>
+              {links.map((link) => (
+                <SortableQuickAccessCard key={link.id} link={link} onRemove={onRemove} />
+              ))}
+
+              {!showForm ? (
+                <div data-no-dnd="true">
+                  <button
+                    onClick={() => setShowForm(true)}
+                    className="flex items-center gap-1 px-2.5 py-1.5 bg-white border border-dashed border-slate-300 rounded-lg text-slate-500 hover:text-primary-600 hover:border-primary-300 transition-all text-xs font-medium flex-shrink-0 min-h-[44px]"
+                  >
+                    <Plus className="w-3 h-3" />
+                    {t('quickAccess.add')}
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={submit} data-no-dnd="true" className="flex flex-wrap items-center gap-1.5 bg-white border border-slate-200 rounded-lg p-1.5 shadow-sm w-full sm:w-auto">
+                  <input
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder={t('quickAccess.titlePlaceholder')}
+                    className="rounded border border-slate-200 px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-primary-300 flex-1 min-w-[80px] min-h-[36px]"
+                    autoFocus
+                  />
+                  <input
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    placeholder={t('quickAccess.urlPlaceholder')}
+                    className="rounded border border-slate-200 px-2 py-1.5 text-xs outline-none focus:ring-1 focus:ring-primary-300 flex-1 min-w-[100px] min-h-[36px]"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowForm(false)}
+                    className="px-2 py-1.5 text-xs rounded bg-slate-100 text-slate-600 min-h-[36px]"
+                  >
+                    X
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-2 py-1.5 text-xs rounded bg-primary-600 text-white min-h-[36px]"
+                  >
+                    OK
+                  </button>
+                </form>
+              )}
+            </div>
+          </SortableContext>
+        </DndContext>
 
         {/* Chevron hint — mobile only, hidden when scrolled to end */}
         {showChevron && (

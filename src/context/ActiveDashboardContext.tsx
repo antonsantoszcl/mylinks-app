@@ -89,6 +89,7 @@ type ActiveDashboardContextType = {
   // Quick access CRUD
   addQuickAccess: (title: string, url: string) => Promise<void>;
   removeQuickAccess: (id: string) => Promise<void>;
+  reorderQuickAccess: (oldIndex: number, newIndex: number) => Promise<void>;
 };
 
 // ── Context ───────────────────────────────────────────────────────────────────
@@ -111,6 +112,7 @@ const ActiveDashboardContext = createContext<ActiveDashboardContextType>({
   reorderLinks: async () => {},
   addQuickAccess: async () => {},
   removeQuickAccess: async () => {},
+  reorderQuickAccess: async () => {},
 });
 
 // ── Provider ──────────────────────────────────────────────────────────────────
@@ -439,6 +441,16 @@ export function ActiveDashboardProvider({ children }: { children: ReactNode }) {
     updateData((prev) => ({ ...prev, quickAccess: prev.quickAccess.filter((q) => q.id !== id) }));
   };
 
+  const reorderQuickAccess = async (oldIndex: number, newIndex: number) => {
+    if (!userId || !data) return;
+    const supabase = getSupabaseClient();
+    const reordered = arrayMove(data.quickAccess, oldIndex, newIndex);
+    updateData((prev) => ({ ...prev, quickAccess: reordered }));
+    await Promise.all(
+      reordered.map((q, i) => supabase.from('quick_access').update({ sort_order: i }).eq('id', q.id))
+    );
+  };
+
   return (
     <ActiveDashboardContext.Provider
       value={{
@@ -459,6 +471,7 @@ export function ActiveDashboardProvider({ children }: { children: ReactNode }) {
         reorderLinks,
         addQuickAccess,
         removeQuickAccess,
+        reorderQuickAccess,
       }}
     >
       {children}

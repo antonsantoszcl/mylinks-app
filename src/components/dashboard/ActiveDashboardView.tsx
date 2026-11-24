@@ -121,6 +121,7 @@ export function ActiveDashboardView() {
     reorderLinks,
     addQuickAccess,
     removeQuickAccess,
+    reorderQuickAccess,
   } = useActiveDashboard();
 
   // recentAccess is not yet persisted — kept as empty local state
@@ -203,6 +204,7 @@ export function ActiveDashboardView() {
         links={data?.quickAccess ?? []}
         onAdd={addQuickAccess}
         onRemove={removeQuickAccess}
+        onReorder={reorderQuickAccess}
       />
 
       <div className="flex items-center gap-1.5 mb-5">
